@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.base.dao.MenuMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.base.model.Menu">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="priority" jdbcType="INTEGER" property="priority" />
+    <result column="pid" jdbcType="BIGINT" property="pid" />
+    <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon" />
+    <result column="component" jdbcType="VARCHAR" property="component" />
+    <result column="hidden" jdbcType="BIT" property="hidden" />
+    <result column="redirect" jdbcType="VARCHAR" property="redirect" />
+    <result column="alwaysShow" jdbcType="VARCHAR" property="alwaysshow" />
+    <result column="meta" jdbcType="LONGVARCHAR" property="meta" />
+  </resultMap>
+
+  <select id="getByUid" resultMap="BaseResultMap">
+    SELECT * from menu WHERE EXISTS(SELECT * from role_menu where role_menu.menu_id = menu.id and EXISTS (SELECT * from user_role WHERE user_role.role_id = role_menu.role_id and user_role.user_id = #{userId}))
+  </select>
+
+  <select id="getByRole" resultMap="BaseResultMap">
+    SELECT * FROM menu WHERE EXISTS (SELECT * FROM role_menu WHERE role_menu.menu_id = menu.id and role_menu.role_id = #{roleId} )
+    </select>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.base.dao.ApiMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.base.model.Api">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="module" jdbcType="VARCHAR" property="module" />
+  </resultMap>
+
+  <select id="getByUser" resultMap="BaseResultMap">
+    SELECT
+            *
+    FROM
+            api
+    WHERE
+            EXISTS (
+                    SELECT
+                            *
+                    FROM
+                            role_api
+                    WHERE
+                            role_api.api_id = api.id
+                      AND EXISTS ( SELECT * FROM user_role WHERE user_role.role_id = role_api.role_id AND user_role.user_id = #{userId} ))
+    </select>
+
+  <select id="selectByUrlAndMethod" resultMap="BaseResultMap">
+      select  * from api where url = #{url} and method = #{method}
+    </select>
+
+  <select id="getByRole" resultMap="BaseResultMap">
+      SELECT * from api WHERE EXISTS(SELECT * from role_api where role_api.role_id = #{roleId} and role_api.api_id = api.id)
+    </select>
+</mapper>

@@ -1,0 +1,7 @@
+*.iml
+/package-lock.json
+/.idea/
+**/target/
+
+/application/src/main/resources/application-produce.properties
+/application/src/main/resources/application-test.properties
