@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -36,6 +37,9 @@ public class GeneratorService {
     @Autowired
     DataSourceProperties dataSourceProperties;
 
+    @Resource
+    protected ResultGenerator resultGenerator;
+
     /**
      * @param isMapper     是否生成mapper
      * @param isService    是否生产service
@@ -48,10 +52,10 @@ public class GeneratorService {
     public Result genCode(boolean isModel, boolean isMapper, boolean isService, boolean isController, String businessName, String tableNames, String moduleName) {
         File path = new File(System.getProperty("user.dir") + File.separator + moduleName);
         if (!path.exists()) {
-            return ResultGenerator.genResult(ResultEnum.MODULE_EXISTS);
+            return resultGenerator.genResult(ResultEnum.MODULE_EXISTS);
         }
         genCodeByCustomModelName(tableNames, null, businessName, isService, isMapper, isController, isModel, path.getPath(), moduleName);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
     /**
@@ -207,7 +211,6 @@ public class GeneratorService {
             data.put("basePackage", ProjectConstant.BASE_PACKAGE + modelPackage);
             data.put("baseController", Ctrl.class.getName());
             data.put("baseResult", Result.class.getName());
-            data.put("baseResultGenerator", ResultGenerator.class.getName());
             data.put("businessName", businessName);
 
             File file = new File(modulePath + JAVA_PATH + packageConvertPath(ProjectConstant.BASE_PACKAGE + modelPackage+ ProjectConstant.CONTROLLER_PACKAGE) + modelNameUpperCamel + "Controller.java");

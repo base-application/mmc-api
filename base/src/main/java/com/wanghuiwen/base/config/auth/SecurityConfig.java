@@ -6,6 +6,7 @@ import com.wanghuiwen.base.model.SysWhitelist;
 import com.wanghuiwen.base.service.ApiService;
 import com.wanghuiwen.base.service.SysWhitelistService;
 import com.wanghuiwen.base.service.UserService;
+import com.wanghuiwen.core.response.ResultGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private SysWhitelistService sysWhitelistService;
     @Resource
     private UserService userService;
-
+    @Resource
+    private ResultGenerator resultGenerator;
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -100,17 +102,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .withObjectPostProcessor(new MyObjectPostProcessor())
                 .anyRequest().authenticated()
                 .and().exceptionHandling()
-                .authenticationEntryPoint(new GoAuthenticationEntryPoint())
-                .accessDeniedHandler(new GoAccessDeniedHandler())
+                .authenticationEntryPoint(new GoAuthenticationEntryPoint(resultGenerator))
+                .accessDeniedHandler(new GoAccessDeniedHandler(resultGenerator))
                 .and()
                 .formLogin()
                 .loginProcessingUrl("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .successHandler(new GoAuthenticationSuccessHandler(userService))
-                .failureHandler(new GoAuthenticationFailureHandler())
+                .failureHandler(new GoAuthenticationFailureHandler(resultGenerator))
                 .and().logout().logoutUrl("/logout")
-                .logoutSuccessHandler(new GoLogoutSuccessHandler())
+                .logoutSuccessHandler(new GoLogoutSuccessHandler(resultGenerator))
                 .and().cors().and().csrf().disable();
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

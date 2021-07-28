@@ -10,11 +10,12 @@ import com.wanghuiwen.base.vo.RoleApiAdd;
 import com.wanghuiwen.base.vo.UserRoleAdd;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
-import com.wanghuiwen.core.response.ResultGenerator;
+import com.wanghuiwen.core.response.ResultEnum;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class ApiController extends Ctrl {
         for (Menu menu : parent) {
             menu.setChildren(res.get(menu.getId()));
         }
-        return ResultGenerator.genSuccessResult(parent);
+        return resultGenerator.genSuccessResult(parent);
     }
 
     @PostMapping(value = "refresh/token",name = "刷新token")
@@ -75,26 +76,26 @@ public class ApiController extends Ctrl {
         PageHelper.startPage(page,size);
         List<User> users = userService.list(params);
         PageInfo<User> pageInfo = new PageInfo<>(users);
-        return ResultGenerator.genSuccessResult(pageInfo);
+        return resultGenerator.genSuccessResult(pageInfo);
     }
 
 
     @GetMapping(value = "role/list",name = "角色列表")
     public Result roleList() {
         List<Role> roles = roleService.findAll();
-        return ResultGenerator.genSuccessResult(roles);
+        return resultGenerator.genSuccessResult(roles);
     }
 
     @GetMapping(value = "user/role",name = "用户角色")
     public Result userRole(Long userId) {
         List<Role> roles = roleService.getByUser(userId);
-        return ResultGenerator.genSuccessResult(roles);
+        return resultGenerator.genSuccessResult(roles);
     }
 
     @PostMapping(value = "user/add",name = "添加/修改用户")
     public Result userAdd(@RequestBody User user) {
         userService.save(user);
-        return ResultGenerator.genSuccessResult(user.getId());
+        return resultGenerator.genSuccessResult(user.getId());
     }
 
 
@@ -116,24 +117,24 @@ public class ApiController extends Ctrl {
             elTree.setChildren(m.getValue());
             elTrees.add(elTree);
         }
-        return ResultGenerator.genSuccessResult(elTrees);
+        return resultGenerator.genSuccessResult(elTrees);
     }
 
     @GetMapping(value = "role/api",name = "角色接口列表")
     public Result roleApi(Long roleId) {
         List<Api> apis = apiService.getByRole(roleId);
-        return ResultGenerator.genSuccessResult(apis);
+        return resultGenerator.genSuccessResult(apis);
     }
 
     @PutMapping(value = "role/api",name = "角色添加接口")
-    public Result roleApiAdd(@RequestBody RoleApiAdd add) {
+    public Result roleApiAdd(@RequestBody @Validated RoleApiAdd add) {
         return roleService.addApi(add);
     }
 
     @PutMapping(value = "role/add",name = "角色添加")
     public Result roleAdd(@RequestBody  Role add) {
         roleService.save(add);
-        return ResultGenerator.genSuccessResult(add.getId());
+        return resultGenerator.genSuccessResult(add.getId());
     }
 
     @DeleteMapping(value = "role/delete",name = "角色删除")
@@ -143,10 +144,10 @@ public class ApiController extends Ctrl {
         params.put("roleId",id);
         List<User> users = userService.list(params);
         if (!CollectionUtils.isEmpty(users)) {
-            return ResultGenerator.genFailResult(400,"该角色下存在用户");
+            return resultGenerator.genResult(ResultEnum.ROLE_HAS_USER);
         }
         roleService.deleteById(id);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
 
@@ -157,7 +158,7 @@ public class ApiController extends Ctrl {
         List<Menu> parent = res.get(0L);
         addMenuChild(parent,res);
 
-        return ResultGenerator.genSuccessResult(parent);
+        return resultGenerator.genSuccessResult(parent);
     }
 
     private void addMenuChild(List<Menu> menus, Map<Long, List<Menu>> res){
@@ -172,13 +173,13 @@ public class ApiController extends Ctrl {
     @PostMapping(value = "menu/add",name = "菜单列表")
     public Result menu(@RequestBody Menu menu) {
         menuService.save(menu);
-        return ResultGenerator.genSuccessResult(menu.getId());
+        return resultGenerator.genSuccessResult(menu.getId());
     }
 
     @GetMapping(value = "role/menu",name = "菜单列表")
     public Result roleMenu(Long roleId) {
         List<Menu> menus = menuService.getByRole(roleId);
-        return ResultGenerator.genSuccessResult(menus);
+        return resultGenerator.genSuccessResult(menus);
     }
 
     @PutMapping(value = "role/menu",name = "角色添加菜单")
@@ -189,18 +190,18 @@ public class ApiController extends Ctrl {
     @DeleteMapping(value = "menu/delete",name = "菜单列表")
     public Result menu(Long id) {
         menuService.deleteById(id);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
     @GetMapping(value = "white/list",name = "白名单列表")
     public Result whitelist() {
-        return ResultGenerator.genSuccessResult(sysWhitelistService.findAll());
+        return resultGenerator.genSuccessResult(sysWhitelistService.findAll());
     }
 
     @PutMapping(value = "white/list/add",name = "添加白名单")
     public Result whitelistAdd(@RequestBody SysWhitelist whitelist) {
         sysWhitelistService.save(whitelist);
-        return ResultGenerator.genSuccessResult(whitelist.getId());
+        return resultGenerator.genSuccessResult(whitelist.getId());
     }
 
     @GetMapping(value = "department/list",name = "组织机构列表")
@@ -234,7 +235,7 @@ public class ApiController extends Ctrl {
         List<DepartmentTree> parent = roleGroup.get(0L);
         addChildDepartment(parent,roleGroup);
 
-         return ResultGenerator.genSuccessResult(parent);
+         return resultGenerator.genSuccessResult(parent);
     }
 
    private void addChildDepartment(List<DepartmentTree> parent , Map<Long, List<DepartmentTree>>  group ){
@@ -252,12 +253,12 @@ public class ApiController extends Ctrl {
     @PutMapping(value = "department/add",name = "添加部门")
     public Result departmentAdd(@RequestBody SysDepartment department) {
         sysDepartmentService.save(department);
-        return ResultGenerator.genSuccessResult(department.getId());
+        return resultGenerator.genSuccessResult(department.getId());
     }
 
     @DeleteMapping(value = "department/delete",name = "删除部门")
     public Result departmentAdd(Long id) {
         sysDepartmentService.deleteById(id);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 }

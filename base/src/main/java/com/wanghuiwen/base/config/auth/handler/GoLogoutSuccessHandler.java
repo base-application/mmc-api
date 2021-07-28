@@ -13,9 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class GoLogoutSuccessHandler implements LogoutSuccessHandler {
+    ResultGenerator resultGenerator;
+
+    public GoLogoutSuccessHandler(ResultGenerator resultGenerator) {
+        this.resultGenerator = resultGenerator;
+    }
+
     @Override
     public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
-        Result result = ResultGenerator.genResult(ResultEnum.LOGIN_OUT_SUCCESS);
+        Result result = resultGenerator.genResult(ResultEnum.LOGIN_OUT_SUCCESS);
 
         httpServletResponse.setHeader("Content-Type", "application/json;charset=utf-8");
         httpServletResponse.setStatus(HttpStatus.OK.value());

@@ -7,6 +7,7 @@ import com.wanghuiwen.base.model.*;
 import com.wanghuiwen.base.service.RoleService;
 import com.wanghuiwen.base.vo.RoleApiAdd;
 import com.wanghuiwen.core.response.Result;
+import com.wanghuiwen.core.response.ResultEnum;
 import com.wanghuiwen.core.response.ResultGenerator;
 import com.wanghuiwen.core.response.ResultMessage;
 import com.wanghuiwen.core.service.AbstractService;
@@ -24,6 +25,10 @@ import java.util.List;
 @Service
 @Transactional
 public class RoleServiceImpl extends AbstractService<Role> implements RoleService {
+
+    @Resource
+    private ResultGenerator resultGenerator;
+
     @Resource
     private RoleMapper roleMapper;
 
@@ -41,7 +46,7 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
     public Result addApi(RoleApiAdd add) {
 
         Role role = findById(add.getRoleId());
-        if (role == null) return ResultGenerator.genFailResult(ResultMessage.NO_RELATED_USER);
+        if (role == null) return resultGenerator.genResult(ResultEnum.NO_RELATED_USER);
 
         List<RoleApi> roleApis = new ArrayList<>();
         for (Long id : add.getApi()) {
@@ -54,7 +59,7 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
         roleMapper.deleteApiById(add.getRoleId());
         roleApiMapper.insertListNoAuto(roleApis);
 
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
     @Override
@@ -63,7 +68,7 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
 
         Role role = findById(add.getRoleId());
 
-        if (role == null) return ResultGenerator.genFailResult(ResultMessage.NO_RELATED_USER);
+        if (role == null) return resultGenerator.genFailResult(ResultEnum.NO_RELATED_USER);
 
         List<RoleMenu> roleMenus = new ArrayList<>();
         for (Long id : add.getApi()) {
@@ -76,6 +81,6 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
         roleMapper.deleteMenuById(add.getRoleId());
         roleMenuMapper.insertListNoAuto(roleMenus);
 
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 }

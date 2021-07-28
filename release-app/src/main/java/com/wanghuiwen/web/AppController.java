@@ -49,14 +49,14 @@ public class AppController extends Ctrl {
     @PostMapping(value="/delete",name="app发布删除")
     public Result delete(@RequestParam Long id) {
         appService.deleteById(id);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "app发布修改", tags = {"app发布"}, notes = "app发布修改,对象主键必填")
     @PostMapping(value="/update",name="app发布修改")
     public Result update(@ApiParam App app) {
         appService.update(app);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "app发布详细信息", tags = {"app发布"}, notes = "app发布详细信息")
@@ -66,7 +66,7 @@ public class AppController extends Ctrl {
     @PostMapping(value="/detail",name="app发布详细信息")
     public Result detail(@RequestParam Integer id) {
         App app = appService.findById(id);
-        return ResultGenerator.genSuccessResult(app);
+        return resultGenerator.genSuccessResult(app);
     }
 
     @ApiOperation(value = "app发布列表信息", tags = {"app发布"}, notes = "app发布列表信息")
@@ -84,7 +84,7 @@ public class AppController extends Ctrl {
         PageHelper.startPage(page, size);
         List<App> list = appService.findAll();
         PageInfo<App> pageInfo = new PageInfo<>(list);
-        return ResultGenerator.genSuccessResult(pageInfo);
+        return resultGenerator.genSuccessResult(pageInfo);
     }
 
     @ApiOperation(value = "app下载页", tags = {"app发布"}, notes = "app下载页")
@@ -102,7 +102,7 @@ public class AppController extends Ctrl {
         res.put("app",app);
         res.put("history",histories);
 
-        return ResultGenerator.genSuccessResult(res);
+        return resultGenerator.genSuccessResult(res);
     }
 
 }

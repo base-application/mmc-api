@@ -30,12 +30,14 @@ public class AppServiceImpl extends AbstractService<App> implements AppService {
     @Resource
     private UploadConfig uploadConfig;
 
+    @Resource
+    protected ResultGenerator resultGenerator;
 
     @Override
     public Result add(App app, HttpServletRequest request) {
         app.setId(GeneratorSnowflakeId.nextId());
         app.setIndexUrl(uploadConfig.getHost()+"app/index/"+app.getId());
         appMapper.insertSelective(app);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 }

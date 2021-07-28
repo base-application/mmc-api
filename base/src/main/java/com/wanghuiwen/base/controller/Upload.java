@@ -31,6 +31,8 @@ import java.util.Map;
 @Api(value = "文件上传", tags = {"文件上传"})
 @Controller
 public class Upload {
+    @Resource
+    private ResultGenerator resultGenerator;
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
@@ -73,10 +75,10 @@ public class Upload {
         String up = "img/";
         try {
             String spath = ImageUploadUtil.upload(request, uploadConfig.getFilePath() + up);
-            return ResultGenerator.genResultAndData(ResultEnum.UPLOADED,uploadConfig.getPrefix() + up + spath.split(",")[0]);
+            return resultGenerator.genSuccessResult(ResultEnum.UPLOADED,uploadConfig.getPrefix() + up + spath.split(",")[0]);
         } catch (IOException e) {
             logger.error("图片上传出错",e);
-            return ResultGenerator.genResult(ResultEnum.UPLOADED_FAIL);
+            return resultGenerator.genResult(ResultEnum.UPLOADED_FAIL);
         }
     }
     /**
@@ -125,15 +127,15 @@ public class Upload {
                             fileName = (originalFilename + suffix);
 
                             file.transferTo(uploadFile);
-                            return ResultGenerator.genSuccessResult(uploadConfig.getHost() + uploadConfig.getPrefix()+ "apk/" + fileName);
+                            return resultGenerator.genSuccessResult(uploadConfig.getHost() + uploadConfig.getPrefix()+ "apk/" + fileName);
                         } catch (IOException e) {
                             logger.error("图片上传出错",e);
-                            return ResultGenerator.genResult(ResultEnum.UPLOADED_FAIL);
+                            return resultGenerator.genResult(ResultEnum.UPLOADED_FAIL);
                         }
                     }
                 }
             }
         }
-        return ResultGenerator.genResult(ResultEnum.UPLOADED_FAIL);
+        return resultGenerator.genResult(ResultEnum.UPLOADED_FAIL);
     }
 }

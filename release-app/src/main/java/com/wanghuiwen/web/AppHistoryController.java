@@ -32,7 +32,7 @@ public class AppHistoryController extends Ctrl {
     public Result add(@ApiParam AppHistory appHistory) {
         appHistory.setCreateDate(new Date());
         appHistoryService.save(appHistory);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "app发布历史删除", tags = {"app发布历史"}, notes = "app发布历史删除")
@@ -42,14 +42,14 @@ public class AppHistoryController extends Ctrl {
     @PostMapping(value="/delete",name="app发布历史删除")
     public Result delete(@RequestParam Long id) {
         appHistoryService.deleteById(id);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "app发布历史修改", tags = {"app发布历史"}, notes = "app发布历史修改,对象主键必填")
     @PostMapping(value="/update",name="app发布历史修改")
     public Result update(@ApiParam AppHistory appHistory) {
         appHistoryService.update(appHistory);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "app发布历史详细信息", tags = {"app发布历史"}, notes = "app发布历史详细信息")
@@ -59,7 +59,7 @@ public class AppHistoryController extends Ctrl {
     @PostMapping(value="/detail",name="app发布历史详细信息")
     public Result detail(@RequestParam Integer id) {
         AppHistory appHistory = appHistoryService.findById(id);
-        return ResultGenerator.genSuccessResult(appHistory);
+        return resultGenerator.genSuccessResult(appHistory);
     }
 
     @ApiOperation(value = "app发布历史列表信息", tags = {"app发布历史"}, notes = "app发布历史列表信息")
@@ -75,7 +75,7 @@ public class AppHistoryController extends Ctrl {
         c.createCriteria().andEqualTo("appId",appid);
 
         List<AppHistory> list = appHistoryService.findByCondition(c);
-        return ResultGenerator.genSuccessResult(list);
+        return resultGenerator.genSuccessResult(list);
     }
 
     @ApiOperation(value = "app发布历史列表信息", tags = {"app发布历史"}, notes = "app发布历史列表信息")
@@ -87,6 +87,6 @@ public class AppHistoryController extends Ctrl {
     @PostMapping(value="/last",name="app发布历史列表信息")
     public Result lastVersion(@RequestParam Long appId) {
         AppHistory last = appHistoryService.findLast(appId);
-        return ResultGenerator.genSuccessResult(last);
+        return resultGenerator.genSuccessResult(last);
     }
 }

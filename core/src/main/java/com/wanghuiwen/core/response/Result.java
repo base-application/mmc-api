@@ -2,6 +2,7 @@ package com.wanghuiwen.core.response;
 
 
 import com.wanghuiwen.common.JSONUtils;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 /**
  * 统一API响应结果封装
@@ -39,12 +40,10 @@ public class Result {
     public Result(IResultEnum resultEnum, Object data) {
         this.data = data;
         this.code = resultEnum.getCode();
-        this.message = resultEnum.getMessage();
     }
 
     public Result(IResultEnum resultEnum) {
         this.code = resultEnum.getCode();
-        this.message = resultEnum.getMessage();
         this.data = null;
     }
 

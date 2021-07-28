@@ -24,6 +24,8 @@ public class CodeGeneratorController {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource
     private GeneratorService generatorService;
+    @Resource
+    private ResultGenerator resultGenerator;
 
 
     public Result generatorCodeModel(@RequestParam String moduleName,
@@ -37,7 +39,7 @@ public class CodeGeneratorController {
                                               @RequestParam String tableName,
                                               @RequestParam String businessName) {
         generatorService.genCode(true, true, false, false, businessName, tableName, moduleName);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
 
@@ -87,7 +89,7 @@ public class CodeGeneratorController {
             result = generatorCodeController(moduleName, tableName, businessName);
             if (result.getCode()!= 200) return result;
         }
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
 }

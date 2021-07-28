@@ -1,74 +1,47 @@
 package com.wanghuiwen.core.response;
 
 
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+
 /**
  * 响应结果生成工具
  */
+@Component
 public class ResultGenerator {
-    public static Result genSuccessResult() {
+    @Resource
+    private MessageSource messageSource;
+    public Result genSuccessResult() {
         return new Result(ResultEnum.SUCCESS_MESSAGE,null);
     }
 
-    public static Result genSuccessResult(Object data) {
+    public Result genSuccessResult(Object data) {
         return new Result(ResultEnum.SUCCESS_MESSAGE,data);
     }
-    public static Result genSuccessResult(Object data, String message) {
+
+    public Result genSuccessResult(ResultEnum resultEnum,Object data) {
         return new Result()
                 .setCode(ResultCode.SUCCESS)
-                .setMessage(message)
+                .setMessage(messageSource.getMessage(String.valueOf(resultEnum.getCode()), null, LocaleContextHolder.getLocale()))
                 .setData(data);
     }
 
-    public static Result genCreatedSuccessResult() {
-        return new Result(ResultEnum.CREATED);
+    public Result genFailResult(ResultEnum resultEnum) {
+        return new Result(resultEnum).setMessage(messageSource.getMessage(String.valueOf(resultEnum.getCode()), null, LocaleContextHolder.getLocale()));
     }
 
-    public static Result genCreatedSuccessResult(Object data) {
-        return new Result(ResultEnum.CREATED,data);
+    public Result genResult(ResultEnum resultEnum) {
+        return new Result(resultEnum).setMessage(messageSource.getMessage(String.valueOf(resultEnum.getCode()), null, LocaleContextHolder.getLocale()));
     }
 
-    public static Result genDeleteSuccessResult() {
-        return new Result(ResultEnum.DELETED);
-    }
-
-    public static Result genUploadSuccessResult() {
-        return new Result(ResultEnum.UPLOADED);
-    }
-
-    public static Result genFailResult() {
-        return new Result(ResultEnum.FAIL);
-    }
-    public static Result genFailResult(int code,String message) {
-        return new Result(code,message);
-    }
-
-    public static Result genFailResult(Object data) {
-        return new Result(ResultEnum.FAIL,data);
-    }
-
-    public static Result genUnauthorizedResult() {
-        return new Result(ResultEnum.UNAUTHORIZED);
-    }
-
-    public static Result genForbiddenResult() {
-        return new Result(ResultEnum.FORBIDDEN);
-    }
-
-    public static Result genExceptionResult() {
-        return new Result(ResultEnum.INTERNAL_SERVER_ERROR);
-    }
-
-    public static Result genResultAndData(ResultEnum resultEnum, Object data) {
-        return new Result(resultEnum,data);
-    }
-    public static Result genResult(ResultEnum resultEnum) {
-        return new Result(resultEnum);
-    }
-
-    public static Result genExceptionResult(Exception e) {
+    public Result genExceptionResult(Exception e) {
         return new Result(e);
     }
-    public static Result genFailResultAddressNull() {
-        return new Result(ResultEnum.ADDRESSNULL);
+
+    public Result genExceptionResult(Exception e,String code) {
+        return new Result(e).setMessage(messageSource.getMessage(code, null, LocaleContextHolder.getLocale()));
     }
 }

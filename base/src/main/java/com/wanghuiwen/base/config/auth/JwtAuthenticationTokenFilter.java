@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private String tokenHeader;
     @Value("${jwt.tokenHead}")
     private String tokenHead;
+    @Resource
+    private ResultGenerator resultGenerator;
 
     private DetailsServic userDetailsService;
     private JwtTokenUtil jwtTokenUtil;
@@ -63,9 +66,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             logger.error("TokenFilterException",e);
             response.setHeader("Content-Type", "application/json;charset=utf-8");
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            Result result = ResultGenerator.genExceptionResult();
+            Result result = resultGenerator.genExceptionResult(e);
             if(e instanceof RedisConnectionFailureException){
-                result = ResultGenerator.genResult(ResultEnum.REDIS_CONNECTION_FAILUR);
+                result = resultGenerator.genResult(ResultEnum.REDIS_CONNECTION_FAIL);
             }
             response.getWriter().write(JSONUtils.obj2json(result));
             response.getWriter().flush();

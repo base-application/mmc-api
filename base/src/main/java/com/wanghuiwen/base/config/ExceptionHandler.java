@@ -15,29 +15,29 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.net.ConnectException;
 
 @ControllerAdvice
 public class ExceptionHandler {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Resource
+    private ResultGenerator resultGenerator;
 
     @org.springframework.web.bind.annotation.ExceptionHandler()
     public @ResponseBody
     Result defaultErrorHandler(HttpServletRequest req, Exception e) {
         logger.error(req.getRequestURI(), e);
-        if (e instanceof MaxUploadSizeExceededException) return ResultGenerator.genResult(ResultEnum.UPLOADED_MAX);
-        if (e instanceof IllegalArgumentException) return ResultGenerator.genResult(ResultEnum.DATE_ENTRY_ERROR);
-        if (e instanceof MissingServletRequestParameterException)
-            return ResultGenerator.genResult(ResultEnum.PARAMS_LACK);
-        if (e instanceof ConnectException) return ResultGenerator.genResult(ResultEnum.CONNECT_EXCEPTION);
-        if (e instanceof HttpRequestMethodNotSupportedException)
-            return ResultGenerator.genExceptionResult(e);
-        if (e instanceof DuplicateKeyException)
-            return ResultGenerator.genResult(ResultEnum.DUPLICATE_KEY);
-        if (e instanceof RequestRejectedException) return ResultGenerator.genResult(ResultEnum.INTERNAL_SERVER_ERROR);
-        if (e instanceof ServiceException) return ResultGenerator.genExceptionResult(e);
-        if (e instanceof MethodArgumentNotValidException) return ResultGenerator.genFailResult(400,((MethodArgumentNotValidException) e).getBindingResult().getAllErrors().get(0).getDefaultMessage());
-        return ResultGenerator.genExceptionResult();
+        if (e instanceof MaxUploadSizeExceededException) return resultGenerator.genResult(ResultEnum.UPLOADED_MAX);
+        if (e instanceof IllegalArgumentException) return resultGenerator.genResult(ResultEnum.DATE_ENTRY_ERROR);
+        if (e instanceof MissingServletRequestParameterException) return resultGenerator.genResult(ResultEnum.PARAMS_LACK);
+        if (e instanceof ConnectException) return resultGenerator.genResult(ResultEnum.CONNECT_EXCEPTION);
+        if (e instanceof DuplicateKeyException) return resultGenerator.genResult(ResultEnum.DUPLICATE_KEY);
+        if (e instanceof RequestRejectedException) return resultGenerator.genResult(ResultEnum.INTERNAL_SERVER_ERROR);
+        if (e instanceof HttpRequestMethodNotSupportedException) return resultGenerator.genExceptionResult(e);
+        if (e instanceof ServiceException) return resultGenerator.genExceptionResult(e,((ServiceException) e).getCode());
+        if (e instanceof MethodArgumentNotValidException) return resultGenerator.genExceptionResult(e,((MethodArgumentNotValidException) e).getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        return resultGenerator.genExceptionResult(e);
     }
 }

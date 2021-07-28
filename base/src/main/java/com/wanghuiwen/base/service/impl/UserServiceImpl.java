@@ -34,6 +34,8 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
     private UserRoleMapper userRoleMapper;
     @Resource
     private JwtTokenUtil jwtTokenUtil;
+    @Resource
+    private ResultGenerator resultGenerator;
 
 
     @Override
@@ -44,7 +46,7 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
     @Override
     public Result addRole(List<Long> roles, Long userId) {
         User user = findById(userId);
-        if (user == null) return ResultGenerator.genFailResult(ResultMessage.NO_RELATED_USER);
+        if (user == null) return resultGenerator.genFailResult(ResultEnum.NO_RELATED_USER);
 
         List<UserRole> userRoles = new ArrayList<>();
         for (Long id : roles) {
@@ -56,7 +58,7 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
 
         userMapper.deleteRoleById(userId);
         userRoleMapper.insertListNoAuto(userRoles);
-        return ResultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult();
     }
 
     @Override
@@ -81,6 +83,6 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
         user.setCredentialsExpiredTime(jwtTokenUtil.getExpiredDate(jwtToken).getTime());
         update(user);
 
-        return ResultGenerator.genResultAndData(ResultEnum.LOGIN_SUCCESS,res);
+        return resultGenerator.genSuccessResult(ResultEnum.LOGIN_SUCCESS,res);
     }
 }

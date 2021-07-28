@@ -7,6 +7,8 @@ import com.wanghuiwen.base.service.ApiService;
 import com.wanghuiwen.base.service.RoleService;
 import com.wanghuiwen.base.service.UserService;
 import com.wanghuiwen.core.config.AuthUser;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,11 +33,14 @@ public class DetailsServic implements UserDetailsService {
     @Resource
     private ApiService apiService;
 
+    @Resource
+    private MessageSource messageSource;
+
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userService.findBy("loginName",s);
         if(user==null){
-            throw new UsernameNotFoundException("用户不存在");
+            throw new UsernameNotFoundException(messageSource.getMessage("login.fail", null, LocaleContextHolder.getLocale()));
         }
         //用户角色
         List<String> roles =  roleService.getByUser(user.getId()).stream()
