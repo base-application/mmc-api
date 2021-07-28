@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 
 import javax.annotation.Resource;
 
-public abstract class Ctrl {
+public abstract class Ctrl implements IControllerLog {
     @Resource
     protected ResultGenerator resultGenerator;
 

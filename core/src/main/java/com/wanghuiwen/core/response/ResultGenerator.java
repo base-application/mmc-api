@@ -15,11 +15,11 @@ public class ResultGenerator {
     @Resource
     private MessageSource messageSource;
     public Result genSuccessResult() {
-        return new Result(ResultEnum.SUCCESS_MESSAGE,null);
+        return new Result(ResultEnum.SUCCESS_MESSAGE,null).setMessage(messageSource.getMessage("200", null, LocaleContextHolder.getLocale()));
     }
 
     public Result genSuccessResult(Object data) {
-        return new Result(ResultEnum.SUCCESS_MESSAGE,data);
+        return new Result(ResultEnum.SUCCESS_MESSAGE,data).setMessage(messageSource.getMessage("200", null, LocaleContextHolder.getLocale()));
     }
 
     public Result genSuccessResult(ResultEnum resultEnum,Object data) {

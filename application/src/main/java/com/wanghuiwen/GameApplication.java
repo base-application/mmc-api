@@ -3,6 +3,7 @@ package com.wanghuiwen;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiKey;
@@ -20,6 +21,7 @@ import java.util.List;
 @SpringBootApplication
 @MapperScan({"com.wanghuiwen.**.dao","com.wanghuiwen.base.dao"})
 @EnableSwagger2
+@EnableAspectJAutoProxy
 public class GameApplication {
 
     public static void main(String[] args) {

@@ -49,6 +49,12 @@ public class SysLog implements Serializable {
      */
     private String method;
 
+    /**
+     * 请求IP
+     */
+    @Column(name = "request_ip")
+    private String requestIp;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -189,5 +195,23 @@ public class SysLog implements Serializable {
      */
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    /**
+     * 获取请求IP
+     *
+     * @return request_ip - 请求IP
+     */
+    public String getRequestIp() {
+        return requestIp;
+    }
+
+    /**
+     * 设置请求IP
+     *
+     * @param requestIp 请求IP
+     */
+    public void setRequestIp(String requestIp) {
+        this.requestIp = requestIp;
     }
 }

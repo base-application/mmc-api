@@ -13,5 +13,6 @@
     <result column="request_method" jdbcType="VARCHAR" property="requestMethod" />
     <result column="request_params" jdbcType="VARCHAR" property="requestParams" />
     <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="request_ip" jdbcType="VARCHAR" property="requestIp" />
   </resultMap>
 </mapper>
