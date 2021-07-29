@@ -8,6 +8,7 @@ import com.wanghuiwen.base.vo.DepartmentTree;
 import com.wanghuiwen.base.vo.ElTree;
 import com.wanghuiwen.base.vo.RoleApiAdd;
 import com.wanghuiwen.base.vo.UserRoleAdd;
+import com.wanghuiwen.common.mybatis.ResultMap;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.core.response.ResultEnum;
@@ -42,6 +43,8 @@ public class ApiController extends Ctrl {
     private SysWhitelistService sysWhitelistService;
     @Resource
     private SysDepartmentService sysDepartmentService;
+    @Resource
+    private SysLogService sysLogService;
 
     @GetMapping(value = "user/generate/routes",name = "前端获取菜单")
     public Result code(Authentication authentication) {
@@ -261,4 +264,27 @@ public class ApiController extends Ctrl {
         sysDepartmentService.deleteById(id);
         return resultGenerator.genSuccessResult();
     }
+
+    @GetMapping(value = "log/list",name = "日志列表")
+    public Result logList(
+            @RequestParam(defaultValue = "0")Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            Long startDate,
+            Long endDate,
+            String method,
+            String loginName
+
+    ) {
+        Map<String,Object> params = new HashMap<>();
+        params.put("startDate",startDate);
+        params.put("endDate",endDate);
+        params.put("method",method);
+        params.put("loginName",loginName);
+        PageHelper.startPage(page,size);
+        List<ResultMap<String,Object>> sysLogs = sysLogService.list(params);
+        PageInfo<ResultMap<String,Object>> pageInfo = new PageInfo<>(sysLogs);
+        return resultGenerator.genSuccessResult(pageInfo);
+    }
+
+
 }

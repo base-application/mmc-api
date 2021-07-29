@@ -15,4 +15,21 @@
     <result column="method" jdbcType="VARCHAR" property="method" />
     <result column="request_ip" jdbcType="VARCHAR" property="requestIp" />
   </resultMap>
+
+  <select id="list" resultType="com.wanghuiwen.common.mybatis.ResultMap">
+    SELECT a.*,u.login_name,u.nick_name from (
+               select * from sys_log where 1=1
+        <if test="params.startDate != null and params.endDate != null">
+          and create_time between #{params.startDate} and #{params.endDate}
+        </if>
+        <if test="params.method != null and params.method  !=''">
+          and method = #{params.method}
+        </if>
+         ) a
+      LEFT JOIN user u on (a.user_id = u.id)
+      <if test="params.loginName!=null and params.loginName!=''">
+        where u.login_name = #{params.loginName}
+      </if>
+      order by a.create_time desc
+  </select>
 </mapper>

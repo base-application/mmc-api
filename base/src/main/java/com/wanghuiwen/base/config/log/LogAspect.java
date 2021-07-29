@@ -7,7 +7,7 @@ import com.wanghuiwen.common.JSONUtils;
 import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.controller.Ctrl;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.models.HttpMethod;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,12 +19,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -71,7 +71,23 @@ public class LogAspect extends Ctrl {
         logger.info("-->request请求方法IP : " + getIP(request));
         log.setRequestIp(getIP(request));
         logger.info("-->request请求类方法CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-        log.setMethod(joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        if(request.getMethod().equals(HttpMethod.PUT.name())){
+            log.setMethod(signature.getMethod().getDeclaredAnnotation(PutMapping.class).name());
+        }
+        if(request.getMethod().equals(HttpMethod.GET.name())){
+            log.setMethod(signature.getMethod().getDeclaredAnnotation(GetMapping.class).name());
+        }
+        if(request.getMethod().equals(HttpMethod.POST.name())){
+            log.setMethod(signature.getMethod().getDeclaredAnnotation(PostMapping.class).name());
+        }
+        if(request.getMethod().equals(HttpMethod.DELETE.name())){
+            log.setMethod(signature.getMethod().getDeclaredAnnotation(DeleteMapping.class).name());
+        }
+        if(request.getMethod().equals(HttpMethod.PATCH.name())){
+            log.setMethod(signature.getMethod().getDeclaredAnnotation(PatchMapping.class).name());
+        }
+        logger.info("-->request请求类方法 : " + log.getMethod());
         logger.info("-->request请求ARGS : " + JSONUtils.obj2json(joinPoint.getArgs()));
         log.setRequestParams(JSONUtils.obj2json(joinPoint.getArgs()));
 
