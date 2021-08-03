@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.address.dao.AddressCitiesMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.address.model.AddressCities">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="state_id" jdbcType="INTEGER" property="stateId" />
+    <result column="state_code" jdbcType="VARCHAR" property="stateCode" />
+    <result column="country_id" jdbcType="INTEGER" property="countryId" />
+    <result column="country_code" jdbcType="CHAR" property="countryCode" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+    <result column="flag" jdbcType="BIT" property="flag" />
+    <result column="translations" jdbcType="LONGVARCHAR" property="translations" />
+  </resultMap>
+
+  <resultMap id="vo" type="com.wanghuiwen.address.vo.CityVo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="state_id" jdbcType="INTEGER" property="stateId" />
+    <result column="state_code" jdbcType="VARCHAR" property="stateCode" />
+    <result column="country_id" jdbcType="INTEGER" property="countryId" />
+    <result column="country_code" jdbcType="CHAR" property="countryCode" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="flag" jdbcType="BIT" property="flag" />
+    <result column="translations" jdbcType="LONGVARCHAR" property="translations" />
+  </resultMap>
+
+  <select id="selectByCountryId" resultMap="vo">
+     select * from address_cities where country_id = #{countryId}
+  </select>
+
+  <select id="selectByStateId" resultMap="vo">
+    select * from address_cities where state_id = #{stateId}
+    <if test="name != null and name != ''">
+      and name = #{name}
+    </if>
+  </select>
+</mapper>

@@ -19,6 +19,7 @@ public enum ResultEnum implements IResultEnum {
     FORBIDDEN(400013),
     ROLE_HAS_USER(400014),
     UNAUTHORIZED(400015),
+    NO_COUNTRY(400016),
     ;
 
     private final int code;

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.address.dao.AddressDistrictMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.address.model.AddressDistrict">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="district_id" jdbcType="INTEGER" property="districtId" />
+    <result column="district_name" jdbcType="VARCHAR" property="districtName" />
+    <result column="city_id" jdbcType="INTEGER" property="cityId" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+  </resultMap>
+
+  <select id="selectByCityId" resultMap="BaseResultMap">
+    select * from address_district where city_id = #{cityId}
+  </select>
+
+  <select id="selectByCountryId" resultMap="BaseResultMap">
+    select * from address_district where EXISTS(SELECT * FROM address_cities WHERE address_cities.id = address_district.city_id and address_cities.country_id = #{id})
+  </select>
+</mapper>

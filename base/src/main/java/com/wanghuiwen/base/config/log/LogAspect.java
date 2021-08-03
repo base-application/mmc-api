@@ -48,7 +48,8 @@ public class LogAspect extends Ctrl {
     public void webLog(){}
 
     @Before("webLog()")
-    public void doBefore(JoinPoint joinPoint) throws NoSuchMethodException {
+    public void doBefore(JoinPoint joinPoint){
+        logger.info("################################: 开始请求 :###################################");
         startTime.set(System.currentTimeMillis());
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -105,6 +106,7 @@ public class LogAspect extends Ctrl {
         // 处理完请求，返回内容
         logger.info("-->response请求响应结果RESULT: " + ret);
         logger.info("-->response请求响应时间= 【" + (System.currentTimeMillis() - startTime.get())+"】毫秒");
+        logger.info("################################: 结束请求 :###################################");
     }
 
     /**

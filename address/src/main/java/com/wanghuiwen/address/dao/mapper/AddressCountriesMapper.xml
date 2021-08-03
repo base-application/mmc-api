@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.address.dao.AddressCountriesMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.address.model.AddressCountries">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="iso3" jdbcType="CHAR" property="iso3" />
+    <result column="iso2" jdbcType="CHAR" property="iso2" />
+    <result column="phonecode" jdbcType="VARCHAR" property="phonecode" />
+    <result column="capital" jdbcType="VARCHAR" property="capital" />
+    <result column="currency" jdbcType="VARCHAR" property="currency" />
+    <result column="currency_symbol" jdbcType="VARCHAR" property="currencySymbol" />
+    <result column="tld" jdbcType="VARCHAR" property="tld" />
+    <result column="native" jdbcType="VARCHAR" property="nativeName" />
+    <result column="region" jdbcType="VARCHAR" property="region" />
+    <result column="subregion" jdbcType="VARCHAR" property="subregion" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="emoji" jdbcType="VARCHAR" property="emoji" />
+    <result column="emojiU" jdbcType="VARCHAR" property="emojiu" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+    <result column="flag" jdbcType="BIT" property="flag" />
+    <result column="wikiDataId" jdbcType="VARCHAR" property="wikidataid" />
+    <result column="numeric_code" jdbcType="VARCHAR" property="numericCode" />
+    <result column="timezones" jdbcType="LONGVARCHAR" property="timezones" />
+    <result column="translations" jdbcType="LONGVARCHAR" property="translations" />
+  </resultMap>
+
+  <select id="findByCode" resultMap="BaseResultMap">
+    select * from address_countries where iso2 = #{countryCode} or iso3 = #{countryCode}
+    </select>
+
+  <select id="list" resultMap="BaseResultMap">
+    select * from address_countries where 1=1
+    <if test="params.nativeName != null and params.nativeName != ''">
+      and native = #{params.nativeName}
+    </if>
+  </select>
+</mapper>
