@@ -7,6 +7,7 @@ import com.wanghuiwen.base.service.ApiService;
 import com.wanghuiwen.base.service.RoleService;
 import com.wanghuiwen.base.service.UserService;
 import com.wanghuiwen.core.config.AuthUser;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,6 +38,7 @@ public class DetailsServic implements UserDetailsService {
     private MessageSource messageSource;
 
     @Override
+    @Cacheable(value="User",key = "#s")
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userService.findBy("loginName",s);
         if(user==null){
@@ -67,7 +69,7 @@ public class DetailsServic implements UserDetailsService {
                 user.getEnable(),
                 user.getLocked(),
                 new Date(user.getExpiredTime()),
-                new Date(user.getCredentialsExpiredTime()));
+                user.getCredentialsExpiredTime());
 
     }
 }

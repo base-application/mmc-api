@@ -14,4 +14,6 @@ public interface ApiService extends Service<Api> {
     Api selectByUrlAndMethod(String url, String method);
 
     List<Api> getByRole(Long roleId);
+
+    List<Api> listAll();
 }

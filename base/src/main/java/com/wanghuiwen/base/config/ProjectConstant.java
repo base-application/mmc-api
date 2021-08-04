@@ -14,5 +14,7 @@ public final class ProjectConstant {
     static final String MAPPER_INTERFACE_REFERENCE = "com.wanghuiwen.core.ApiMapper";//Mapper插件基础接口的完全限定名
     public static final String ROLE_ADMIN="admin";
     public static final String ROLE_USER="user";
-    static final Role[] initRole={new Role("管理员"),new Role("普通用户")};
+    static final Role[] initRole={new Role("管理员"),new Role("普通用户"),new Role("商户")};
+    public static final String WHITE_LIST_CACHE_KEY = "white_list";
+    public static final String API_LIST_CACHE_KEY = "api_list";
 }

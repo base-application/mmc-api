@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.WebApplicationContext;
@@ -19,6 +22,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import javax.annotation.Resource;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by wanghuiwen on 17-2-12.
@@ -35,8 +40,11 @@ public class InitRunner implements CommandLineRunner {
     WebApplicationContext applicationContext;
     @Autowired
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
+    @Resource
+    private RedisTemplate redisTemplate;
 
 
+    @CacheEvict(value=ProjectConstant.API_LIST_CACHE_KEY, beforeInvocation=true)
     public void run(String... strings) {
         initPower();
         initRole();
@@ -88,7 +96,7 @@ public class InitRunner implements CommandLineRunner {
                 power.setName(m.getKey().getName());
             }
 
-            apiService.save(power);
+            apiService.saveOrUpdate(power);
         }
 
     }

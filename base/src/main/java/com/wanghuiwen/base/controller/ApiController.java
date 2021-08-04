@@ -2,6 +2,7 @@ package com.wanghuiwen.base.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wanghuiwen.base.config.ProjectConstant;
 import com.wanghuiwen.base.model.*;
 import com.wanghuiwen.base.service.*;
 import com.wanghuiwen.base.vo.DepartmentTree;
@@ -12,6 +13,8 @@ import com.wanghuiwen.common.mybatis.ResultMap;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.core.response.ResultEnum;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
@@ -97,7 +100,7 @@ public class ApiController extends Ctrl {
 
     @PostMapping(value = "user/add",name = "添加/修改用户")
     public Result userAdd(@RequestBody User user) {
-        userService.save(user);
+        userService.saveOrUpdate(user);
         return resultGenerator.genSuccessResult(user.getId());
     }
 
@@ -136,7 +139,7 @@ public class ApiController extends Ctrl {
 
     @PutMapping(value = "role/add",name = "角色添加")
     public Result roleAdd(@RequestBody  Role add) {
-        roleService.save(add);
+        roleService.saveOrUpdate(add);
         return resultGenerator.genSuccessResult(add.getId());
     }
 
@@ -175,7 +178,7 @@ public class ApiController extends Ctrl {
 
     @PostMapping(value = "menu/add",name = "菜单列表")
     public Result menu(@RequestBody Menu menu) {
-        menuService.save(menu);
+        menuService.saveOrUpdate(menu);
         return resultGenerator.genSuccessResult(menu.getId());
     }
 
@@ -201,9 +204,11 @@ public class ApiController extends Ctrl {
         return resultGenerator.genSuccessResult(sysWhitelistService.findAll());
     }
 
+
     @PutMapping(value = "white/list/add",name = "添加白名单")
+    @CacheEvict(value=ProjectConstant.WHITE_LIST_CACHE_KEY,keyGenerator = "baseKeyGenerator")
     public Result whitelistAdd(@RequestBody SysWhitelist whitelist) {
-        sysWhitelistService.save(whitelist);
+        sysWhitelistService.saveOrUpdate(whitelist);
         return resultGenerator.genSuccessResult(whitelist.getId());
     }
 
@@ -255,7 +260,7 @@ public class ApiController extends Ctrl {
 
     @PutMapping(value = "department/add",name = "添加部门")
     public Result departmentAdd(@RequestBody SysDepartment department) {
-        sysDepartmentService.save(department);
+        sysDepartmentService.saveOrUpdate(department);
         return resultGenerator.genSuccessResult(department.getId());
     }
 
