@@ -38,9 +38,8 @@ public class DetailsServic implements UserDetailsService {
     private MessageSource messageSource;
 
     @Override
-    @Cacheable(value="User",key = "#s")
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userService.findBy("loginName",s);
+        User user = userService.findByLoginName(s);
         if(user==null){
             throw new UsernameNotFoundException(messageSource.getMessage("login.fail", null, LocaleContextHolder.getLocale()));
         }
@@ -51,7 +50,7 @@ public class DetailsServic implements UserDetailsService {
 
         //api 权限控制
         List<GrantedAuthority> authorities = new ArrayList<>();
-        List<Api> powers = apiService.getByUser(user.getId());
+        List<Api> powers = userService.getApis(user.getId());
         if (powers.size() > 0) {
             for (Api p : powers) {
                 authorities.add(new SimpleGrantedAuthority(p.getUrl()));

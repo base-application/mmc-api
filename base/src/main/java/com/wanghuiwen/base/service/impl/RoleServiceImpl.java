@@ -11,6 +11,8 @@ import com.wanghuiwen.core.response.ResultEnum;
 import com.wanghuiwen.core.response.ResultGenerator;
 import com.wanghuiwen.core.response.ResultMessage;
 import com.wanghuiwen.core.service.AbstractService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,11 +40,13 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
     @Resource
     private RoleMenuMapper roleMenuMapper;
     @Override
+    @Cacheable(value="User::Role",key = "#id")
     public List<Role> getByUser(Long id) {
         return roleMapper.getByUser(id);
     }
 
     @Override
+    @CacheEvict(value="Role::Api",key = "#add.roleId")
     public Result addApi(RoleApiAdd add) {
 
         Role role = findById(add.getRoleId());
@@ -63,8 +67,8 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
     }
 
     @Override
+    @CacheEvict(value="User::Role",key = "'*'")
     public Result addMenu(RoleApiAdd add) {
-
 
         Role role = findById(add.getRoleId());
 
