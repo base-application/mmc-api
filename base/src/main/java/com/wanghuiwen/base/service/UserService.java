@@ -1,5 +1,6 @@
 package com.wanghuiwen.base.service;
 import com.wanghuiwen.base.model.Api;
+import com.wanghuiwen.base.model.Menu;
 import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.service.Service;
@@ -18,7 +19,21 @@ public interface UserService extends Service<User> {
 
     Result login(AuthUser userDetails);
 
+    /**
+     * 获取用户权限
+     * @param id 用户id
+     * @return
+     */
     List<Api> getApis(Long id);
 
+
+
     User findByLoginName(String s);
+
+    /**
+     * 获取用户菜单
+     * @param id 用户id
+     * @return
+     */
+    List<Menu> getByMenus(Long id);
 }

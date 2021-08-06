@@ -51,7 +51,7 @@ public class ApiController extends Ctrl {
 
     @GetMapping(value = "user/generate/routes",name = "前端获取菜单")
     public Result code(Authentication authentication) {
-        List<Menu> menus = menuService.getByUid(getAuthUser(authentication).getId());
+        List<Menu> menus = userService.getByMenus(getAuthUser(authentication).getId());
         Map<Long, List<Menu>> res = menus.stream().collect(Collectors.groupingBy(Menu::getPid));
         List<Menu> parent = res.get(0L);
         for (Menu menu : parent) {

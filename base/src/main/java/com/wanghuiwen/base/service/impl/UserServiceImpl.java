@@ -3,11 +3,9 @@ package com.wanghuiwen.base.service.impl;
 import com.wanghuiwen.base.config.auth.JwtTokenUtil;
 import com.wanghuiwen.base.dao.UserMapper;
 import com.wanghuiwen.base.dao.UserRoleMapper;
-import com.wanghuiwen.base.model.Api;
-import com.wanghuiwen.base.model.Role;
-import com.wanghuiwen.base.model.User;
-import com.wanghuiwen.base.model.UserRole;
+import com.wanghuiwen.base.model.*;
 import com.wanghuiwen.base.service.ApiService;
+import com.wanghuiwen.base.service.MenuService;
 import com.wanghuiwen.base.service.RoleService;
 import com.wanghuiwen.base.service.UserService;
 import com.wanghuiwen.core.config.AuthUser;
@@ -47,6 +45,9 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
 
     @Resource
     private ApiService apiService;
+
+    @Resource
+    private MenuService menuService;
 
 
     @Override
@@ -112,5 +113,16 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
     @Cacheable(value="User",key = "#s")
     public User findByLoginName(String s) {
         return findBy("loginName",s);
+    }
+
+    @Override
+    public List<Menu> getByMenus(Long id) {
+        List<Menu> menus = new ArrayList<>();
+        List<Role> roles = roleService.getByUser(id);
+        for (Role role : roles) {
+            List<Menu> roleApi = menuService.getByRole(role.getId());
+            menus.addAll(roleApi);
+        }
+        return menus;
     }
 }

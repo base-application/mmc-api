@@ -11,9 +11,24 @@ import java.util.List;
  * Created by wanghuiwen on 2021/07/13.
  */
 public interface RoleService extends Service<Role> {
+    /**
+     * 获取用户角色
+     * @param id
+     * @return
+     */
     List<Role> getByUser(Long id);
 
+    /**
+     * 角色修改权限
+     * @param add
+     * @return
+     */
     Result addApi(RoleApiAdd add);
 
+    /**
+     * 角色修改菜单
+     * @param add
+     * @return
+     */
     Result addMenu(RoleApiAdd add);
 }

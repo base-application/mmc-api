@@ -67,7 +67,7 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
     }
 
     @Override
-    @CacheEvict(value="User::Role",key = "'*'")
+    @CacheEvict(value = "Role::Menu",key = "#add.roleId")
     public Result addMenu(RoleApiAdd add) {
 
         Role role = findById(add.getRoleId());

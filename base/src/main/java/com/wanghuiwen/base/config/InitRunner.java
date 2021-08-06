@@ -36,15 +36,13 @@ public class InitRunner implements CommandLineRunner {
     private ApiService apiService;
     @Resource
     private RoleService roleService;
-    @Autowired
-    WebApplicationContext applicationContext;
-    @Autowired
-    private RequestMappingHandlerMapping requestMappingHandlerMapping;
     @Resource
-    private RedisTemplate redisTemplate;
+    WebApplicationContext applicationContext;
+    @Resource
+    private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
 
-    @CacheEvict(value=ProjectConstant.API_LIST_CACHE_KEY, beforeInvocation=true)
+    @CacheEvict(value=ProjectConstant.API_LIST_CACHE_KEY, beforeInvocation=true,allEntries = true)
     public void run(String... strings) {
         initPower();
         initRole();
