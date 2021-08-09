@@ -10,21 +10,18 @@ import com.wanghuiwen.base.vo.ElTree;
 import com.wanghuiwen.base.vo.RoleApiAdd;
 import com.wanghuiwen.base.vo.UserRoleAdd;
 import com.wanghuiwen.common.mybatis.ResultMap;
+import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.core.response.ResultEnum;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -51,7 +48,7 @@ public class ApiController extends Ctrl {
 
     @GetMapping(value = "user/generate/routes",name = "前端获取菜单")
     public Result code(Authentication authentication) {
-        List<Menu> menus = userService.getByMenus(getAuthUser(authentication).getId());
+        List<Menu> menus = userService.getMenus(getAuthUser(authentication).getId());
         Map<Long, List<Menu>> res = menus.stream().collect(Collectors.groupingBy(Menu::getPid));
         List<Menu> parent = res.get(0L);
         for (Menu menu : parent) {
@@ -106,13 +103,23 @@ public class ApiController extends Ctrl {
 
 
     @PutMapping(value = "user/role",name = "修改用户角色")
-    public Result userRoleUpdate(@RequestBody UserRoleAdd add) {
-        return userService.addRole(add.getRoles(),add.getUserId());
+    public Result userRoleUpdate(@RequestBody UserRoleAdd add,Authentication authentication) {
+        return userService.addRole(add.getRoles(),add.getUserId(),getAuthUser(authentication));
     }
 
     @GetMapping(value = "api/list",name = "接口列表")
-    public Result apiList() {
-        List<Api> roles = apiService.findAll();
+    public Result apiList(Authentication authentication) {
+        AuthUser user = getAuthUser(authentication);
+        List<Api> roles;
+        /**
+         * 非管理员只返回自己有的权限
+         */
+        if(!user.getRoles().contains(ProjectConstant.ROLE_ADMIN)){
+            roles = userService.getApis(user.getId());
+        }else {
+            roles = apiService.findAll();
+        }
+
         Map<String, List<Api>> res = roles.stream().collect(Collectors.groupingBy(Api::getModule));
 
         List<ElTree<Api>> elTrees = new ArrayList<>();
@@ -158,8 +165,18 @@ public class ApiController extends Ctrl {
 
 
     @GetMapping(value = "menu/list",name = "菜单列表")
-    public Result menu() {
-        List<Menu> menus = menuService.findAll();
+    public Result menu(Authentication authentication) {
+        List<Menu> menus;
+        /**
+         * 非管理员只返回自己拥有的权限
+         */
+        if(!getAuthUser(authentication).getRoles().contains(ProjectConstant.ROLE_ADMIN)){
+            menus = userService.getMenus(getAuthUser(authentication).getId());
+        }else {
+            menus = menuService.findAll();
+        }
+
+
         Map<Long, List<Menu>> res = menus.stream().collect(Collectors.groupingBy(Menu::getPid));
         List<Menu> parent = res.get(0L);
         addMenuChild(parent,res);
@@ -213,8 +230,10 @@ public class ApiController extends Ctrl {
     }
 
     @GetMapping(value = "department/list",name = "组织机构列表")
-    public Result departmentList() {
+    public Result departmentList(Authentication authentication) {
         List<DepartmentTree> roleTree = new ArrayList<>();
+
+        AuthUser authUser = getAuthUser(authentication);
 
         List<SysDepartment> departments = sysDepartmentService.findAll();
         List<Role> roles = roleService.findAll();
@@ -235,6 +254,7 @@ public class ApiController extends Ctrl {
             departmentTree.setPid(department.getPid());
             departmentTree.setType(1);
             departmentTree.setEkey("1"+department.getId());
+            departmentTree.setAdminId(department.getAdminId());
             roleTree.add(departmentTree);
         }
 
@@ -243,7 +263,34 @@ public class ApiController extends Ctrl {
         List<DepartmentTree> parent = roleGroup.get(0L);
         addChildDepartment(parent,roleGroup);
 
-         return resultGenerator.genSuccessResult(parent);
+        /**
+         * 如果不是管理员只返回自己管理的部门及下级部门
+         */
+        if(!authUser.getRoles().contains(ProjectConstant.ROLE_ADMIN)){
+            DepartmentTree departmentTree = traversing(parent,authUser);
+            return resultGenerator.genSuccessResult(Collections.singletonList(departmentTree));
+        }
+
+        return resultGenerator.genSuccessResult(parent);
+    }
+
+    /**
+     * 遍历部门
+     * @param root
+     * @param authUser
+     */
+
+    public static DepartmentTree traversing(List<DepartmentTree> root, AuthUser authUser) {
+        for (DepartmentTree node : root) {
+            if (node.getType() == 1 && node.getAdminId().equals(authUser.getId())){
+                return node ;
+            }
+            List<DepartmentTree> childres = node.getChildren();
+            if (childres != null && childres.size() > 0) {
+              return traversing(childres, authUser);
+            }
+        }
+        return null;
     }
 
    private void addChildDepartment(List<DepartmentTree> parent , Map<Long, List<DepartmentTree>>  group ){

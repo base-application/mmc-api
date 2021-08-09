@@ -10,4 +10,28 @@
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
     <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
   </resultMap>
+
+  <resultMap id="vo" type="com.wanghuiwen.ecommerce.vo.ManagerVo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <collection property="roles" column="user_id" javaType="ArrayList" ofType="com.wanghuiwen.base.model.Role" select="com.wanghuiwen.base.dao.RoleMapper.getByUser" />
+  </resultMap>
+
+  <select id="admins" resultMap="vo">
+    select m.name,m.merchant_id,m.user_id,u.login_name,u.nick_name,u.avatar from manager m
+    LEFT JOIN user u on(m.user_id = u.id)
+    where 1=1
+    <if test="params.merchantId != null and params.merchantId != ''">
+      and m.merchant_id = #{params.merchantId}
+    </if>
+    <if test="params.name != null and params.name != ''">
+      and m.name = concat('%',#{params.name},'%')
+    </if>
+  </select>
 </mapper>

@@ -36,4 +36,8 @@
   <delete id="deleteRoleById">
     DELETE FROM user_role WHERE user_id = #{userId}
   </delete>
+
+  <delete id="deleteRoleByIdNoAdmin">
+    DELETE FROM user_role WHERE user_id = #{userId} and not EXISTS(SELECT * from role WHERE dept_id = 1 and role.id = user_role.role_id)
+    </delete>
 </mapper>

@@ -3,6 +3,7 @@ import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.ecommerce.model.Manager;
 import com.wanghuiwen.ecommerce.model.Merchant;
 import com.wanghuiwen.core.service.Service;
+import com.wanghuiwen.ecommerce.vo.ManagerVo;
 import com.wanghuiwen.ecommerce.vo.MerchantVo;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface MerchantService extends Service<Merchant> {
 
     List<Merchant> list(Map<String, Object> params);
 
-    List<Manager> admins(Map<String, Object> params);
+    List<ManagerVo> admins(Map<String, Object> params);
 }

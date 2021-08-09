@@ -8,9 +8,11 @@ import com.wanghuiwen.ecommerce.model.Manager;
 import com.wanghuiwen.ecommerce.model.Merchant;
 import com.wanghuiwen.ecommerce.service.ManagerService;
 import com.wanghuiwen.ecommerce.service.MerchantService;
+import com.wanghuiwen.ecommerce.vo.ManagerVo;
 import com.wanghuiwen.ecommerce.vo.MerchantVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,6 +62,13 @@ public class MerchantController extends Ctrl {
         return resultGenerator.genSuccessResult(pageInfo);
     }
 
+    @ApiOperation(value = "商铺添加管理员", tags = {"商户管理"}, notes = "notes")
+    @PostMapping(value = "/add/admin", name = "商铺添加管理员")
+    public Result addAdmin(@RequestBody ManagerVo manager, Authentication authentication) {
+        return managerService.add(manager,getAuthUser(authentication));
+    }
+
+
 
     @ApiOperation(value = "商铺管理员", tags = {"商户管理"}, notes = "notes")
     @GetMapping(value = "merchant/admins", name = "商铺管理员")
@@ -72,8 +81,8 @@ public class MerchantController extends Ctrl {
         params.put("merchantId", merchantId);
 
         PageHelper.startPage(page, size);
-        List<Manager> merchants = merchantService.admins(params);
-        PageInfo<Manager> pageInfo = new PageInfo<>(merchants);
+        List<ManagerVo> merchants = merchantService.admins(params);
+        PageInfo<ManagerVo> pageInfo = new PageInfo<>(merchants);
         return resultGenerator.genSuccessResult(pageInfo);
     }
 }

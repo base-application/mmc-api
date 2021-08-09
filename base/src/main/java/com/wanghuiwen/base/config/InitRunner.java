@@ -2,19 +2,17 @@ package com.wanghuiwen.base.config;
 
 import com.wanghuiwen.base.model.Api;
 import com.wanghuiwen.base.model.Role;
+import com.wanghuiwen.base.model.SysDepartment;
 import com.wanghuiwen.base.service.ApiService;
 import com.wanghuiwen.base.service.RoleService;
+import com.wanghuiwen.base.service.SysDepartmentService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -22,8 +20,6 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import javax.annotation.Resource;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * Created by wanghuiwen on 17-2-12.
@@ -37,15 +33,23 @@ public class InitRunner implements CommandLineRunner {
     @Resource
     private RoleService roleService;
     @Resource
-    WebApplicationContext applicationContext;
-    @Resource
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
+    @Resource
+    private SysDepartmentService sysDepartmentService;
 
 
     @CacheEvict(value=ProjectConstant.API_LIST_CACHE_KEY, beforeInvocation=true,allEntries = true)
     public void run(String... strings) {
         initPower();
         initRole();
+        initDepartment();
+    }
+
+    private void initDepartment() {
+        SysDepartment department = sysDepartmentService.findById(ProjectConstant.department.getId());
+        if(department==null){
+            sysDepartmentService.save(ProjectConstant.department);
+        }
     }
 
     private void initPower() {

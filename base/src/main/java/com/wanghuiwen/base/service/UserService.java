@@ -15,7 +15,7 @@ import java.util.Map;
 public interface UserService extends Service<User> {
     List<User> list(Map<String, Object> params);
 
-    Result addRole(List<Long> roles, Long userId);
+    Result addRole(List<Long> roles, Long userId, AuthUser authUser);
 
     Result login(AuthUser userDetails);
 
@@ -35,5 +35,5 @@ public interface UserService extends Service<User> {
      * @param id 用户id
      * @return
      */
-    List<Menu> getByMenus(Long id);
+    List<Menu> getMenus(Long id);
 }

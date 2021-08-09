@@ -8,5 +8,6 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="pid" jdbcType="BIGINT" property="pid" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
   </resultMap>
 </mapper>

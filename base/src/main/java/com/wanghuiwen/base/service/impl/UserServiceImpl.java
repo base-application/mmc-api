@@ -1,5 +1,6 @@
 package com.wanghuiwen.base.service.impl;
 
+import com.wanghuiwen.base.config.ProjectConstant;
 import com.wanghuiwen.base.config.auth.JwtTokenUtil;
 import com.wanghuiwen.base.dao.UserMapper;
 import com.wanghuiwen.base.dao.UserRoleMapper;
@@ -12,7 +13,6 @@ import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.core.response.ResultEnum;
 import com.wanghuiwen.core.response.ResultGenerator;
-import com.wanghuiwen.core.response.ResultMessage;
 import com.wanghuiwen.core.service.AbstractService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,10 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 
 /**
@@ -57,7 +57,7 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
 
     @Override
     @CacheEvict(value="User::Role",key = "#userId")
-    public Result addRole(List<Long> roles, Long userId) {
+    public Result addRole(List<Long> roles, Long userId, AuthUser authUser) {
         User user = findById(userId);
         if (user == null) return resultGenerator.genFailResult(ResultEnum.NO_RELATED_USER);
 
@@ -69,7 +69,15 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
             userRoles.add(userRole);
         }
 
-        userMapper.deleteRoleById(userId);
+        /**
+         * 如果不是管理员不能操作系统角色 dept_id  = 1
+         */
+        if(authUser.getRoles().contains(ProjectConstant.ROLE_ADMIN)){
+            userMapper.deleteRoleById(userId);
+        }else {
+            userMapper.deleteRoleByIdNoAdmin(userId);
+        }
+
         userRoleMapper.insertListNoAuto(userRoles);
         return resultGenerator.genSuccessResult();
     }
@@ -116,13 +124,15 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
     }
 
     @Override
-    public List<Menu> getByMenus(Long id) {
+    public List<Menu> getMenus(Long id) {
         List<Menu> menus = new ArrayList<>();
         List<Role> roles = roleService.getByUser(id);
         for (Role role : roles) {
             List<Menu> roleApi = menuService.getByRole(role.getId());
             menus.addAll(roleApi);
         }
+        //多个角色有重复的菜单 去重
+        menus =  menus.stream().distinct().collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(Menu::getId))), ArrayList::new));
         return menus;
     }
 }

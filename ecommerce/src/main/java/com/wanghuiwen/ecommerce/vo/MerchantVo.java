@@ -1,7 +1,5 @@
 package com.wanghuiwen.ecommerce.vo;
 
-
-
 public class MerchantVo {
     private String avatar;
 

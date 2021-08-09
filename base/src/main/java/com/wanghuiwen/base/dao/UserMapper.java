@@ -13,4 +13,6 @@ public interface UserMapper extends ApiMapper<User> {
     List<User> list(@Param("params") Map<String, Object> params);
 
     void deleteRoleById(Long userId);
+
+    void deleteRoleByIdNoAdmin(Long userId);
 }
