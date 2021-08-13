@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.ecommerce.dao.CategoryMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.ecommerce.model.Category">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="category_id" jdbcType="BIGINT" property="categoryId" />
+    <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+    <result column="category_pid" jdbcType="BIGINT" property="categoryPid" />
+    <result column="priority" jdbcType="BIGINT" property="priority" />
+    <result column="disable" jdbcType="BIT" property="disable" />
+    <result column="category_icon" jdbcType="VARCHAR" property="categoryIcon" />
+  </resultMap>
+
+  <select id="selectChild" resultMap="BaseResultMap">
+    SELECT * from category WHERE category_pid = #{categoryId}
+    </select>
+
+  <select id="query" resultMap="BaseResultMap">
+    SELECT * from category WHERE 1=1
+      <if test="params.categoryPid !=null">
+       and  category_pid = #{params.categoryPid}
+      </if>
+  </select>
+
+  <select id="findFront" resultMap="BaseResultMap">
+    SELECT * from category WHERE EXISTS(SELECT * from front_category_item where front_category_item.front_category_id = #{categoryId} AND front_category_item.category_id = category.category_id)
+  </select>
+</mapper>

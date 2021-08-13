@@ -267,8 +267,7 @@ public class ApiController extends Ctrl {
          * 如果不是管理员只返回自己管理的部门及下级部门
          */
         if(!authUser.getRoles().contains(ProjectConstant.ROLE_ADMIN)){
-            DepartmentTree departmentTree = traversing(parent,authUser);
-            return resultGenerator.genSuccessResult(Collections.singletonList(departmentTree));
+            return resultGenerator.genSuccessResult(traversing(parent,authUser));
         }
 
         return resultGenerator.genSuccessResult(parent);
@@ -280,17 +279,19 @@ public class ApiController extends Ctrl {
      * @param authUser
      */
 
-    public static DepartmentTree traversing(List<DepartmentTree> root, AuthUser authUser) {
+    public static List<DepartmentTree> traversing(List<DepartmentTree> root, AuthUser authUser) {
+        List<DepartmentTree> departmentTrees = new ArrayList<>();
         for (DepartmentTree node : root) {
-            if (node.getType() == 1 && node.getAdminId().equals(authUser.getId())){
-                return node ;
+            if ( node.getAdminId()!=null && node.getType() == 1 && node.getAdminId().equals(authUser.getId())){
+                departmentTrees.add(node);
+                continue;
             }
             List<DepartmentTree> childres = node.getChildren();
             if (childres != null && childres.size() > 0) {
-              return traversing(childres, authUser);
+                departmentTrees.addAll(traversing(childres, authUser));
             }
         }
-        return null;
+        return departmentTrees;
     }
 
    private void addChildDepartment(List<DepartmentTree> parent , Map<Long, List<DepartmentTree>>  group ){
@@ -315,6 +316,12 @@ public class ApiController extends Ctrl {
     public Result departmentAdd(Long id) {
         sysDepartmentService.deleteById(id);
         return resultGenerator.genSuccessResult();
+    }
+
+    @GetMapping(value = "department/uses",name = "获取部门下的用户")
+    public Result departmentUsers(Long id) {
+        List<User> users = userService.getByDepartment(id);
+        return resultGenerator.genSuccessResult(users);
     }
 
     @GetMapping(value = "log/list",name = "日志列表")

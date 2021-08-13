@@ -31,19 +31,19 @@ public class ResultGenerator {
         return new Result(ResultEnum.SUCCESS_MESSAGE,data).setMessage(messageSource.getMessage("200", null, LocaleContextHolder.getLocale()));
     }
 
-    public Result genSuccessResult(ResultEnum resultEnum,Object data) {
+    public Result genSuccessResult(IResultEnum resultEnum,Object data) {
         return new Result()
                 .setCode(200)
-                .setMessage(messageSource.getMessage(String.valueOf(resultEnum.getCode()), null, LocaleContextHolder.getLocale()))
+                .setMessage(messageSource.getMessage(resultEnum.getMessageCode(), null, LocaleContextHolder.getLocale()))
                 .setData(data);
     }
 
-    public Result genFailResult(ResultEnum resultEnum) {
-        return new Result(resultEnum).setMessage(messageSource.getMessage(String.valueOf(resultEnum.getCode()), null, LocaleContextHolder.getLocale()));
+    public Result genFailResult(IResultEnum resultEnum) {
+        return new Result(resultEnum).setMessage(messageSource.getMessage(resultEnum.getMessageCode(), null, LocaleContextHolder.getLocale()));
     }
 
-    public Result genResult(ResultEnum resultEnum) {
-        return new Result(resultEnum).setMessage(messageSource.getMessage(String.valueOf(resultEnum.getCode()), null, LocaleContextHolder.getLocale()));
+    public Result genResult(IResultEnum resultEnum) {
+        return new Result(resultEnum).setMessage(messageSource.getMessage(resultEnum.getMessageCode(), null, LocaleContextHolder.getLocale()));
     }
 
     public Result genExceptionResult(Exception e) {

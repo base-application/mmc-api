@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.ecommerce.dao.FrontCategoryMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.ecommerce.model.FrontCategory">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="category_id" jdbcType="BIGINT" property="categoryId" />
+    <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+    <result column="category_icon" jdbcType="VARCHAR" property="categoryIcon" />
+    <result column="category_type" jdbcType="INTEGER" property="categoryType" />
+    <result column="priority" jdbcType="INTEGER" property="priority" />
+    <result column="disable" jdbcType="BIT" property="disable" />
+    <result column="h5_url" jdbcType="VARCHAR" property="h5Url" />
+    <result column="category_pid" jdbcType="BIGINT" property="categoryPid" />
+  </resultMap>
+
+  <select id="findChild" resultMap="BaseResultMap">
+    select  * from front_category where category_pid = #{categoryId}
+  </select>
+</mapper>

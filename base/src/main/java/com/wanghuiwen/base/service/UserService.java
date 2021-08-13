@@ -36,4 +36,11 @@ public interface UserService extends Service<User> {
      * @return
      */
     List<Menu> getMenus(Long id);
+
+    /**
+     * 获取部门下的人员
+     * @param id
+     * @return
+     */
+    List<User> getByDepartment(Long id);
 }

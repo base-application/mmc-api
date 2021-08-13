@@ -25,7 +25,7 @@ import static java.util.Collections.singletonList;
 @SpringBootApplication
 @MapperScan({"com.wanghuiwen.**.dao"})
 @EnableAspectJAutoProxy
-@EnableCaching
+//@EnableCaching
 public class GameApplication {
 
     public static void main(String[] args) {

@@ -15,4 +15,6 @@ public interface UserMapper extends ApiMapper<User> {
     void deleteRoleById(Long userId);
 
     void deleteRoleByIdNoAdmin(Long userId);
+
+    List<User> getByDepartment(List<Long> id);
 }

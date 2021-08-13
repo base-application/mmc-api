@@ -22,7 +22,6 @@ public enum ResultEnum implements IResultEnum {
     NO_COUNTRY(400016),
     PARAMS_VALIDATED_ERROR(400017),
     ;
-
     private final int code;
 
     ResultEnum(int code) {
@@ -33,4 +32,11 @@ public enum ResultEnum implements IResultEnum {
     public int getCode() {
         return this.code;
     }
+
+    @Override
+    public String getMessageCode() {
+        return String.valueOf(this.code);
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.wanghuiwen.base.service.impl;
 
 import com.wanghuiwen.base.config.ProjectConstant;
 import com.wanghuiwen.base.config.auth.JwtTokenUtil;
+import com.wanghuiwen.base.dao.SysDepartmentMapper;
 import com.wanghuiwen.base.dao.UserMapper;
 import com.wanghuiwen.base.dao.UserRoleMapper;
 import com.wanghuiwen.base.model.*;
@@ -18,9 +19,11 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
@@ -48,6 +51,9 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
 
     @Resource
     private MenuService menuService;
+
+    @Resource
+    private SysDepartmentMapper sysDepartmentMapper;
 
 
     @Override
@@ -134,5 +140,28 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
         //多个角色有重复的菜单 去重
         menus =  menus.stream().distinct().collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(Menu::getId))), ArrayList::new));
         return menus;
+    }
+
+    @Override
+    public List<User> getByDepartment(Long id) {
+        SysDepartment department = sysDepartmentMapper.selectByPrimaryKey(id);
+        List<SysDepartment> departments =  getChildDepartment(Collections.singletonList(id));
+        departments.add(department);
+
+        return userMapper.getByDepartment(departments.stream().map(SysDepartment::getId).collect(Collectors.toList()));
+    }
+
+
+    List<SysDepartment>  getChildDepartment(List<Long> id){
+        List<SysDepartment> sysDepartments = new ArrayList<>();
+        for (Long aLong : id) {
+            List<SysDepartment> departments = sysDepartmentMapper.getChild(aLong);
+            sysDepartments.addAll(departments);
+            if(!CollectionUtils.isEmpty(departments)){
+                List<Long> ids = departments.stream().map(SysDepartment::getId).distinct().collect(Collectors.toList());
+                sysDepartments.addAll(getChildDepartment(ids));
+            }
+        }
+        return sysDepartments;
     }
 }
