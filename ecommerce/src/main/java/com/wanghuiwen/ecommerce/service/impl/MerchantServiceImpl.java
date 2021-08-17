@@ -124,4 +124,9 @@ public class MerchantServiceImpl extends AbstractService<Merchant> implements Me
     public List<ManagerVo> admins(Map<String, Object> params) {
         return managerMapper.admins(params);
     }
+
+    @Override
+    public Merchant findByManagerId(Long id) {
+        return merchantMapper.selectByManagerId(id);
+    }
 }

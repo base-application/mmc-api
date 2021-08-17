@@ -18,4 +18,6 @@ public interface MerchantService extends Service<Merchant> {
     List<Merchant> list(Map<String, Object> params);
 
     List<ManagerVo> admins(Map<String, Object> params);
+
+    Merchant findByManagerId(Long id);
 }

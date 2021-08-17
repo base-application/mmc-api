@@ -45,16 +45,25 @@ public class ApiController extends Ctrl {
     private SysDepartmentService sysDepartmentService;
     @Resource
     private SysLogService sysLogService;
+    @Resource
+    private ButtonService buttonService;
 
     @GetMapping(value = "user/generate/routes",name = "前端获取菜单")
     public Result code(Authentication authentication) {
         List<Menu> menus = userService.getMenus(getAuthUser(authentication).getId());
         Map<Long, List<Menu>> res = menus.stream().collect(Collectors.groupingBy(Menu::getPid));
+
         List<Menu> parent = res.get(0L);
+
         for (Menu menu : parent) {
             menu.setChildren(res.get(menu.getId()));
         }
-        return resultGenerator.genSuccessResult(parent);
+        Map<String,Object> result = new HashMap<>();
+
+        List<Button> button = userService.getButtons(getAuthUser(authentication).getId());
+        result.put("menu",parent);
+        result.put("button",button);
+        return resultGenerator.genSuccessResult(result);
     }
 
     @PostMapping(value = "refresh/token",name = "刷新token")
@@ -125,6 +134,7 @@ public class ApiController extends Ctrl {
         List<ElTree<Api>> elTrees = new ArrayList<>();
         for (Map.Entry<String, List<Api>> m : res.entrySet()) {
             ElTree<Api> elTree = new ElTree<>();
+            elTree.setDisabled(true);
             elTree.setId(m.getKey());
             elTree.setName(m.getKey());
             elTree.setChildren(m.getValue());
@@ -142,6 +152,56 @@ public class ApiController extends Ctrl {
     @PutMapping(value = "role/api",name = "角色添加接口")
     public Result roleApiAdd(@RequestBody @Validated RoleApiAdd add) {
         return roleService.addApi(add);
+    }
+
+    @PutMapping(value = "button/save",name = "添加按钮权限")
+    public Result addButton(@RequestBody @Validated Button add) {
+        buttonService.saveOrUpdate(add);
+        return resultGenerator.genSuccessResult(add.getButtonId());
+    }
+
+    @DeleteMapping(value = "button/delete",name = "删除按钮权限")
+    public Result addButton(Long id) {
+        buttonService.deleteById(id);
+        return resultGenerator.genSuccessResult();
+    }
+
+    @GetMapping(value = "button/list",name = "按钮权限列表")
+    public Result buttons(Authentication authentication) {
+        AuthUser user = getAuthUser(authentication);
+        List<Button> roles;
+        /**
+         * 非管理员只返回自己有的按钮
+         */
+        if(!user.getRoles().contains(ProjectConstant.ROLE_ADMIN)){
+            roles = userService.getButtons(user.getId());
+        }else {
+            roles = buttonService.findAll();
+        }
+
+        Map<String, List<Button>> res = roles.stream().collect(Collectors.groupingBy(Button::getModeName));
+
+        List<ElTree<Button>> elTrees = new ArrayList<>();
+        for (Map.Entry<String, List<Button>> m : res.entrySet()) {
+            ElTree<Button> elTree = new ElTree<>();
+            elTree.setDisabled(true);
+            elTree.setId(m.getKey());
+            elTree.setName(m.getKey());
+            elTree.setChildren(m.getValue());
+            elTrees.add(elTree);
+        }
+        return resultGenerator.genSuccessResult(elTrees);
+    }
+
+    @GetMapping(value = "role/button",name = "角色按钮列表")
+    public Result roleButton(Long roleId) {
+        List<Button> buttons = buttonService.getByRole(roleId);
+        return resultGenerator.genSuccessResult(buttons);
+    }
+
+    @PutMapping(value = "role/button",name = "角色按钮添加")
+    public Result roleButton(@RequestBody @Validated RoleApiAdd add) {
+        return roleService.addButton(add);
     }
 
     @PutMapping(value = "role/add",name = "角色添加")

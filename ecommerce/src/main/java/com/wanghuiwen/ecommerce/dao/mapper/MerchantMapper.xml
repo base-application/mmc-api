@@ -24,4 +24,8 @@
       and name like concat('%',#{params.name},'%')
     </if>
   </select>
+
+  <select id="selectByManagerId" resultMap="BaseResultMap">
+    select  * from merchant where manager_id = #{id}
+    </select>
 </mapper>

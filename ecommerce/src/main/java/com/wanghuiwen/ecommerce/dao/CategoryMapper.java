@@ -20,4 +20,6 @@ public interface CategoryMapper extends ApiMapper<Category> {
      * @return
      */
     List<Category> findFront(Long categoryId);
+
+    List<Category> findAllEnable();
 }

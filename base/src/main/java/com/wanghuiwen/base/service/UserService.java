@@ -1,5 +1,6 @@
 package com.wanghuiwen.base.service;
 import com.wanghuiwen.base.model.Api;
+import com.wanghuiwen.base.model.Button;
 import com.wanghuiwen.base.model.Menu;
 import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.core.config.AuthUser;
@@ -43,4 +44,6 @@ public interface UserService extends Service<User> {
      * @return
      */
     List<User> getByDepartment(Long id);
+
+    List<Button> getButtons(Long id);
 }

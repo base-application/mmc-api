@@ -4,10 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
-import com.wanghuiwen.ecommerce.model.Manager;
 import com.wanghuiwen.ecommerce.model.Merchant;
 import com.wanghuiwen.ecommerce.service.ManagerService;
 import com.wanghuiwen.ecommerce.service.MerchantService;
+import com.wanghuiwen.ecommerce.service.MerchantServiceService;
 import com.wanghuiwen.ecommerce.vo.ManagerVo;
 import com.wanghuiwen.ecommerce.vo.MerchantVo;
 import io.swagger.annotations.Api;
@@ -33,6 +33,8 @@ public class MerchantController extends Ctrl {
     private ManagerService managerService;
     @Resource
     private MerchantService merchantService;
+    @Resource
+    private MerchantServiceService merchantServiceService;
 
     @ApiOperation(value = "商铺修改", tags = {"商户管理"}, notes = "notes")
     @PutMapping(value = "/save", name = "保存商户用户")
@@ -45,6 +47,20 @@ public class MerchantController extends Ctrl {
     @PostMapping(value = "/add", name = "添加商户用户")
     public Result add(@RequestBody MerchantVo merchant) {
         return merchantService.add(merchant);
+    }
+
+    @ApiOperation(value = "商铺详情", tags = {"商户管理"}, notes = "商铺详情")
+    @GetMapping(value = "/detail", name = "商铺详情")
+    public Result add(Long merchantId) {
+        Merchant merchant = merchantService.findById(merchantId);
+        return resultGenerator.genSuccessResult(merchant);
+    }
+
+    @ApiOperation(value = "我的商铺详情", tags = {"商户管理"}, notes = "我的商铺详情")
+    @GetMapping(value = "/detail/my", name = "我的商铺详情")
+    public Result detailMy(Authentication authentication) {
+        Merchant merchant = merchantService.findByManagerId(getAuthUser(authentication).getId());
+        return resultGenerator.genSuccessResult(merchant);
     }
 
     @ApiOperation(value = "商铺列表", tags = {"商户管理"}, notes = "notes")
@@ -84,5 +100,28 @@ public class MerchantController extends Ctrl {
         List<ManagerVo> merchants = merchantService.admins(params);
         PageInfo<ManagerVo> pageInfo = new PageInfo<>(merchants);
         return resultGenerator.genSuccessResult(pageInfo);
+    }
+
+
+    @ApiOperation(value = "商铺服务添加", tags = {"商户管理"}, notes = "notes")
+    @PutMapping(value = "merchant/service", name = "商铺服务添加")
+    public Result addService(@RequestBody com.wanghuiwen.ecommerce.model.MerchantService service,Authentication authentication) {
+        if(service.getMerchantId() == null){
+            service.setMerchantId(getAuthUser(authentication).getId());
+        }
+        merchantServiceService.saveOrUpdate(service);
+        return resultGenerator.genSuccessResult(service.getServiceId());
+    }
+
+    @ApiOperation(value = "商铺服务列表", tags = {"商户管理"}, notes = "notes")
+    @GetMapping(value = "merchant/service", name = "商铺服务列表")
+    public Result listService(Long merchantId,Authentication authentication) {
+        List<com.wanghuiwen.ecommerce.model.MerchantService>  services;
+        if(merchantId==null){
+             services = merchantServiceService.findByMerchantId(getAuthUser(authentication).getId());
+        }else {
+            services = merchantServiceService.findByMerchantId(merchantId);
+        }
+        return resultGenerator.genSuccessResult(services);
     }
 }

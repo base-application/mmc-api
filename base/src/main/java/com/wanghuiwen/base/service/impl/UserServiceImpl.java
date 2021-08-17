@@ -6,10 +6,7 @@ import com.wanghuiwen.base.dao.SysDepartmentMapper;
 import com.wanghuiwen.base.dao.UserMapper;
 import com.wanghuiwen.base.dao.UserRoleMapper;
 import com.wanghuiwen.base.model.*;
-import com.wanghuiwen.base.service.ApiService;
-import com.wanghuiwen.base.service.MenuService;
-import com.wanghuiwen.base.service.RoleService;
-import com.wanghuiwen.base.service.UserService;
+import com.wanghuiwen.base.service.*;
 import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.core.response.ResultEnum;
@@ -54,6 +51,8 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
 
     @Resource
     private SysDepartmentMapper sysDepartmentMapper;
+    @Resource
+    private ButtonService buttonService;
 
 
     @Override
@@ -163,5 +162,19 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
             }
         }
         return sysDepartments;
+    }
+
+
+    @Override
+    public List<Button> getButtons(Long id) {
+        List<Button>  buttons = new ArrayList<>();
+        List<Role> roles = roleService.getByUser(id);
+        for (Role role : roles) {
+            List<Button> roleApi = buttonService.getByRole(role.getId());
+            buttons.addAll(roleApi);
+        }
+        //多个角色有重复的按钮 去重
+        buttons =  buttons.stream().distinct().collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(Button::getButtonId))), ArrayList::new));
+        return buttons;
     }
 }

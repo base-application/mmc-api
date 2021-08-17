@@ -31,4 +31,11 @@ public interface RoleService extends Service<Role> {
      * @return
      */
     Result addMenu(RoleApiAdd add);
+
+    /**
+     * 角色保存按钮
+     * @param add
+     * @return
+     */
+    Result addButton(RoleApiAdd add);
 }

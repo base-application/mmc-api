@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.ecommerce.dao.MerchantServiceMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.ecommerce.model.MerchantService">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="service_id" jdbcType="INTEGER" property="serviceId" />
+    <result column="service_title" jdbcType="VARCHAR" property="serviceTitle" />
+    <result column="service_detail" jdbcType="VARCHAR" property="serviceDetail" />
+    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <result column="available" jdbcType="BIT" property="available" />
+  </resultMap>
+
+  <select id="findByMerchantId" resultMap="BaseResultMap">
+    select  * from merchant_service where merchant_id = #{merchantId}
+    </select>
+</mapper>

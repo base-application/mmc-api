@@ -1,6 +1,7 @@
 package com.wanghuiwen.base.service.impl;
 
 import com.wanghuiwen.base.dao.RoleApiMapper;
+import com.wanghuiwen.base.dao.RoleButtonMapper;
 import com.wanghuiwen.base.dao.RoleMapper;
 import com.wanghuiwen.base.dao.RoleMenuMapper;
 import com.wanghuiwen.base.model.*;
@@ -15,6 +16,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -39,6 +41,10 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
 
     @Resource
     private RoleMenuMapper roleMenuMapper;
+
+    @Resource
+    private RoleButtonMapper roleButtonMapper;
+
     @Override
     @Cacheable(value="User::Role",key = "#id")
     public List<Role> getByUser(Long id) {
@@ -61,7 +67,9 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
         }
 
         roleMapper.deleteApiById(add.getRoleId());
-        roleApiMapper.insertListNoAuto(roleApis);
+        if(!CollectionUtils.isEmpty(roleApis)){
+            roleApiMapper.insertListNoAuto(roleApis);
+        }
 
         return resultGenerator.genSuccessResult();
     }
@@ -83,8 +91,33 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
         }
 
         roleMapper.deleteMenuById(add.getRoleId());
-        roleMenuMapper.insertListNoAuto(roleMenus);
+        if(!CollectionUtils.isEmpty(roleMenus)){
+            roleMenuMapper.insertListNoAuto(roleMenus);
+        }
 
+        return resultGenerator.genSuccessResult();
+    }
+
+    @Override
+    @CacheEvict(value = "Role::Button",key = "#add.roleId")
+    public Result addButton(RoleApiAdd add) {
+
+        Role role = findById(add.getRoleId());
+
+        if (role == null) return resultGenerator.genFailResult(ResultEnum.NO_RELATED_USER);
+
+        List<RoleButton> roleButtons = new ArrayList<>();
+        for (Long id : add.getApi()) {
+            RoleButton roleButton = new RoleButton();
+            roleButton.setButtonId(id);
+            roleButton.setRoleId(add.getRoleId());
+            roleButtons.add(roleButton);
+        }
+
+        roleMapper.deleteButtonByRole(add.getRoleId());
+        if(!CollectionUtils.isEmpty(roleButtons)){
+            roleButtonMapper.insertListNoAuto(roleButtons);
+        }
         return resultGenerator.genSuccessResult();
     }
 }

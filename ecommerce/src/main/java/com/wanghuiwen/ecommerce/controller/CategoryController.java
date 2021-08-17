@@ -5,7 +5,6 @@ import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.ecommerce.config.EcommerceResultEnum;
 import com.wanghuiwen.ecommerce.model.Category;
-import com.wanghuiwen.ecommerce.model.FrontCategory;
 import com.wanghuiwen.ecommerce.model.Manager;
 import com.wanghuiwen.ecommerce.model.MerchantCategory;
 import com.wanghuiwen.ecommerce.service.CategoryService;

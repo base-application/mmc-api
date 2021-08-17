@@ -43,7 +43,7 @@ public class CategoryServiceImpl extends AbstractService<Category> implements Ca
 
     @Override
     public List<CategoryTree> tree() {
-        List<Category> categoryList = findAll();
+        List<Category> categoryList = categoryMapper.findAllEnable();
         Map<Long,List<Category>> group = categoryList.stream().collect(Collectors.groupingBy(Category::getCategoryPid));
         if(CollectionUtils.isEmpty(group)){
             return new ArrayList<>();

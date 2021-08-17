@@ -12,4 +12,6 @@ import java.util.Map;
 @Mapper
 public interface MerchantMapper extends ApiMapper<Merchant> {
     List<Merchant> list(@Param("params") Map<String, Object> params);
+
+    Merchant selectByManagerId(Long id);
 }

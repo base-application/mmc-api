@@ -27,4 +27,8 @@
   <select id="findFront" resultMap="BaseResultMap">
     SELECT * from category WHERE EXISTS(SELECT * from front_category_item where front_category_item.front_category_id = #{categoryId} AND front_category_item.category_id = category.category_id)
   </select>
+
+  <select id="findAllEnable" resultMap="BaseResultMap">
+    SELECT * from category order by priority
+  </select>
 </mapper>

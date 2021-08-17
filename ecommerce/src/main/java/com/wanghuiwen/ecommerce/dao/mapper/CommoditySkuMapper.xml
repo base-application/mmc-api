@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.ecommerce.dao.CommoditySkuMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.ecommerce.model.CommoditySku">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="specs_id" jdbcType="BIGINT" property="specsId" />
+    <result column="commodity_id" jdbcType="BIGINT" property="commodityId" />
+    <result column="specs_name" jdbcType="VARCHAR" property="specsName" />
+    <result column="specs_image" jdbcType="VARCHAR" property="specsImage" />
+    <result column="specs_stock" jdbcType="VARCHAR" property="specsStock" />
+    <result column="specs_price" jdbcType="DECIMAL" property="specsPrice" />
+    <result column="specs_attr" jdbcType="VARCHAR" property="specsAttr" />
+    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+    <result column="weight" jdbcType="DOUBLE" property="weight" />
+  </resultMap>
+</mapper>
