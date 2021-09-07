@@ -14,6 +14,7 @@ import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.core.response.ResultEnum;
+import com.wanghuiwen.core.response.ResultGenerator;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.CollectionUtils;
@@ -69,6 +70,11 @@ public class ApiController extends Ctrl {
     @PostMapping(value = "refresh/token",name = "刷新token")
     public Result refresh(Authentication authentication) {
         return userService.login(getAuthUser(authentication));
+    }
+
+    @PostMapping(value = "login")
+    public Result login() {
+       return resultGenerator.genSuccessResult();
     }
 
     @GetMapping(value = "user/list",name = "用户列表")

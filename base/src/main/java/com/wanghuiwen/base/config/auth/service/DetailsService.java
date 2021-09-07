@@ -24,16 +24,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class DetailsServic implements UserDetailsService {
+public class DetailsService implements UserDetailsService {
 
     @Resource
     private UserService userService;
     @Resource
     private RoleService roleService;
-
-    @Resource
-    private ApiService apiService;
-
     @Resource
     private MessageSource messageSource;
 
@@ -67,8 +63,7 @@ public class DetailsServic implements UserDetailsService {
                 user.getAvatar(),
                 user.getEnable(),
                 user.getLocked(),
-                new Date(user.getExpiredTime()),
-                user.getCredentialsExpiredTime());
+                new Date(user.getExpiredTime()));
 
     }
 }

@@ -70,6 +70,10 @@
       <artifactId>mybatis-generator-core</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacv-platform</artifactId>
+    </dependency>
   </dependencies>
 
 </project>

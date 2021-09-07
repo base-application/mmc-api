@@ -20,7 +20,6 @@ public class AuthUser implements UserDetails  {
     private boolean enable;
     private boolean lock;
     private Date expiredTime;
-    private Long credentialsExpiredTime;
 
     public AuthUser(String userName,
                     String nickName,
@@ -32,8 +31,7 @@ public class AuthUser implements UserDetails  {
                     String avatar,
                     boolean enable,
                     boolean lock,
-                    Date expiredTime,
-                    Long credentialsExpiredTime) {
+                    Date expiredTime) {
         this.userName = userName;
         this.nickName = nickName;
         this.password = password;
@@ -45,7 +43,6 @@ public class AuthUser implements UserDetails  {
         this.enable=enable;
         this.lock=lock;
         this.expiredTime=expiredTime;
-        this.credentialsExpiredTime=credentialsExpiredTime;
     }
 
     @Override
@@ -75,8 +72,7 @@ public class AuthUser implements UserDetails  {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        if(this.credentialsExpiredTime == null) return true;
-        return new Date(this.credentialsExpiredTime).compareTo(new Date()) > 0;
+      return true;
     }
 
     @Override
