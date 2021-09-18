@@ -8,6 +8,7 @@ import javax.persistence.*;
 public class CommoditySku implements Serializable {
     @Id
     @Column(name = "specs_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long specsId;
 
     /**
@@ -39,12 +40,6 @@ public class CommoditySku implements Serializable {
      */
     @Column(name = "specs_price")
     private BigDecimal specsPrice;
-
-    /**
-     * 规格 {属性id：属性值id}
-     */
-    @Column(name = "specs_attr")
-    private String specsAttr;
 
     /**
      * 成本价
@@ -161,24 +156,6 @@ public class CommoditySku implements Serializable {
      */
     public void setSpecsPrice(BigDecimal specsPrice) {
         this.specsPrice = specsPrice;
-    }
-
-    /**
-     * 获取规格 {属性id：属性值id}
-     *
-     * @return specs_attr - 规格 {属性id：属性值id}
-     */
-    public String getSpecsAttr() {
-        return specsAttr;
-    }
-
-    /**
-     * 设置规格 {属性id：属性值id}
-     *
-     * @param specsAttr 规格 {属性id：属性值id}
-     */
-    public void setSpecsAttr(String specsAttr) {
-        this.specsAttr = specsAttr;
     }
 
     /**

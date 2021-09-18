@@ -6,6 +6,13 @@ import javax.persistence.*;
 @Table(name = "commodity_slide")
 public class CommoditySlide implements Serializable {
     @Id
+    @Column(name = "slide_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long slideId;
+
+    /**
+     * 商品Id
+     */
     @Column(name = "commodity_id")
     private Long commodityId;
 
@@ -13,13 +20,13 @@ public class CommoditySlide implements Serializable {
      * 资源路径/视频资源这里是封面
      */
     @Column(name = "resource_url")
-    private Long resourceUrl;
+    private String resourceUrl;
 
     /**
      * 1图片 2 视频
      */
     @Column(name = "resource_type")
-    private Long resourceType;
+    private Byte resourceType;
 
     /**
      * 视频路径
@@ -30,14 +37,32 @@ public class CommoditySlide implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * @return commodity_id
+     * @return slide_id
+     */
+    public Long getSlideId() {
+        return slideId;
+    }
+
+    /**
+     * @param slideId
+     */
+    public void setSlideId(Long slideId) {
+        this.slideId = slideId;
+    }
+
+    /**
+     * 获取商品Id
+     *
+     * @return commodity_id - 商品Id
      */
     public Long getCommodityId() {
         return commodityId;
     }
 
     /**
-     * @param commodityId
+     * 设置商品Id
+     *
+     * @param commodityId 商品Id
      */
     public void setCommodityId(Long commodityId) {
         this.commodityId = commodityId;
@@ -48,7 +73,7 @@ public class CommoditySlide implements Serializable {
      *
      * @return resource_url - 资源路径/视频资源这里是封面
      */
-    public Long getResourceUrl() {
+    public String getResourceUrl() {
         return resourceUrl;
     }
 
@@ -57,7 +82,7 @@ public class CommoditySlide implements Serializable {
      *
      * @param resourceUrl 资源路径/视频资源这里是封面
      */
-    public void setResourceUrl(Long resourceUrl) {
+    public void setResourceUrl(String resourceUrl) {
         this.resourceUrl = resourceUrl;
     }
 
@@ -66,7 +91,7 @@ public class CommoditySlide implements Serializable {
      *
      * @return resource_type - 1图片 2 视频
      */
-    public Long getResourceType() {
+    public Byte getResourceType() {
         return resourceType;
     }
 
@@ -75,7 +100,7 @@ public class CommoditySlide implements Serializable {
      *
      * @param resourceType 1图片 2 视频
      */
-    public void setResourceType(Long resourceType) {
+    public void setResourceType(Byte resourceType) {
         this.resourceType = resourceType;
     }
 

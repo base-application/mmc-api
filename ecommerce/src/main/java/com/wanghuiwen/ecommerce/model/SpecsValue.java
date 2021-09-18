@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class SpecsValue implements Serializable {
     @Id
     @Column(name = "attribute_value_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long attributeValueId;
 
     @Column(name = "attribute_id")

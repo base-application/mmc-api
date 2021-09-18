@@ -1,12 +1,12 @@
 package com.wanghuiwen.ecommerce.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import javax.persistence.*;
 
 public class Commodity implements Serializable {
     @Id
     @Column(name = "commodity_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commodityId;
 
     /**
@@ -22,50 +22,15 @@ public class Commodity implements Serializable {
     private Long categoryId;
 
     /**
-     * 是否包邮
-     */
-    @Column(name = "free_postage")
-    private Boolean freePostage;
-
-    /**
-     * 统一运费
-     */
-    private BigDecimal postage;
-
-    /**
-     * 包邮设置
-     */
-    @Column(name = "free_postage_condition")
-    private Long freePostageCondition;
-
-    /**
      * 运费模版
      */
     @Column(name = "carriage_template_id")
     private Long carriageTemplateId;
 
     /**
-     * 几件起购
-     */
-    @Column(name = "min_purchase")
-    private Integer minPurchase;
-
-    /**
      * 商品状态 1 发布 2 不发布
      */
     private Integer state;
-
-    /**
-     * 限购数量
-     */
-    @Column(name = "user_limit")
-    private Integer userLimit;
-
-    /**
-     * 1 每天 2 每周 3 每年 4 永久
-     */
-    @Column(name = "limit_mode")
-    private Integer limitMode;
 
     /**
      * 商品类型 1 实物 2 虚拟
@@ -78,6 +43,12 @@ public class Commodity implements Serializable {
      */
     @Column(name = "merchant_category_id")
     private Long merchantCategoryId;
+
+    /**
+     * 减库存方式 1 下单立减 2 付款减库存
+     */
+    @Column(name = "stock_mode")
+    private Byte stockMode;
 
     private static final long serialVersionUID = 1L;
 
@@ -132,60 +103,6 @@ public class Commodity implements Serializable {
     }
 
     /**
-     * 获取是否包邮
-     *
-     * @return free_postage - 是否包邮
-     */
-    public Boolean getFreePostage() {
-        return freePostage;
-    }
-
-    /**
-     * 设置是否包邮
-     *
-     * @param freePostage 是否包邮
-     */
-    public void setFreePostage(Boolean freePostage) {
-        this.freePostage = freePostage;
-    }
-
-    /**
-     * 获取统一运费
-     *
-     * @return postage - 统一运费
-     */
-    public BigDecimal getPostage() {
-        return postage;
-    }
-
-    /**
-     * 设置统一运费
-     *
-     * @param postage 统一运费
-     */
-    public void setPostage(BigDecimal postage) {
-        this.postage = postage;
-    }
-
-    /**
-     * 获取包邮设置
-     *
-     * @return free_postage_condition - 包邮设置
-     */
-    public Long getFreePostageCondition() {
-        return freePostageCondition;
-    }
-
-    /**
-     * 设置包邮设置
-     *
-     * @param freePostageCondition 包邮设置
-     */
-    public void setFreePostageCondition(Long freePostageCondition) {
-        this.freePostageCondition = freePostageCondition;
-    }
-
-    /**
      * 获取运费模版
      *
      * @return carriage_template_id - 运费模版
@@ -204,24 +121,6 @@ public class Commodity implements Serializable {
     }
 
     /**
-     * 获取几件起购
-     *
-     * @return min_purchase - 几件起购
-     */
-    public Integer getMinPurchase() {
-        return minPurchase;
-    }
-
-    /**
-     * 设置几件起购
-     *
-     * @param minPurchase 几件起购
-     */
-    public void setMinPurchase(Integer minPurchase) {
-        this.minPurchase = minPurchase;
-    }
-
-    /**
      * 获取商品状态 1 发布 2 不发布
      *
      * @return state - 商品状态 1 发布 2 不发布
@@ -237,42 +136,6 @@ public class Commodity implements Serializable {
      */
     public void setState(Integer state) {
         this.state = state;
-    }
-
-    /**
-     * 获取限购数量
-     *
-     * @return user_limit - 限购数量
-     */
-    public Integer getUserLimit() {
-        return userLimit;
-    }
-
-    /**
-     * 设置限购数量
-     *
-     * @param userLimit 限购数量
-     */
-    public void setUserLimit(Integer userLimit) {
-        this.userLimit = userLimit;
-    }
-
-    /**
-     * 获取1 每天 2 每周 3 每年 4 永久
-     *
-     * @return limit_mode - 1 每天 2 每周 3 每年 4 永久
-     */
-    public Integer getLimitMode() {
-        return limitMode;
-    }
-
-    /**
-     * 设置1 每天 2 每周 3 每年 4 永久
-     *
-     * @param limitMode 1 每天 2 每周 3 每年 4 永久
-     */
-    public void setLimitMode(Integer limitMode) {
-        this.limitMode = limitMode;
     }
 
     /**
@@ -309,5 +172,23 @@ public class Commodity implements Serializable {
      */
     public void setMerchantCategoryId(Long merchantCategoryId) {
         this.merchantCategoryId = merchantCategoryId;
+    }
+
+    /**
+     * 获取减库存方式 1 下单立减 2 付款减库存
+     *
+     * @return stock_mode - 减库存方式 1 下单立减 2 付款减库存
+     */
+    public Byte getStockMode() {
+        return stockMode;
+    }
+
+    /**
+     * 设置减库存方式 1 下单立减 2 付款减库存
+     *
+     * @param stockMode 减库存方式 1 下单立减 2 付款减库存
+     */
+    public void setStockMode(Byte stockMode) {
+        this.stockMode = stockMode;
     }
 }

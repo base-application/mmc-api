@@ -5,9 +5,14 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="commodity_id" jdbcType="BIGINT" property="commodityId" />
-    <result column="resource_url" jdbcType="BIGINT" property="resourceUrl" />
-    <result column="resource_type" jdbcType="BIGINT" property="resourceType" />
+    <id column="slide_id" jdbcType="BIGINT" property="slideId" />
+    <result column="commodity_id" jdbcType="BIGINT" property="commodityId" />
+    <result column="resource_url" jdbcType="VARCHAR" property="resourceUrl" />
+    <result column="resource_type" jdbcType="TINYINT" property="resourceType" />
     <result column="video_url" jdbcType="VARCHAR" property="videoUrl" />
   </resultMap>
+
+  <select id="findByCommodityId" resultMap="BaseResultMap">
+    select  * from commodity_slide where commodity_id  = #{commodityId}
+    </select>
 </mapper>

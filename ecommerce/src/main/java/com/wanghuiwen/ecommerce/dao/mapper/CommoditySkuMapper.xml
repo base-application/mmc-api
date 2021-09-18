@@ -11,7 +11,6 @@
     <result column="specs_image" jdbcType="VARCHAR" property="specsImage" />
     <result column="specs_stock" jdbcType="VARCHAR" property="specsStock" />
     <result column="specs_price" jdbcType="DECIMAL" property="specsPrice" />
-    <result column="specs_attr" jdbcType="VARCHAR" property="specsAttr" />
     <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
     <result column="weight" jdbcType="DOUBLE" property="weight" />
   </resultMap>

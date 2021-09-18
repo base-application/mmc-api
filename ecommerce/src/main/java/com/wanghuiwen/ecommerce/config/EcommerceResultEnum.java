@@ -3,7 +3,8 @@ package com.wanghuiwen.ecommerce.config;
 import com.wanghuiwen.core.response.IResultEnum;
 
 public enum  EcommerceResultEnum implements IResultEnum {
-    ONLY_MERCHANT(40001);
+    ONLY_MERCHANT(40001),
+    ATTRIBUTE_DISTINCT_NAME(40002);
 
     private final int code;
 
