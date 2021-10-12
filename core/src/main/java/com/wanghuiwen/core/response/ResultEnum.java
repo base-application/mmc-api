@@ -3,7 +3,7 @@ package com.wanghuiwen.core.response;
 public enum ResultEnum implements IResultEnum {
     SUCCESS_MESSAGE(200),
     UPLOADED(200),
-    LOGIN_SUCCESS(200),
+    LOGIN_SUCCESS(20000),
     LOGIN_FAIL(400001),
     MODULE_EXISTS(400002),
     LOGIN_OUT_SUCCESS(400003),

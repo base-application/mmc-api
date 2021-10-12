@@ -10,7 +10,6 @@
         <module>code-generator</module>
         <module>base</module>
         <module>address</module>
-        <module>ecommerce</module>
         <module>user</module>
     </modules>
     <parent>

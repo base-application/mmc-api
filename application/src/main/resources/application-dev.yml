@@ -41,9 +41,9 @@ spring:
       max-lifetime: 30000
       maximum-pool-size: 10
       minimum-idle: 3
-    password: wanghuiwen.
-    url: jdbc:mysql://wanghuiwen.com:3306/mall?useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&&allowPublicKeyRetrieval=true
-    username: admin
+    password: 12345678
+    url: jdbc:mysql://127.0.0.1:3306/mall?useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&&allowPublicKeyRetrieval=true
+    username: root
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     serialization:

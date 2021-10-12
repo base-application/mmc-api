@@ -1,12 +1,14 @@
 package com.wanghuiwen.base.config.auth;
 
 import com.wanghuiwen.base.config.ProjectConstant;
+import com.wanghuiwen.core.config.AuthUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -34,7 +36,14 @@ public class AccessManager  implements AccessDecisionManager {
         for(Iterator<ConfigAttribute> it = configAttributes.iterator(); it.hasNext();) {
             cfa = it.next();
             needRole = cfa.getAttribute();
-            //authentication 为CustomUserDetailService中添加的权限信息.
+
+            if(authentication instanceof UsernamePasswordAuthenticationToken){
+                AuthUser authUser = (AuthUser) authentication.getPrincipal();
+                if(authUser.getRoles().contains(ProjectConstant.ROLE_ADMIN)){
+                    return;
+                }
+            }
+
             for(GrantedAuthority grantedAuthority:authentication.getAuthorities()) {
                 if(needRole.equals(grantedAuthority.getAuthority())||grantedAuthority.getAuthority().equals(ProjectConstant.ROLE_ADMIN)) {
                     logger.info(authentication.getName()+":"+needRole);

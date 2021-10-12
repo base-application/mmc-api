@@ -46,4 +46,10 @@ public interface UserService extends Service<User> {
     List<User> getByDepartment(Long id);
 
     List<Button> getButtons(Long id);
+
+
+    /**
+     * 注册
+     */
+    void register(User user,String roleName);
 }

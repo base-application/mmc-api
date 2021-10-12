@@ -3,9 +3,11 @@ package com.wanghuiwen.base.config;
 import com.wanghuiwen.base.model.Api;
 import com.wanghuiwen.base.model.Role;
 import com.wanghuiwen.base.model.SysDepartment;
+import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.base.service.ApiService;
 import com.wanghuiwen.base.service.RoleService;
 import com.wanghuiwen.base.service.SysDepartmentService;
+import com.wanghuiwen.base.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,8 @@ public class InitRunner implements CommandLineRunner {
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
     @Resource
     private SysDepartmentService sysDepartmentService;
+    @Resource
+    private UserService userService;
 
 
     @CacheEvict(value=ProjectConstant.API_LIST_CACHE_KEY, beforeInvocation=true,allEntries = true)
@@ -43,6 +47,14 @@ public class InitRunner implements CommandLineRunner {
         initPower();
         initRole();
         initDepartment();
+        initUser();
+    }
+
+    private void initUser() {
+        for (User user : ProjectConstant.users) {
+            userService.register(user,ProjectConstant.ROLE_ADMIN);
+        }
+
     }
 
     private void initDepartment() {

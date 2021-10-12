@@ -12,6 +12,8 @@ import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.core.response.ResultEnum;
 import com.wanghuiwen.core.response.ResultGenerator;
 import com.wanghuiwen.core.service.AbstractService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ import static java.util.stream.Collectors.toCollection;
 @Service
 @Transactional
 public class UserServiceImpl extends AbstractService<User> implements UserService {
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource
     private UserMapper userMapper;
     @Resource
@@ -176,5 +179,20 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
         //多个角色有重复的按钮 去重
         buttons =  buttons.stream().distinct().collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(Button::getButtonId))), ArrayList::new));
         return buttons;
+    }
+
+    @Override
+    public void register(User user,String roleName) {
+        User oldUser = findByLoginName(user.getLoginName());
+        if(oldUser!=null){
+            logger.debug(user.getLoginName()+"用户已经注册");
+        }else {
+            save(user);
+            Role role = roleService.findBy("name", roleName);
+            UserRole userRole = new UserRole();
+            userRole.setUserId(user.getId());
+            userRole.setRoleId(role.getId());
+            userRoleMapper.insertSelective(userRole);
+        }
     }
 }
