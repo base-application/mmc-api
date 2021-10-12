@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.ecommerce.dao.CommodityMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.ecommerce.model.Commodity">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="commodity_id" jdbcType="BIGINT" property="commodityId" />
+    <result column="commodity_name" jdbcType="VARCHAR" property="commodityName" />
+    <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+    <result column="carriage_template_id" jdbcType="BIGINT" property="carriageTemplateId" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="commodity_type" jdbcType="INTEGER" property="commodityType" />
+    <result column="merchant_category_id" jdbcType="BIGINT" property="merchantCategoryId" />
+    <result column="stock_mode" jdbcType="TINYINT" property="stockMode" />
+  </resultMap>
+</mapper>
