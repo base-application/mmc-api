@@ -41,23 +41,6 @@ public class User implements Serializable {
      */
     private Boolean locked;
 
-    /**
-     * 商户Id
-     */
-    @Column(name = "merchant_id")
-    private Long merchantId;
-
-    /**
-     * 昵称
-     */
-    @Column(name = "nick_name")
-    private String nickName;
-
-    /**
-     * 头像
-     */
-    private String avatar;
-
     private static final long serialVersionUID = 1L;
 
     /**
@@ -180,59 +163,5 @@ public class User implements Serializable {
      */
     public void setLocked(Boolean locked) {
         this.locked = locked;
-    }
-
-    /**
-     * 获取商户Id
-     *
-     * @return merchant_id - 商户Id
-     */
-    public Long getMerchantId() {
-        return merchantId;
-    }
-
-    /**
-     * 设置商户Id
-     *
-     * @param merchantId 商户Id
-     */
-    public void setMerchantId(Long merchantId) {
-        this.merchantId = merchantId;
-    }
-
-    /**
-     * 获取昵称
-     *
-     * @return nick_name - 昵称
-     */
-    public String getNickName() {
-        return nickName;
-    }
-
-    /**
-     * 设置昵称
-     *
-     * @param nickName 昵称
-     */
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    /**
-     * 获取头像
-     *
-     * @return avatar - 头像
-     */
-    public String getAvatar() {
-        return avatar;
-    }
-
-    /**
-     * 设置头像
-     *
-     * @param avatar 头像
-     */
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
 }

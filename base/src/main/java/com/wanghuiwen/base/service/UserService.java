@@ -52,4 +52,6 @@ public interface UserService extends Service<User> {
      * 注册
      */
     void register(User user,String roleName);
+
+    AuthUser getAuthUser(String s);
 }

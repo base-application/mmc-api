@@ -9,41 +9,19 @@ import java.util.List;
 
 public class AuthUser implements UserDetails  {
     private String userName;
-    private String nickName;
     private String password;
     private Long id;
-    private Byte type;
     private List<GrantedAuthority> authorities;
     private List<String> roles;
     private String avatar;
-    private String level;
     private boolean enable;
     private boolean lock;
-    private Date expiredTime;
+    private Long expiredTime;
+    private String nickName;
+    private Integer grade;
 
-    public AuthUser(String userName,
-                    String nickName,
-                    String password,
-                    List<GrantedAuthority> authorities,
-                    List<String> roles,
-                    Long id,
-                    Byte type,
-                    String avatar,
-                    boolean enable,
-                    boolean lock,
-                    Date expiredTime) {
-        this.userName = userName;
-        this.nickName = nickName;
-        this.password = password;
-        this.authorities=authorities;
-        this.roles=roles;
-        this.type=type;
-        this.id=id;
-        this.avatar=avatar;
-        this.enable=enable;
-        this.lock=lock;
-        this.expiredTime=expiredTime;
-    }
+
+    public AuthUser() {}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -62,7 +40,7 @@ public class AuthUser implements UserDetails  {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.expiredTime.compareTo(new Date()) > 0;
+        return this.expiredTime.compareTo(new Date().getTime()) > 0;
     }
 
     @Override
@@ -96,13 +74,6 @@ public class AuthUser implements UserDetails  {
         this.id = id;
     }
 
-    public Byte getType() {
-        return type;
-    }
-
-    public void setType(Byte type) {
-        this.type = type;
-    }
 
     public void setAuthorities(List<GrantedAuthority> authorities) {
         this.authorities = authorities;
@@ -125,20 +96,47 @@ public class AuthUser implements UserDetails  {
         this.avatar = avatar;
     }
 
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-
     public String getNickName() {
         return nickName;
     }
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    public boolean isLock() {
+        return lock;
+    }
+
+    public void setLock(boolean lock) {
+        this.lock = lock;
+    }
+
+    public Long getExpiredTime() {
+        return expiredTime;
+    }
+
+    public void setExpiredTime(Long expiredTime) {
+        this.expiredTime = expiredTime;
+    }
+
+    public Integer getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Integer grade) {
+        this.grade = grade;
     }
 }

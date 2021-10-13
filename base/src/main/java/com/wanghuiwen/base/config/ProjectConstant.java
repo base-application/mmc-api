@@ -33,10 +33,8 @@ public final class ProjectConstant {
         department =department1;
 
         User user = new User();
-        user.setAvatar("http://e.hiphotos.baidu.com/image/pic/item/a1ec08fa513d2697e542494057fbb2fb4316d81e.jpg");
         user.setEnable(true);
         user.setLoginName("admin");
-        user.setNickName("管理员");
         user.setPassword(new BCryptPasswordEncoder().encode("123456"));
         user.setLocked(false);
         users.add(user);

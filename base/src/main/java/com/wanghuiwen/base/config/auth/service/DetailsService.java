@@ -35,7 +35,7 @@ public class DetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userService.findByLoginName(s);
+        AuthUser user = userService.getAuthUser(s);
         if(user==null){
             throw new UsernameNotFoundException(messageSource.getMessage("login.fail", null, LocaleContextHolder.getLocale()));
         }
@@ -53,17 +53,9 @@ public class DetailsService implements UserDetailsService {
             }
         }
 
-        return new AuthUser(user.getLoginName(),
-                user.getNickName(),
-                user.getPassword(),
-                authorities,
-                roles,
-                user.getId(),
-                (byte)1,
-                user.getAvatar(),
-                user.getEnable(),
-                user.getLocked(),
-                new Date(user.getExpiredTime()));
+        user.setAuthorities(authorities);
+        user.setRoles(roles);
+        return user;
 
     }
 }

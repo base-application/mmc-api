@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wanghuiwen.base.dao.UserMapper">
-    <resultMap id="BaseResultMap" type="com.wanghuiwen.base.model.User">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.base.model.User">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="enable" jdbcType="BIT" property="enable" />
+    <result column="expired_time" jdbcType="BIGINT" property="expiredTime" />
+    <result column="credentials_expired_time" jdbcType="BIGINT" property="credentialsExpiredTime" />
+    <result column="locked" jdbcType="BIT" property="locked" />
+  </resultMap>
+
+    <resultMap id="auth" type="com.wanghuiwen.core.config.AuthUser">
         <!--
           WARNING - @mbg.generated
         -->
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="login_name" jdbcType="VARCHAR" property="loginName"/>
-        <result column="password" jdbcType="VARCHAR" property="password"/>
-        <result column="enable" jdbcType="BIT" property="enable"/>
-        <result column="expired_time" jdbcType="BIGINT" property="expiredTime"/>
-        <result column="credentials_expired_time" jdbcType="BIGINT" property="credentialsExpiredTime"/>
-        <result column="locked" jdbcType="BIT" property="locked"/>
-        <result column="merchant_id" jdbcType="BIGINT" property="merchantId"/>
-        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
-        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="login_name" jdbcType="VARCHAR" property="userName" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="enable" jdbcType="BIT" property="enable" />
+        <result column="expired_time" jdbcType="BIGINT" property="expiredTime" />
+        <result column="credentials_expired_time" jdbcType="BIGINT" property="expiredTime" />
+        <result column="locked" jdbcType="BIT" property="lock" />
+        <result column="grade_id" jdbcType="INTEGER" property="grade" />
+        <result column="picture" jdbcType="VARCHAR" property="avatar" />
+        <result column="name" jdbcType="VARCHAR" property="nickName" />
     </resultMap>
 
     <select id="list" resultMap="BaseResultMap">
@@ -63,9 +76,14 @@
         AND EXISTS ( SELECT * FROM role WHERE role.id = user_role.role_id AND
 
         role.dept_id in
-        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+        <foreach close=")" collection="list" index="index" item="id" open="(" separator=",">
             #{id}
         </foreach>
         ))
+    </select>
+
+  <select id="findAuthUser" resultMap="auth">
+      SELECT a.*,ui.`name`,ui.grade_id,ui.picture from (SELECT * from user where login_name = #{s}) a
+       LEFT JOIN user_info ui on (ui.user_id = a.id )
     </select>
 </mapper>

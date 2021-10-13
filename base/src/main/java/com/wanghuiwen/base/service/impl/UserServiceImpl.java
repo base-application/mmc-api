@@ -7,6 +7,7 @@ import com.wanghuiwen.base.dao.UserMapper;
 import com.wanghuiwen.base.dao.UserRoleMapper;
 import com.wanghuiwen.base.model.*;
 import com.wanghuiwen.base.service.*;
+import com.wanghuiwen.common.JSONUtils;
 import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.core.response.ResultEnum;
@@ -14,6 +15,7 @@ import com.wanghuiwen.core.response.ResultGenerator;
 import com.wanghuiwen.core.service.AbstractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -100,8 +102,9 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
         res.put("token", jwtToken);
         res.put("id", userDetails.getId());
         res.put("nickname", userDetails.getNickName());
-        res.put("avatar", userDetails.getAvatar());
         res.put("username", userDetails.getUsername());
+        res.put("avatar", userDetails.getAvatar());
+        res.put("grade", userDetails.getGrade());
 
         /**
          * 设置登陆过期时间
@@ -194,5 +197,11 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
             userRole.setRoleId(role.getId());
             userRoleMapper.insertSelective(userRole);
         }
+    }
+
+    @Override
+    public AuthUser getAuthUser(String s) {
+
+        return userMapper.findAuthUser(s);
     }
 }
