@@ -10,12 +10,10 @@ jwt:
 logging:
   level:
     com:
-      common:
-        mybatis: debug
       wanghuiwen:
         base:
           dao: debug
-        ecommerce:
+        user:
           dao: debug
 mybatis:
   hot:

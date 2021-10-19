@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.ReferralMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Referral">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="referral_id" jdbcType="BIGINT" property="referralId" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="received_user" jdbcType="BIGINT" property="receivedUser" />
+    <result column="send_user" jdbcType="BIGINT" property="sendUser" />
+    <result column="fail_message" jdbcType="VARCHAR" property="failMessage" />
+    <result column="send_time" jdbcType="BIGINT" property="sendTime" />
+    <result column="received_time" jdbcType="BIGINT" property="receivedTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+</mapper>

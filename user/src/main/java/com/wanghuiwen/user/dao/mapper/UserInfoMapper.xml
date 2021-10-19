@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.UserInfo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="group_id" jdbcType="INTEGER" property="groupId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber"/>
+        <result column="picture" jdbcType="VARCHAR" property="picture"/>
+        <result column="industry" jdbcType="VARCHAR" property="industry"/>
+        <result column="country" jdbcType="INTEGER" property="country"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="birthday" jdbcType="BIGINT" property="birthday"/>
+        <result column="occupation" jdbcType="VARCHAR" property="occupation"/>
+        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>
+        <result column="whatsapp" jdbcType="VARCHAR" property="whatsapp"/>
+        <result column="facebook" jdbcType="VARCHAR" property="facebook"/>
+        <result column="linkedin" jdbcType="VARCHAR" property="linkedin"/>
+        <result column="youtube" jdbcType="VARCHAR" property="youtube"/>
+        <result column="instagram" jdbcType="VARCHAR" property="instagram"/>
+        <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
+    </resultMap>
+
+
+    <resultMap id="vo" type="com.wanghuiwen.user.vo.UserInfoVo">
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="group_id" jdbcType="INTEGER" property="groupId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber"/>
+        <result column="picture" jdbcType="VARCHAR" property="picture"/>
+        <result column="industry" jdbcType="VARCHAR" property="industry"/>
+        <result column="country" jdbcType="INTEGER" property="country"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="birthday" jdbcType="BIGINT" property="birthday"/>
+        <result column="occupation" jdbcType="VARCHAR" property="occupation"/>
+        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>
+        <result column="whatsapp" jdbcType="VARCHAR" property="whatsapp"/>
+        <result column="facebook" jdbcType="VARCHAR" property="facebook"/>
+        <result column="linkedin" jdbcType="VARCHAR" property="linkedin"/>
+        <result column="youtube" jdbcType="VARCHAR" property="youtube"/>
+        <result column="instagram" jdbcType="VARCHAR" property="instagram"/>
+        <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
+        <result column="enable" jdbcType="BIT" property="enable"/>
+        <collection property="companyVos" column="user_id" javaType="ArrayList"
+                    select="com.wanghuiwen.user.dao.UserCompanyMapper.selectByUser"/>
+    </resultMap>
+
+    <resultMap id="network" type="com.wanghuiwen.user.vo.UserNetWorkVo">
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="group_id" jdbcType="INTEGER" property="groupId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber"/>
+        <result column="picture" jdbcType="VARCHAR" property="picture"/>
+        <result column="industry" jdbcType="VARCHAR" property="industry"/>
+        <result column="country" jdbcType="INTEGER" property="country"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="birthday" jdbcType="BIGINT" property="birthday"/>
+        <result column="occupation" jdbcType="VARCHAR" property="occupation"/>
+        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>
+        <result column="whatsapp" jdbcType="VARCHAR" property="whatsapp"/>
+        <result column="facebook" jdbcType="VARCHAR" property="facebook"/>
+        <result column="linkedin" jdbcType="VARCHAR" property="linkedin"/>
+        <result column="youtube" jdbcType="VARCHAR" property="youtube"/>
+        <result column="instagram" jdbcType="VARCHAR" property="instagram"/>
+        <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
+        <result column="enable" jdbcType="INTEGER" property="enable"/>
+        <result column="isFriend" jdbcType="INTEGER" property="isFriend"/>
+    </resultMap>
+
+
+    <select id="managerList" resultMap="vo">
+        SELECT ui.*,
+        u.`enable`,
+        ar.attendance_rate as attendance,
+        rgs.send_count as referralSend,
+        rgr.received_count as referralReceived,
+        tgs.thank_send_count as thankYouNote,
+        tgr.thank_received_count
+        FROM (select * from user_info where 1=1
+        <if test="params.name!=null and params.name!=''">
+            and name like concat('%',#{params.name},'%')
+        </if>
+        <if test="params.groupId!=null">
+            and group_id = #{params.groupId}
+        </if>
+        <if test="params.gradeId!=null">
+            and grade_id = #{params.gradeId}
+        </if>
+        ) ui
+        LEFT JOIN `user` u ON (ui.user_id = u.id)
+        LEFT JOIN grade ON (grade.grade_id = ui.grade_id)
+        LEFT JOIN mmc_group mg ON (mg.group_id = ui.group_id)
+        LEFT JOIN attendance_rate ar on (ar.user_id = ui.user_id)
+        LEFT JOIN referral_group_send rgs on (rgs.send_user = ui.user_id)
+        LEFT JOIN referral_group_received rgr on (rgr.received_user = ui.user_id)
+        LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.user_id)
+        LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
+        order by mg.group_name ,grade_id
+    </select>
+
+    <select id="network" resultMap="network">
+        SELECT ui.*,
+        u.`enable`,
+        ar.attendance_rate as attendance,
+        rgs.send_count as referralSend,
+        rgr.received_count as referralReceived,
+        tgs.thank_send_count as thankYouNote,
+        tgr.thank_received_count,
+        uf.create_time is not null as isFriend
+        FROM (select * from user_info where 1=1
+        <if test="params.name!=null and params.name!=''">
+            and name like concat('%',#{params.name},'%')
+        </if>
+        <if test="params.Industry!=null and params.Industry!=''">
+            and industry = #{params.Industry}
+        </if>
+        <if test="params.countryId!=null">
+            and country = #{params.countryId}
+        </if>
+        <if test="params.cityId!=null">
+            and state = #{params.cityId}
+        </if>
+        <if test="params.onlySelf!=null">
+            and exists(select * from user_friend uf2 where (uf2.fans_id = #{params.userId} and uf2.fans_id =
+            user_info.user_id) or (uf2.idol_id = #{params.userId} and uf2.idol_id = user_info.user_id))
+        </if>
+
+        ) ui
+        LEFT JOIN `user` u ON (ui.user_id = u.id)
+        LEFT JOIN grade ON (grade.grade_id = ui.grade_id)
+        LEFT JOIN mmc_group mg ON (mg.group_id = ui.group_id)
+        LEFT JOIN attendance_rate ar on (ar.user_id = ui.user_id)
+        LEFT JOIN referral_group_send rgs on (rgs.send_user = ui.user_id)
+        LEFT JOIN referral_group_received rgr on (rgr.received_user = ui.user_id)
+        LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.user_id)
+        LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
+        LEFT JOIN user_friend uf on ((uf.fans_id = #{params.userId} and uf.idol_id = ui.user_id) or (uf.idol_id =
+        #{params.userId} and uf.fans_id = ui.user_id))
+    </select>
+
+    <select id="detail" resultMap="vo">
+        SELECT ui.*,
+               u.`enable`,
+               ar.attendance_rate         as attendance,
+               rgs.send_count             as referralSend,
+               rgr.received_count         as referralReceived,
+               tgs.thank_send_count       as thankYouNote,
+               tgr.thank_received_count,
+               uf.create_time is not null as isFriend
+        FROM (select * from user_info where user_id = #{userId}) ui
+                     LEFT JOIN `user` u ON (ui.user_id = u.id)
+                     LEFT JOIN grade ON (grade.grade_id = ui.grade_id)
+                     LEFT JOIN mmc_group mg ON (mg.group_id = ui.group_id)
+                     LEFT JOIN attendance_rate ar on (ar.user_id = ui.user_id)
+                     LEFT JOIN referral_group_send rgs on (rgs.send_user = ui.user_id)
+                     LEFT JOIN referral_group_received rgr on (rgr.received_user = ui.user_id)
+                     LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.user_id)
+                     LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
+                     LEFT JOIN user_friend uf
+                on ((uf.fans_id = #{id} and uf.idol_id = ui.user_id) or
+                    (uf.idol_id = ${id} and uf.fans_id = ui.user_id))
+    </select>
+</mapper>

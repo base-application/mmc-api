@@ -17,7 +17,7 @@
   </resultMap>
 
   <select id="list" resultType="com.wanghuiwen.common.mybatis.ResultMap">
-    SELECT a.*,u.login_name,u.nick_name from (
+    SELECT a.*,u.login_name from (
                select * from sys_log where 1=1
         <if test="params.startDate != null and params.endDate != null">
           and create_time between #{params.startDate} and #{params.endDate}

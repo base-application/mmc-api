@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.ThankYouNoteMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.ThankYouNote">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="thank_you_note_id" jdbcType="BIGINT" property="thankYouNoteId" />
+    <result column="send_user" jdbcType="BIGINT" property="sendUser" />
+    <result column="received_user" jdbcType="BIGINT" property="receivedUser" />
+    <result column="send_time" jdbcType="BIGINT" property="sendTime" />
+    <result column="received_time" jdbcType="BIGINT" property="receivedTime" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="value" jdbcType="DECIMAL" property="value" />
+  </resultMap>
+</mapper>

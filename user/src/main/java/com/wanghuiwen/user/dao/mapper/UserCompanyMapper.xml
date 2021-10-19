@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.UserCompanyMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.UserCompany">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="company_logo" jdbcType="VARCHAR" property="companyLogo" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="company_address" jdbcType="VARCHAR" property="companyAddress" />
+    <result column="company_website" jdbcType="VARCHAR" property="companyWebsite" />
+    <result column="company_email" jdbcType="VARCHAR" property="companyEmail" />
+    <result column="company_phone" jdbcType="VARCHAR" property="companyPhone" />
+    <result column="company_facebook" jdbcType="VARCHAR" property="companyFacebook" />
+    <result column="company_linkedin" jdbcType="VARCHAR" property="companyLinkedin" />
+    <result column="company_youtube" jdbcType="VARCHAR" property="companyYoutube" />
+    <result column="company_instagram" jdbcType="VARCHAR" property="companyInstagram" />
+    <result column="company_introduction" jdbcType="VARCHAR" property="companyIntroduction" />
+    <result column="company_goals" jdbcType="VARCHAR" property="companyGoals" />
+    <result column="company_accomplishments" jdbcType="VARCHAR" property="companyAccomplishments" />
+    <result column="company_interests" jdbcType="VARCHAR" property="companyInterests" />
+    <result column="service_introduction" jdbcType="VARCHAR" property="serviceIntroduction" />
+  </resultMap>
+
+  <resultMap id="vo" type="com.wanghuiwen.user.vo.CompanyVo">
+    <id column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="company_logo" jdbcType="VARCHAR" property="companyLogo" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="company_address" jdbcType="VARCHAR" property="companyAddress" />
+    <result column="company_website" jdbcType="VARCHAR" property="companyWebsite" />
+    <result column="company_email" jdbcType="VARCHAR" property="companyEmail" />
+    <result column="company_phone" jdbcType="VARCHAR" property="companyPhone" />
+    <result column="company_facebook" jdbcType="VARCHAR" property="companyFacebook" />
+    <result column="company_linkedin" jdbcType="VARCHAR" property="companyLinkedin" />
+    <result column="company_youtube" jdbcType="VARCHAR" property="companyYoutube" />
+    <result column="company_instagram" jdbcType="VARCHAR" property="companyInstagram" />
+    <result column="company_introduction" jdbcType="VARCHAR" property="companyIntroduction" />
+    <result column="company_goals" jdbcType="VARCHAR" property="companyGoals" />
+    <result column="company_accomplishments" jdbcType="VARCHAR" property="companyAccomplishments" />
+    <result column="company_interests" jdbcType="VARCHAR" property="companyInterests" />
+    <result column="service_introduction" jdbcType="VARCHAR" property="serviceIntroduction" />
+    <collection property="producePictures" column="company_id" select="com.wanghuiwen.user.dao.CompanyProduceMapper.selectByCompanyId"/>
+  </resultMap>
+
+  <select id="selectByUser" resultMap="vo">
+    select  * from user_company where user_id =#{id}
+  </select>
+</mapper>

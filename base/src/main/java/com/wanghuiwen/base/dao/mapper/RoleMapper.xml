@@ -25,4 +25,8 @@
   <delete id="deleteButtonByRole">
     delete  from role_button where role_id = #{roleId}
     </delete>
+
+  <select id="selectByName" resultMap="BaseResultMap">
+    select * from role where name = #{roleUser}
+    </select>
 </mapper>

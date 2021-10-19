@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.CompanyProduceMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.CompanyProduce">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="produce_id" jdbcType="BIGINT" property="produceId" />
+    <result column="produce_picture" jdbcType="VARCHAR" property="producePicture" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+  </resultMap>
+
+  <select id="selectByCompanyId" resultMap="BaseResultMap">
+    select * from company_produce where company_id = #{id}
+  </select>
+</mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.GuideLineMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.GuideLine">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="guide_line_id" jdbcType="BIGINT" property="guideLineId" />
+    <result column="guide_line_title" jdbcType="VARCHAR" property="guideLineTitle" />
+    <result column="guide_line_image" jdbcType="VARCHAR" property="guideLineImage" />
+  </resultMap>
+</mapper>

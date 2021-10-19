@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.UserFriendApplyMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.UserFriendApply">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="fans_id" jdbcType="BIGINT" property="fansId" />
+    <result column="idol_id" jdbcType="BIGINT" property="idolId" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+</mapper>

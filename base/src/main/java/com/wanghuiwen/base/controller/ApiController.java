@@ -17,6 +17,7 @@ import com.wanghuiwen.core.response.ResultEnum;
 import com.wanghuiwen.core.response.ResultGenerator;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -112,6 +113,7 @@ public class ApiController extends Ctrl {
 
     @PostMapping(value = "user/add",name = "添加/修改用户")
     public Result userAdd(@RequestBody User user) {
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userService.saveOrUpdate(user);
         return resultGenerator.genSuccessResult(user.getId());
     }
