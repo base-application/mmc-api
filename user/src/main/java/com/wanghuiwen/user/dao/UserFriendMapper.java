@@ -6,5 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UserFriendMapper extends ApiMapper<UserFriend> {
-    UserFriend selectByPrimaryKey(Long idolId, Long fansId);
+    UserFriend selectByUser(Long idolId, Long fansId);
 }

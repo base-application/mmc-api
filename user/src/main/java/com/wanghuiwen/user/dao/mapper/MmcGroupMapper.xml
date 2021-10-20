@@ -8,4 +8,39 @@
     <id column="group_id" jdbcType="INTEGER" property="groupId" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
   </resultMap>
+
+  <resultMap id="vo" type="com.wanghuiwen.user.vo.GroupUserVo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <collection property="userInfoVos" column="group_id" ofType="com.wanghuiwen.user.vo.UserInfoVo" select="listGroupUser"/>
+  </resultMap>
+
+  <select id="listUser" resultMap="vo">
+    select  * from mmc_group
+  </select>
+
+  <select id="listGroupUser" resultMap="com.wanghuiwen.user.dao.UserInfoMapper.vo">
+    SELECT ui.*,
+    u.`enable`,
+    mg.group_name,
+    grade.grade_name,
+    ar.attendance_rate as attendance,
+    rgs.send_count as referralSend,
+    rgr.received_count as referralReceived,
+    tgs.thank_send_count as thankYouNote,
+    tgr.thank_received_count
+    FROM (select * from user_info where group_id = #{id} ) ui
+    LEFT JOIN `user` u ON (ui.user_id = u.id)
+    LEFT JOIN grade ON (grade.grade_id = ui.grade_id)
+    LEFT JOIN mmc_group mg ON (mg.group_id = ui.group_id)
+    LEFT JOIN attendance_rate ar on (ar.user_id = ui.user_id)
+    LEFT JOIN referral_group_send rgs on (rgs.send_user = ui.user_id)
+    LEFT JOIN referral_group_received rgr on (rgr.received_user = ui.user_id)
+    LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.user_id)
+    LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
+    order by mg.group_name ,grade_id
+  </select>
 </mapper>

@@ -10,7 +10,7 @@
     <result column="create_time" jdbcType="BIGINT" property="createTime" />
   </resultMap>
 
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+  <select id="selectByUser" resultMap="BaseResultMap">
     select * from user_friend where (fans_id = #{fansId} and idol_id = #{idolId}) or ( idol_id = #{fansId} and fans_id = #{idolId})
   </select>
 </mapper>

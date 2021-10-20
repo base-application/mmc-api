@@ -30,7 +30,7 @@ public class UserFriendServiceImpl extends AbstractService<UserFriend> implement
     @Override
     public void apply(Long idolId, AuthUser authUser) {
 
-        UserFriend userFriend = userFriendMapper.selectByPrimaryKey(idolId,authUser.getId());
+        UserFriend userFriend = userFriendMapper.selectByUser(idolId,authUser.getId());
         if(userFriend!=null) throw  new ServiceException("已经是好友了");
 
         UserFriendApply apply = new UserFriendApply();
@@ -47,7 +47,7 @@ public class UserFriendServiceImpl extends AbstractService<UserFriend> implement
         UserFriendApply apply =  userFriendApplyMapper.selectByPrimaryKey(id);
         if(!apply.getIdolId().equals(authUser.getId())) throw  new ServiceException("不是本人的好友请求");
 
-        UserFriend userFriend = userFriendMapper.selectByPrimaryKey(apply.getFansId(),authUser.getId());
+        UserFriend userFriend = userFriendMapper.selectByUser(apply.getFansId(),authUser.getId());
         if(userFriend==null){
             UserFriend friend = new UserFriend();
             friend.setFansId(apply.getFansId());

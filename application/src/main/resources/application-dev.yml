@@ -26,7 +26,7 @@ mybatis:
 server:
   port: 8005
   servlet:
-    context-path: ''
+    context-path: '/mmc'
   tomcat:
     uri-encoding: UTF-8
 spring:

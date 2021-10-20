@@ -67,7 +67,7 @@
 </div>
 <script type="text/javascript">
     function generator() {
-        fetch('/generator/code/submit', {
+        fetch('/mmc/generator/code/submit', {
             method: 'post',
             body: new FormData(document.getElementById('code'))
         }).then(res => res.json())

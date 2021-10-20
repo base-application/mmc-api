@@ -44,8 +44,7 @@
         <result column="instagram" jdbcType="VARCHAR" property="instagram"/>
         <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
         <result column="enable" jdbcType="BIT" property="enable"/>
-        <collection property="companyVos" column="user_id" javaType="ArrayList"
-                    select="com.wanghuiwen.user.dao.UserCompanyMapper.selectByUser"/>
+        <collection property="companyVos" column="user_id" javaType="ArrayList" select="com.wanghuiwen.user.dao.UserCompanyMapper.selectByUser"/>
     </resultMap>
 
     <resultMap id="network" type="com.wanghuiwen.user.vo.UserNetWorkVo">
@@ -74,6 +73,8 @@
     <select id="managerList" resultMap="vo">
         SELECT ui.*,
         u.`enable`,
+        mg.group_name,
+        grade.grade_name,
         ar.attendance_rate as attendance,
         rgs.send_count as referralSend,
         rgr.received_count as referralReceived,
@@ -122,6 +123,9 @@
         </if>
         <if test="params.cityId!=null">
             and state = #{params.cityId}
+        </if>
+        <if test="params.groupId!=null">
+            and group_id = #{params.groupId}
         </if>
         <if test="params.onlySelf!=null">
             and exists(select * from user_friend uf2 where (uf2.fans_id = #{params.userId} and uf2.fans_id =
