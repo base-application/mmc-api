@@ -1,18 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wanghuiwen.user.dao.ReferralMapper">
-  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Referral">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="referral_id" jdbcType="BIGINT" property="referralId" />
-    <result column="reason" jdbcType="VARCHAR" property="reason" />
-    <result column="received_user" jdbcType="BIGINT" property="receivedUser" />
-    <result column="send_user" jdbcType="BIGINT" property="sendUser" />
-    <result column="fail_message" jdbcType="VARCHAR" property="failMessage" />
-    <result column="send_time" jdbcType="BIGINT" property="sendTime" />
-    <result column="received_time" jdbcType="BIGINT" property="receivedTime" />
-    <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="remark" jdbcType="VARCHAR" property="remark" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Referral">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="referral_id" jdbcType="BIGINT" property="referralId"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="received_user" jdbcType="BIGINT" property="receivedUser"/>
+        <result column="send_user" jdbcType="BIGINT" property="sendUser"/>
+        <result column="fail_message" jdbcType="VARCHAR" property="failMessage"/>
+        <result column="send_time" jdbcType="BIGINT" property="sendTime"/>
+        <result column="received_time" jdbcType="BIGINT" property="receivedTime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+
+    <resultMap id="vo" type="com.wanghuiwen.user.vo.ReferralVo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="referral_id" jdbcType="BIGINT" property="referralId"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="received_user" jdbcType="BIGINT" property="receivedUser"/>
+        <result column="send_user" jdbcType="BIGINT" property="sendUser"/>
+        <result column="fail_message" jdbcType="VARCHAR" property="failMessage"/>
+        <result column="send_time" jdbcType="BIGINT" property="sendTime"/>
+        <result column="received_time" jdbcType="BIGINT" property="receivedTime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <collection property="picture" column="referral_id" ofType="com.wanghuiwen.user.vo.ImageVo"
+                    select="getPicture"/>
+    </resultMap>
+
+    <select id="list" resultMap="vo">
+        SELECT
+        r.*,
+        send.`name` AS fromName,
+        send.picture AS fromPicture,
+        send.group_id AS fromGroupId ,
+        received.name AS toName,
+        received.picture AS toPicture,
+        received.group_id AS toGroupId
+        FROM
+        (select * from referral where 1=1
+        <if test="params.name != null and params.name != ''">
+            and exists(select * from user_info ui where ui.name like concat('%',#{params.name},'%') and (ui.user_id =
+            referral.received_user or ui.user_id = referral.send_user))
+        </if>
+        <if test="params.startTime != null and params.endTime != ''">
+            and send_time between #{params.startTime} and #{params.endTime}
+        </if>
+        <if test="params.receivedUser != null">
+            and received_user = #{params.receivedUser}
+        </if>
+        <if test="params.groupId != null">
+            and exists(select * from user_info ui where ui.group_id = #{params.groupId} and (ui.user_id =
+            referral.received_user or ui.user_id = referral.send_user))
+        </if>
+        ) r
+        LEFT JOIN user_info send ON ( send.user_id = r.send_user )
+        LEFT JOIN user_info received ON (received.user_id = r.received_user)
+    </select>
+
+    <select id="getPicture">
+        select *
+        from referral_picture
+        where referral_id = #{id}
+    </select>
+
+    <delete id="deleteByReferral">
+        delete
+        from referral_picture
+        where referral_id = #{referralId}
+    </delete>
 </mapper>
