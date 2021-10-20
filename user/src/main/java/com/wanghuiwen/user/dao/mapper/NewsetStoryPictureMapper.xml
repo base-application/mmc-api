@@ -9,4 +9,8 @@
     <result column="newest_story_id" jdbcType="BIGINT" property="newestStoryId" />
     <result column="newest_story_picture" jdbcType="VARCHAR" property="newestStoryPicture" />
   </resultMap>
+
+  <delete id="deleteByNew">
+    delete from newset_story_picture where newest_story_id = #{storyId}
+    </delete>
 </mapper>

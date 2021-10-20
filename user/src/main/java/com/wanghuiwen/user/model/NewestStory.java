@@ -13,8 +13,6 @@ public class NewestStory implements Serializable {
 
     private String link;
 
-    private String poster;
-
     @Column(name = "push_time")
     private Long pushTime;
 
@@ -60,20 +58,6 @@ public class NewestStory implements Serializable {
      */
     public void setLink(String link) {
         this.link = link;
-    }
-
-    /**
-     * @return poster
-     */
-    public String getPoster() {
-        return poster;
-    }
-
-    /**
-     * @param poster
-     */
-    public void setPoster(String poster) {
-        this.poster = poster;
     }
 
     /**

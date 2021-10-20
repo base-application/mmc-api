@@ -6,4 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface NewsetStoryPictureMapper extends ApiMapper<NewsetStoryPicture> {
+    void deleteByNew(Long storyId);
 }

@@ -8,7 +8,28 @@
     <id column="story_id" jdbcType="BIGINT" property="storyId" />
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="link" jdbcType="VARCHAR" property="link" />
-    <result column="poster" jdbcType="VARCHAR" property="poster" />
     <result column="push_time" jdbcType="BIGINT" property="pushTime" />
   </resultMap>
+
+  <resultMap id="vo" type="com.wanghuiwen.user.vo.NewestStoryVo">
+    <id column="story_id" jdbcType="BIGINT" property="storyId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="link" jdbcType="VARCHAR" property="link" />
+    <result column="push_time" jdbcType="BIGINT" property="pushTime" />
+    <collection property="poster" column="story_id" ofType="com.wanghuiwen.user.vo.ImageVo" select="getPoster"/>
+  </resultMap>
+
+  <select id="list" resultMap="vo">
+    select  * from newest_story where 1=1
+    <if test="params.description!= null and params.description!= ''">
+      and description like concat('%',#{params.description},'%')
+    </if>
+    <if test="params.startDate!= null and params.endDate!= null">
+      and push_time BETWEEN #{params.startDate} AND #{params.endDate}
+    </if>
+  </select>
+
+  <select id="getPoster">
+   select  newest_story_picture as url, newest_story_id as id from newset_story_picture where newest_story_id = #{id}
+  </select>
 </mapper>
