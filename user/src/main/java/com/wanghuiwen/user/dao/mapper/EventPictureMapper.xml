@@ -9,4 +9,8 @@
     <result column="event_id" jdbcType="BIGINT" property="eventId" />
     <result column="url" jdbcType="VARCHAR" property="url" />
   </resultMap>
+
+  <delete id="deleteByEvent">
+    delete  from event_picture where event_id = #{eventId}
+  </delete>
 </mapper>

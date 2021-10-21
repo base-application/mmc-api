@@ -6,4 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface EventPictureMapper extends ApiMapper<EventPicture> {
+    void deleteByEvent(Long eventId);
 }

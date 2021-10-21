@@ -1,19 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wanghuiwen.user.dao.AttendanceMapper">
-  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Attendance">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="user_id" jdbcType="BIGINT" property="userId" />
-    <id column="event_id" jdbcType="BIGINT" property="eventId" />
-    <result column="check_in_time" jdbcType="BIGINT" property="checkInTime" />
-    <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime" />
-    <result column="is_attendance" jdbcType="BIT" property="isAttendance" />
-    <result column="remark" jdbcType="VARCHAR" property="remark" />
-    <result column="agent" jdbcType="VARCHAR" property="agent" />
-    <result column="agent_role" jdbcType="VARCHAR" property="agentRole" />
-    <result column="absent_reason" jdbcType="VARCHAR" property="absentReason" />
-    <result column="facebook_comment" jdbcType="BIT" property="facebookComment" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Attendance">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <id column="event_id" jdbcType="BIGINT" property="eventId"/>
+        <result column="check_in_time" jdbcType="BIGINT" property="checkInTime"/>
+        <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime"/>
+        <result column="is_attendance" jdbcType="BIT" property="isAttendance"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="agent" jdbcType="VARCHAR" property="agent"/>
+        <result column="agent_role" jdbcType="VARCHAR" property="agentRole"/>
+        <result column="absent_reason" jdbcType="VARCHAR" property="absentReason"/>
+        <result column="facebook_comment" jdbcType="BIT" property="facebookComment"/>
+    </resultMap>
+
+    <resultMap id="userVo" type="com.wanghuiwen.user.vo.CheckHistoryVo">
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <id column="event_id" jdbcType="BIGINT" property="eventId"/>
+        <result column="check_in_time" jdbcType="BIGINT" property="checkInTime"/>
+        <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime"/>
+        <result column="is_attendance" jdbcType="BIT" property="isAttendance"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="agent" jdbcType="VARCHAR" property="agent"/>
+        <result column="agent_role" jdbcType="VARCHAR" property="agentRole"/>
+        <result column="absent_reason" jdbcType="VARCHAR" property="absentReason"/>
+    </resultMap>
+
+    <select id="selectUserEvent" resultMap="BaseResultMap">
+        select *
+        from attendance
+        where event_id = #{eventId}
+          and user_id = #{userId}
+    </select>
+
+    <update id="updateUserEvent">
+        update attendance set user_id = #{userId}
+        <if test="isAttendance!=null">
+            , is_attendance = #{isAttendance}
+        </if>
+        <if test="checkInTime!=null">
+            , check_in_time = #{checkInTime}
+        </if>
+        <if test="checkOutTime!=null">
+            , check_out_time = #{checkOutTime}
+        </if>
+        <if test="agent!=null">
+            , agent = #{agent}
+        </if>
+        <if test="agentRole!=null">
+            , agent_role = #{agentRole}
+        </if>
+        <if test="absentReason!=null">
+            , absent_reason = #{absentReason}
+        </if>
+        <if test="facebookComment!=null">
+            , facebook_comment = #{facebookComment}
+        </if>
+        where user_id = #{userId} and event_id = #{eventId}
+    </update>
+
+    <select id="deleteUserEvent">
+        delete
+        from attendance
+        where event_id = #{eventId}
+          and user_id = #{userId}
+    </select>
+
+    <select id="checkHistory" resultMap="userVo">
+        SELECT a.*,
+               me.event_title,
+               me.event_description,
+               me.event_start_time,
+               me.event_end_time,
+               me.event_location,
+               me.event_map_link
+        from (select * from attendance where user_id = #{id}) a
+                     LEFT JOIN mmc_event me on (me.event_id = a.event_id)
+    </select>
 </mapper>

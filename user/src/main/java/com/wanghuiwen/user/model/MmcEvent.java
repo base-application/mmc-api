@@ -58,7 +58,7 @@ public class MmcEvent implements Serializable {
      * 审核状态 1 未处理 2 同意 3 拒绝
      */
     @Column(name = "approve_status")
-    private String approveStatus;
+    private Integer approveStatus;
 
     private static final long serialVersionUID = 1L;
 
@@ -221,7 +221,7 @@ public class MmcEvent implements Serializable {
      *
      * @return approve_status - 审核状态 1 未处理 2 同意 3 拒绝
      */
-    public String getApproveStatus() {
+    public Integer getApproveStatus() {
         return approveStatus;
     }
 
@@ -230,7 +230,7 @@ public class MmcEvent implements Serializable {
      *
      * @param approveStatus 审核状态 1 未处理 2 同意 3 拒绝
      */
-    public void setApproveStatus(String approveStatus) {
+    public void setApproveStatus(Integer approveStatus) {
         this.approveStatus = approveStatus;
     }
 }

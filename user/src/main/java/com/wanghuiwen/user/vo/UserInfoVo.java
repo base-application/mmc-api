@@ -54,8 +54,11 @@ public class UserInfoVo {
     private int attendance;
     private int referralSend;
     private int referralReceived;
-    private int thankUouNote;
+    private int thankYouNote;
     private boolean enable;
+
+    private int positionId;
+    private String positionName;
 
     List<CompanyVo> companyVos;
 
@@ -235,12 +238,12 @@ public class UserInfoVo {
         this.referralReceived = referralReceived;
     }
 
-    public int getThankUouNote() {
-        return thankUouNote;
+    public int getThankYouNote() {
+        return thankYouNote;
     }
 
-    public void setThankUouNote(int thankUouNote) {
-        this.thankUouNote = thankUouNote;
+    public void setThankYouNote(int thankYouNote) {
+        this.thankYouNote = thankYouNote;
     }
 
     public boolean isEnable() {
@@ -257,5 +260,21 @@ public class UserInfoVo {
 
     public void setCompanyVos(List<CompanyVo> companyVos) {
         this.companyVos = companyVos;
+    }
+
+    public int getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(int positionId) {
+        this.positionId = positionId;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
     }
 }

@@ -9,6 +9,7 @@ import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.config.Const;
 import com.wanghuiwen.user.model.UserInfo;
+import com.wanghuiwen.user.service.PositionService;
 import com.wanghuiwen.user.service.UserCompanyService;
 import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.user.vo.CompanyVo;
@@ -43,6 +44,8 @@ public class UserInfoController extends Ctrl{
     private UserCompanyService userCompanyService;
     @Resource
     private UserService userService;
+    @Resource
+    private PositionService positionService;
     @Resource
     private RedisTemplate<String,String> redisTemplate;
 
@@ -203,6 +206,12 @@ public class UserInfoController extends Ctrl{
         userService.update(user);
         redisTemplate.delete(key);
         return resultGenerator.genSuccessResult();
+    }
+
+    @ApiOperation(value = "用户职位下拉选项", tags = {"用户管理"}, notes = "用户职位下拉选项")
+    @GetMapping(value="/position/list",name="用户职位下拉选项")
+    public Result positionList() {
+        return resultGenerator.genSuccessResult(positionService.findAll());
     }
 
     /**

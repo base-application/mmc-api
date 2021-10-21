@@ -1,6 +1,5 @@
 package com.wanghuiwen.user.controller;
 
-import com.github.pagehelper.PageHelper;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.model.MmcGroup;
@@ -32,9 +31,9 @@ public class GroupController extends Ctrl{
 
     @ApiOperation(value = "用户分组添加", tags = {"用户分组"}, notes = "用户分组添加")
     @PutMapping(value="/add",name="用户分组添加")
-    public Result add(@ApiParam MmcGroup group) {
-        mmcGroupService.save(group);
-        return resultGenerator.genSuccessResult();
+    public Result add(@RequestBody MmcGroup group) {
+        mmcGroupService.saveOrUpdate(group);
+        return resultGenerator.genSuccessResult(group.getGroupId());
     }
 
     @ApiOperation(value = "用户分组删除", tags = {"用户分组"}, notes = "用户分组删除")

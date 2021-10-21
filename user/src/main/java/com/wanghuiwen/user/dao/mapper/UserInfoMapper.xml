@@ -75,6 +75,7 @@
         u.`enable`,
         mg.group_name,
         grade.grade_name,
+        po.position_name,
         ar.attendance_rate as attendance,
         rgs.send_count as referralSend,
         rgr.received_count as referralReceived,
@@ -99,6 +100,7 @@
         LEFT JOIN referral_group_received rgr on (rgr.received_user = ui.user_id)
         LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.user_id)
         LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
+        left join position po on (po.position_id  = ui.position_id)
         order by mg.group_name ,grade_id
     </select>
 
