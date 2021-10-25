@@ -6,4 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface ThankYouNotePictureMapper extends ApiMapper<ThankYouNotePicture> {
+    void deleteByThank(Long thankYouNoteId);
 }

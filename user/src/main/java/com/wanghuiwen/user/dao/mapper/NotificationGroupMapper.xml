@@ -8,4 +8,8 @@
     <id column="notification_id" jdbcType="INTEGER" property="notificationId" />
     <id column="group_id" jdbcType="INTEGER" property="groupId" />
   </resultMap>
+
+  <delete id="deleteByNotification">
+    delete from notification_group where notification_id = #{notificationId}
+    </delete>
 </mapper>

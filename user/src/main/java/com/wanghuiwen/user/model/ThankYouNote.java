@@ -44,6 +44,12 @@ public class ThankYouNote implements Serializable {
      */
     private BigDecimal value;
 
+    /**
+     * 关联refrral
+     */
+    @Column(name = "referral_id")
+    private Long referralId;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -166,5 +172,23 @@ public class ThankYouNote implements Serializable {
      */
     public void setValue(BigDecimal value) {
         this.value = value;
+    }
+
+    /**
+     * 获取关联refrral
+     *
+     * @return referral_id - 关联refrral
+     */
+    public Long getReferralId() {
+        return referralId;
+    }
+
+    /**
+     * 设置关联refrral
+     *
+     * @param referralId 关联refrral
+     */
+    public void setReferralId(Long referralId) {
+        this.referralId = referralId;
     }
 }

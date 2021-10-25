@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.AdvertisementMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Advertisement">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="advertisement_id" jdbcType="INTEGER" property="advertisementId" />
+    <result column="advertisement_poster" jdbcType="VARCHAR" property="advertisementPoster" />
+    <result column="advertisement_type" jdbcType="INTEGER" property="advertisementType" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="advertisement_link" jdbcType="VARCHAR" property="advertisementLink" />
+  </resultMap>
+
+  <select id="pull" resultMap="BaseResultMap">
+    select  * from advertisement where status = 1  order by advertisement_id desc limit 1
+    </select>
+</mapper>

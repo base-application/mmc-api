@@ -113,8 +113,19 @@ public class ApiController extends Ctrl {
 
     @PostMapping(value = "user/add",name = "添加/修改用户")
     public Result userAdd(@RequestBody User user) {
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        if(user.getPassword()!=null){
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        }
         userService.saveOrUpdate(user);
+        return resultGenerator.genSuccessResult(user.getId());
+    }
+
+
+    @PostMapping(value = "user/enable",name = "禁用启用用户")
+    public Result userEnable(@RequestBody User vo) {
+        User user = userService.findById(vo.getId());
+        user.setEnable(vo.getEnable());
+        userService.update(user);
         return resultGenerator.genSuccessResult(user.getId());
     }
 

@@ -6,4 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface NotificationUserMapper extends ApiMapper<NotificationUser> {
+    NotificationUser selectByUser(Integer notificationId, Long userId);
+
+    void updateByUser(NotificationUser notificationUser);
 }

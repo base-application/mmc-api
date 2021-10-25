@@ -19,4 +19,10 @@ public class Const {
     //拒绝
     public static  final  int EVENT__REFUSE = 3;
 
+
+    //已读
+    public static  final  int NOTIFICATION_READ = 1;
+    //删除
+    public static  final  int NOTIFICATION__DELETE= 2;
+
 }

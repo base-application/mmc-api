@@ -8,4 +8,8 @@
     <id column="slider_id" jdbcType="INTEGER" property="sliderId" />
     <id column="group_id" jdbcType="INTEGER" property="groupId" />
   </resultMap>
+
+  <delete id="deleteBySlider">
+    delete from slider_group where slider_id = #{sliderId}
+    </delete>
 </mapper>

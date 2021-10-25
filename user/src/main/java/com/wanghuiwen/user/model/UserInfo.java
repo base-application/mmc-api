@@ -77,6 +77,14 @@ public class UserInfo implements Serializable {
     @Column(name = "grade_id")
     private Integer gradeId;
 
+    /**
+     * Member/Guest
+     */
+    private String member;
+
+    @Column(name = "position_id")
+    private Integer positionId;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -359,5 +367,37 @@ public class UserInfo implements Serializable {
      */
     public void setGradeId(Integer gradeId) {
         this.gradeId = gradeId;
+    }
+
+    /**
+     * 获取Member/Guest
+     *
+     * @return member - Member/Guest
+     */
+    public String getMember() {
+        return member;
+    }
+
+    /**
+     * 设置Member/Guest
+     *
+     * @param member Member/Guest
+     */
+    public void setMember(String member) {
+        this.member = member;
+    }
+
+    /**
+     * @return position_id
+     */
+    public Integer getPositionId() {
+        return positionId;
+    }
+
+    /**
+     * @param positionId
+     */
+    public void setPositionId(Integer positionId) {
+        this.positionId = positionId;
     }
 }

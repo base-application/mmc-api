@@ -6,4 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface SliderGroupMapper extends ApiMapper<SliderGroup> {
+    void deleteBySlider(Integer sliderId);
 }

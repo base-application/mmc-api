@@ -9,4 +9,8 @@
     <result column="note_id" jdbcType="BIGINT" property="noteId" />
     <result column="url" jdbcType="VARCHAR" property="url" />
   </resultMap>
+
+  <delete id="deleteByThank">
+    delete from thank_you_note_picture where note_id = #{thankYouNoteId}
+    </delete>
 </mapper>

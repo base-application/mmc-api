@@ -107,7 +107,7 @@ public class UserInfoController extends Ctrl{
 
     @ApiOperation(value = "修改用户信息", tags = {"用户管理"}, notes = "修改用户信息")
     @PutMapping("/update")
-    public Result update(UserInfo userInfo){
+    public Result update(@RequestBody UserInfo userInfo){
         userInfoService.update(userInfo);
         return resultGenerator.genSuccessResult();
     }

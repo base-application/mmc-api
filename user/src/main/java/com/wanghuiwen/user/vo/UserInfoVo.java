@@ -59,6 +59,7 @@ public class UserInfoVo {
 
     private int positionId;
     private String positionName;
+    private String member;
 
     List<CompanyVo> companyVos;
 
@@ -276,5 +277,13 @@ public class UserInfoVo {
 
     public void setPositionName(String positionName) {
         this.positionName = positionName;
+    }
+
+    public String getMember() {
+        return member;
+    }
+
+    public void setMember(String member) {
+        this.member = member;
     }
 }

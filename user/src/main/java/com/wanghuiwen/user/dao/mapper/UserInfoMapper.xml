@@ -1,72 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wanghuiwen.user.dao.UserInfoMapper">
-    <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.UserInfo">
-        <!--
-          WARNING - @mbg.generated
-        -->
-        <id column="user_id" jdbcType="BIGINT" property="userId"/>
-        <result column="group_id" jdbcType="INTEGER" property="groupId"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber"/>
-        <result column="picture" jdbcType="VARCHAR" property="picture"/>
-        <result column="industry" jdbcType="VARCHAR" property="industry"/>
-        <result column="country" jdbcType="INTEGER" property="country"/>
-        <result column="state" jdbcType="INTEGER" property="state"/>
-        <result column="birthday" jdbcType="BIGINT" property="birthday"/>
-        <result column="occupation" jdbcType="VARCHAR" property="occupation"/>
-        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>
-        <result column="whatsapp" jdbcType="VARCHAR" property="whatsapp"/>
-        <result column="facebook" jdbcType="VARCHAR" property="facebook"/>
-        <result column="linkedin" jdbcType="VARCHAR" property="linkedin"/>
-        <result column="youtube" jdbcType="VARCHAR" property="youtube"/>
-        <result column="instagram" jdbcType="VARCHAR" property="instagram"/>
-        <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.UserInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="concat_number" jdbcType="VARCHAR" property="concatNumber" />
+    <result column="picture" jdbcType="VARCHAR" property="picture" />
+    <result column="industry" jdbcType="VARCHAR" property="industry" />
+    <result column="country" jdbcType="INTEGER" property="country" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="birthday" jdbcType="BIGINT" property="birthday" />
+    <result column="occupation" jdbcType="VARCHAR" property="occupation" />
+    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+    <result column="whatsapp" jdbcType="VARCHAR" property="whatsapp" />
+    <result column="facebook" jdbcType="VARCHAR" property="facebook" />
+    <result column="linkedin" jdbcType="VARCHAR" property="linkedin" />
+    <result column="youtube" jdbcType="VARCHAR" property="youtube" />
+    <result column="instagram" jdbcType="VARCHAR" property="instagram" />
+    <result column="grade_id" jdbcType="INTEGER" property="gradeId" />
+    <result column="member" jdbcType="VARCHAR" property="member" />
+    <result column="position_id" jdbcType="INTEGER" property="positionId" />
+  </resultMap>
 
 
     <resultMap id="vo" type="com.wanghuiwen.user.vo.UserInfoVo">
-        <id column="user_id" jdbcType="BIGINT" property="userId"/>
-        <result column="group_id" jdbcType="INTEGER" property="groupId"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber"/>
-        <result column="picture" jdbcType="VARCHAR" property="picture"/>
-        <result column="industry" jdbcType="VARCHAR" property="industry"/>
-        <result column="country" jdbcType="INTEGER" property="country"/>
-        <result column="state" jdbcType="INTEGER" property="state"/>
-        <result column="birthday" jdbcType="BIGINT" property="birthday"/>
-        <result column="occupation" jdbcType="VARCHAR" property="occupation"/>
-        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>
-        <result column="whatsapp" jdbcType="VARCHAR" property="whatsapp"/>
-        <result column="facebook" jdbcType="VARCHAR" property="facebook"/>
-        <result column="linkedin" jdbcType="VARCHAR" property="linkedin"/>
-        <result column="youtube" jdbcType="VARCHAR" property="youtube"/>
-        <result column="instagram" jdbcType="VARCHAR" property="instagram"/>
-        <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
-        <result column="enable" jdbcType="BIT" property="enable"/>
-        <collection property="companyVos" column="user_id" javaType="ArrayList" select="com.wanghuiwen.user.dao.UserCompanyMapper.selectByUser"/>
+        <id column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="group_id" jdbcType="INTEGER" property="groupId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber" />
+        <result column="picture" jdbcType="VARCHAR" property="picture" />
+        <result column="industry" jdbcType="VARCHAR" property="industry" />
+        <result column="country" jdbcType="INTEGER" property="country" />
+        <result column="state" jdbcType="INTEGER" property="state" />
+        <result column="birthday" jdbcType="BIGINT" property="birthday" />
+        <result column="occupation" jdbcType="VARCHAR" property="occupation" />
+        <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+        <result column="whatsapp" jdbcType="VARCHAR" property="whatsapp" />
+        <result column="facebook" jdbcType="VARCHAR" property="facebook" />
+        <result column="linkedin" jdbcType="VARCHAR" property="linkedin" />
+        <result column="youtube" jdbcType="VARCHAR" property="youtube" />
+        <result column="instagram" jdbcType="VARCHAR" property="instagram" />
+        <result column="grade_id" jdbcType="INTEGER" property="gradeId" />
+        <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
+        <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+        <result column="position_name" jdbcType="VARCHAR" property="positionName" />
+        <result column="position_id" jdbcType="INTEGER" property="positionId" />
+        <result column="enable" jdbcType="BIT" property="enable" />
+        <collection column="user_id" javaType="ArrayList" property="companyVos" select="com.wanghuiwen.user.dao.UserCompanyMapper.selectByUser" />
     </resultMap>
 
     <resultMap id="network" type="com.wanghuiwen.user.vo.UserNetWorkVo">
-        <id column="user_id" jdbcType="BIGINT" property="userId"/>
-        <result column="group_id" jdbcType="INTEGER" property="groupId"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber"/>
-        <result column="picture" jdbcType="VARCHAR" property="picture"/>
-        <result column="industry" jdbcType="VARCHAR" property="industry"/>
-        <result column="country" jdbcType="INTEGER" property="country"/>
-        <result column="state" jdbcType="INTEGER" property="state"/>
-        <result column="birthday" jdbcType="BIGINT" property="birthday"/>
-        <result column="occupation" jdbcType="VARCHAR" property="occupation"/>
-        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>
-        <result column="whatsapp" jdbcType="VARCHAR" property="whatsapp"/>
-        <result column="facebook" jdbcType="VARCHAR" property="facebook"/>
-        <result column="linkedin" jdbcType="VARCHAR" property="linkedin"/>
-        <result column="youtube" jdbcType="VARCHAR" property="youtube"/>
-        <result column="instagram" jdbcType="VARCHAR" property="instagram"/>
-        <result column="grade_id" jdbcType="INTEGER" property="gradeId"/>
-        <result column="enable" jdbcType="INTEGER" property="enable"/>
-        <result column="isFriend" jdbcType="INTEGER" property="isFriend"/>
+        <id column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="group_id" jdbcType="INTEGER" property="groupId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber" />
+        <result column="picture" jdbcType="VARCHAR" property="picture" />
+        <result column="industry" jdbcType="VARCHAR" property="industry" />
+        <result column="country" jdbcType="INTEGER" property="country" />
+        <result column="state" jdbcType="INTEGER" property="state" />
+        <result column="birthday" jdbcType="BIGINT" property="birthday" />
+        <result column="occupation" jdbcType="VARCHAR" property="occupation" />
+        <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+        <result column="whatsapp" jdbcType="VARCHAR" property="whatsapp" />
+        <result column="facebook" jdbcType="VARCHAR" property="facebook" />
+        <result column="linkedin" jdbcType="VARCHAR" property="linkedin" />
+        <result column="youtube" jdbcType="VARCHAR" property="youtube" />
+        <result column="instagram" jdbcType="VARCHAR" property="instagram" />
+        <result column="grade_id" jdbcType="INTEGER" property="gradeId" />
+        <result column="enable" jdbcType="INTEGER" property="enable" />
+        <result column="isFriend" jdbcType="INTEGER" property="isFriend" />
     </resultMap>
 
 

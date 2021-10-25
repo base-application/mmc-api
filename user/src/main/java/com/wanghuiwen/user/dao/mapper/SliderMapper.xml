@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wanghuiwen.user.dao.SliderMapper">
-  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Slider">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="slider_id" jdbcType="INTEGER" property="sliderId" />
-    <result column="slider_poster" jdbcType="VARCHAR" property="sliderPoster" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Slider">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="slider_id" jdbcType="INTEGER" property="sliderId"/>
+        <result column="slider_poster" jdbcType="VARCHAR" property="sliderPoster"/>
+    </resultMap>
+
+    <resultMap id="vo" type="com.wanghuiwen.user.vo.SliderVo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="slider_id" jdbcType="INTEGER" property="sliderId"/>
+        <result column="slider_poster" jdbcType="VARCHAR" property="sliderPoster"/>
+        <collection property="grades" column="slider_id" select="getGrade"/>
+        <collection property="group" column="slider_id" select="getGroup"/>
+    </resultMap>
+
+    <select id="list" resultMap="vo">
+        select *
+        from slider
+    </select>
+
+    <select id="getGrade" resultMap="com.wanghuiwen.user.dao.GradeMapper.BaseResultMap">
+        select *
+        from grade
+        where exists(select * from slider_grade where slider_id = #{id} and grade.grade_id = slider_grade.grade_id)
+    </select>
+
+    <select id="getGroup" resultMap="com.wanghuiwen.user.dao.MmcGroupMapper.BaseResultMap">
+        select *
+        from mmc_group
+        where exists(select *
+                     from slider_group
+                     where slider_group.slider_id = #{id}
+                       and mmc_group.group_id = slider_group.group_id)
+    </select>
+
+    <select id="userList" resultMap="vo">
+        select *
+        from slider
+        where exists(select *
+                     from user_info
+                     where user_id = #{userId}
+                       and exists(select *
+                                  from slider_grade
+                                  where user_info.grade_id = slider_grade.grade_id
+                                    and slider_grade.slider_id = slider.slider_id))
+          or exists(select *
+                     from user_info
+                     where user_id = #{userId}
+                       and exists(select *
+                                  from slider_group
+                                  where user_info.group_id = slider_group.group_id
+                                    and slider.slider_id = slider_group.slider_id
+                             ))
+    </select>
 </mapper>

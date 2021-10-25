@@ -9,4 +9,12 @@
     <id column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="status" jdbcType="INTEGER" property="status" />
   </resultMap>
+
+  <select id="selectByUser" resultMap="BaseResultMap">
+    select  * from notification_user where user_id = #{userId} and notification_id =#{notificationId}
+    </select>
+
+  <update id="updateByUser">
+    update notification_user set notification_id = #{notificationId},user_id = #{userId},status=#{status} where notification_id = #{notificationId} and user_id = #{userId}
+  </update>
 </mapper>
