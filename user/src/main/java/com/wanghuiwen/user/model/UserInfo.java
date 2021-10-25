@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class UserInfo implements Serializable {
     @Id
     @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
     /**
@@ -84,6 +85,11 @@ public class UserInfo implements Serializable {
 
     @Column(name = "position_id")
     private Integer positionId;
+
+    /**
+     * email
+     */
+    private String email;
 
     private static final long serialVersionUID = 1L;
 
@@ -399,5 +405,23 @@ public class UserInfo implements Serializable {
      */
     public void setPositionId(Integer positionId) {
         this.positionId = positionId;
+    }
+
+    /**
+     * 获取email
+     *
+     * @return email - email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * 设置email
+     *
+     * @param email email
+     */
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

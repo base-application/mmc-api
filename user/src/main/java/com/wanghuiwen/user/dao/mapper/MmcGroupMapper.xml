@@ -43,4 +43,8 @@
     LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
     order by mg.group_name ,grade_id
   </select>
+
+  <select id="findByName" resultMap="BaseResultMap">
+    select * from mmc_group where  group_name = #{name}
+    </select>
 </mapper>

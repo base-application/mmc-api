@@ -6,6 +6,7 @@ import javax.persistence.*;
 public class Position implements Serializable {
     @Id
     @Column(name = "position_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer positionId;
 
     @Column(name = "position_name")

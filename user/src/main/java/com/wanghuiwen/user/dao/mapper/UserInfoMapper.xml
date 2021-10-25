@@ -24,6 +24,7 @@
     <result column="grade_id" jdbcType="INTEGER" property="gradeId" />
     <result column="member" jdbcType="VARCHAR" property="member" />
     <result column="position_id" jdbcType="INTEGER" property="positionId" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
   </resultMap>
 
 
@@ -89,13 +90,16 @@
         tgr.thank_received_count
         FROM (select * from user_info where 1=1
         <if test="params.name!=null and params.name!=''">
-            and name like concat('%',#{params.name},'%')
+            and (name like concat('%',#{params.name},'%') or concat_number like concat('%',#{params.name},'%'))
         </if>
         <if test="params.groupId!=null">
             and group_id = #{params.groupId}
         </if>
         <if test="params.gradeId!=null">
             and grade_id = #{params.gradeId}
+        </if>
+        <if test="params.positionId!=null">
+            and position_id = #{params.positionId}
         </if>
         ) ui
         LEFT JOIN `user` u ON (ui.user_id = u.id)

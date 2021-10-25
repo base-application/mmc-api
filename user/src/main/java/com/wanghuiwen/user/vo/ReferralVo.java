@@ -27,8 +27,10 @@ public class ReferralVo {
     private String fromPicture;
     private int fromGroupId;
     private String fromName;
+    private String fromGroup;
     private String toPicture;
     private int toGroupId;
+    private String toGroup;
     private String toName;
     private Long referralId;
     private String reason;
@@ -166,5 +168,21 @@ public class ReferralVo {
 
     public void setPicture(List<ImageVo> picture) {
         this.picture = picture;
+    }
+
+    public String getFromGroup() {
+        return fromGroup;
+    }
+
+    public void setFromGroup(String fromGroup) {
+        this.fromGroup = fromGroup;
+    }
+
+    public String getToGroup() {
+        return toGroup;
+    }
+
+    public void setToGroup(String toGroup) {
+        this.toGroup = toGroup;
     }
 }

@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class UserCompany implements Serializable {
     @Id
     @Column(name = "company_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long companyId;
 
     @Column(name = "user_id")

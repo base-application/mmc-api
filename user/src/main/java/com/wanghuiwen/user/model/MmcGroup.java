@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class MmcGroup implements Serializable {
     @Id
     @Column(name = "group_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer groupId;
 
     /**

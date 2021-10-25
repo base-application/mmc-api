@@ -54,10 +54,10 @@ public class ReferralController extends Ctrl{
     public Result list(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam String name,
-            @RequestParam Long startTime,
-            @RequestParam Long endTime,
-            @RequestParam Long groupId
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long startTime,
+            @RequestParam(required = false) Long endTime,
+            @RequestParam(required = false) Long groupId
     ) {
 
         Map<String,Object> params = new HashMap<>();

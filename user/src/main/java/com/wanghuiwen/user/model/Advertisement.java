@@ -4,7 +4,9 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 public class Advertisement implements Serializable {
+    @Id
     @Column(name = "advertisement_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer advertisementId;
 
     /**

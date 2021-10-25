@@ -8,4 +8,8 @@
     <id column="position_id" jdbcType="INTEGER" property="positionId" />
     <result column="position_name" jdbcType="VARCHAR" property="positionName" />
   </resultMap>
+
+  <select id="findByName" resultMap="BaseResultMap">
+    select * from position where position_name = #{name} limit 1
+    </select>
 </mapper>

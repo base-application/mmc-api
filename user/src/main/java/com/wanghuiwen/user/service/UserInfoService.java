@@ -19,4 +19,6 @@ public interface UserInfoService extends Service<UserInfo> {
     List<UserNetWorkVo> network(Map<String, Object> params);
 
     UserInfoVo detail(Long userId, Long id);
+
+    void excelToUser(List<List<String>> excelData);
 }

@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.base.service.UserService;
 import com.wanghuiwen.common.UtilFun;
+import com.wanghuiwen.common.excel.ExcelUtil;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.config.Const;
@@ -15,13 +16,16 @@ import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.user.vo.CompanyVo;
 import com.wanghuiwen.user.vo.UserInfoVo;
 import com.wanghuiwen.user.vo.UserNetWorkVo;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,12 +170,14 @@ public class UserInfoController extends Ctrl{
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long groupId,
-            @RequestParam(required = false) Long gradeId
+            @RequestParam(required = false) Long gradeId,
+            @RequestParam(required = false) Long positionId
     ) {
         Map<String,Object> params = new HashMap<>();
         params.put("name",name);
         params.put("groupId",groupId);
         params.put("gradeId",gradeId);
+        params.put("positionId",positionId);
         PageHelper.startPage(page,size);
         List<UserInfoVo> userInfoVoList = userInfoService.managerList(page,size,params);
         PageInfo<UserInfoVo> pageInfo = new PageInfo<>(userInfoVoList);
@@ -212,6 +218,15 @@ public class UserInfoController extends Ctrl{
     @GetMapping(value="/position/list",name="用户职位下拉选项")
     public Result positionList() {
         return resultGenerator.genSuccessResult(positionService.findAll());
+    }
+
+
+    @ApiOperation(value = "导入用户", tags = {"用户管理"}, notes = "导入用户")
+    @PostMapping(value="import",name="导入用户")
+    public Result importUser(MultipartFile file) throws IOException {
+       List<List<String>> excelData = ExcelUtil.read(file);
+        userInfoService.excelToUser(excelData);
+        return resultGenerator.genSuccessResult();
     }
 
     /**

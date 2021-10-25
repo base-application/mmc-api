@@ -8,4 +8,8 @@
     <id column="grade_id" jdbcType="INTEGER" property="gradeId" />
     <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
   </resultMap>
+
+  <select id="findByName" resultMap="BaseResultMap">
+    select  * from grade where  grade_name = #{name} limit 1
+    </select>
 </mapper>

@@ -84,7 +84,7 @@ public class UtilFun {
             Date date =format.parse(datestr);
             return date;
         } catch (ParseException e) {
-           logger.error("日期转换错误",e);
+           logger.error("日期转换错误" + datestr,e);
             return null;
         }
 

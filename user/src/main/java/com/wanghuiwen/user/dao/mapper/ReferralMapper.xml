@@ -29,8 +29,9 @@
         <result column="received_time" jdbcType="BIGINT" property="receivedTime"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
-        <collection property="picture" column="referral_id" ofType="com.wanghuiwen.user.vo.ImageVo"
-                    select="getPicture"/>
+        <result column="fromGroup" jdbcType="VARCHAR"  property="fromGroup"/>
+        <result column="toGroup" jdbcType="VARCHAR" property="toGroup"/>
+        <collection property="picture" column="referral_id" select="getPicture"/>
     </resultMap>
 
     <select id="list" resultMap="vo">
@@ -39,9 +40,11 @@
         send.`name` AS fromName,
         send.picture AS fromPicture,
         send.group_id AS fromGroupId ,
+        sendg.group_name as fromGroup,
         received.name AS toName,
         received.picture AS toPicture,
-        received.group_id AS toGroupId
+        received.group_id AS toGroupId,
+        receivedg.group_name as toGroup
         FROM
         (select * from referral where 1=1
         <if test="params.name != null and params.name != ''">
@@ -61,10 +64,12 @@
         ) r
         LEFT JOIN user_info send ON ( send.user_id = r.send_user )
         LEFT JOIN user_info received ON (received.user_id = r.received_user)
+        LEFT JOIN mmc_group sendg on (sendg.group_id = send.group_id)
+        LEFT JOIN mmc_group receivedg on (receivedg.group_id = received.group_id)
     </select>
 
-    <select id="getPicture">
-        select *
+    <select id="getPicture" resultType="com.wanghuiwen.user.vo.ImageVo">
+        select picture_id as id ,url
         from referral_picture
         where referral_id = #{id}
     </select>

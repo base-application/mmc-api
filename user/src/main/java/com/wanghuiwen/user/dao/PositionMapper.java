@@ -6,4 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface PositionMapper extends ApiMapper<Position> {
+    Position findByName(String name);
 }

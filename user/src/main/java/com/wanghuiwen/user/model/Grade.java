@@ -6,6 +6,7 @@ import javax.persistence.*;
 public class Grade implements Serializable {
     @Id
     @Column(name = "grade_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer gradeId;
 
     @Column(name = "grade_name")
