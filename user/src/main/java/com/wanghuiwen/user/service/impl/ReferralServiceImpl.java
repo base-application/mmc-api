@@ -61,4 +61,11 @@ public class ReferralServiceImpl extends AbstractService<Referral> implements Re
         referral.setFailMessage(failMessage);
         update(referral);
     }
+
+    @Override
+    public void remark(Long referralId, String remark) {
+       Referral referral =  findById(referralId);
+       referral.setRemark(remark);
+       update(referral);
+    }
 }

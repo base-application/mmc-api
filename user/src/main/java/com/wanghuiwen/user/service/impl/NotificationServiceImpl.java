@@ -51,17 +51,17 @@ public class NotificationServiceImpl extends AbstractService<Notification> imple
             notificationGrade.setNotificationId(notification.getNotificationId());
             return notificationGrade;
         }).collect(Collectors.toList());
-        notificationGradeMapper.insertList(grades);
+        notificationGradeMapper.insertListNoAuto(grades);
 
 
         notificationGroupMapper.deleteByNotification(notification.getNotificationId());
         List<NotificationGroup> groups =  notificationVo.getGroups().stream().map(g -> {
             NotificationGroup group = new NotificationGroup();
             group.setGroupId(g.getGroupId());
-            group.setNotificationId(notificationVo.getNotificationId());
+            group.setNotificationId(notification.getNotificationId());
             return group;
         }).collect(Collectors.toList());
-        notificationGroupMapper.insertList(groups);
+        notificationGroupMapper.insertListNoAuto(groups);
 
     }
 

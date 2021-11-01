@@ -19,12 +19,17 @@ public class AttendanceVo {
     private Long eventId;
     private Long checkInTime;
     private Long checkOutTime;
-    private boolean isAttendance;
+    private boolean attendance;
     private String remark;
     private String agent;
     private String agentRole;
     private String name;
     private String picture;
+    private String gradeName;
+    private String concatNumber;
+    private String absentReason;
+    private Boolean facebookComment;
+
 
     public Long getUserId() {
         return userId;
@@ -58,12 +63,12 @@ public class AttendanceVo {
         this.checkOutTime = checkOutTime;
     }
 
-    public boolean isIsAttendance() {
-        return isAttendance;
+    public boolean isAttendance() {
+        return attendance;
     }
 
-    public void setIsAttendance(boolean isAttendance) {
-        this.isAttendance = isAttendance;
+    public void setAttendance(boolean attendance) {
+        this.attendance = attendance;
     }
 
     public String getRemark() {
@@ -104,5 +109,38 @@ public class AttendanceVo {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+
+    public String getAbsentReason() {
+        return absentReason;
+    }
+
+    public void setAbsentReason(String absentReason) {
+        this.absentReason = absentReason;
+    }
+
+    public Boolean getFacebookComment() {
+        return facebookComment;
+    }
+
+    public void setFacebookComment(Boolean facebookComment) {
+        this.facebookComment = facebookComment;
+    }
+
+    public String getGradeName() {
+        return gradeName;
+    }
+
+    public void setGradeName(String gradeName) {
+        this.gradeName = gradeName;
+    }
+
+    public String getConcatNumber() {
+        return concatNumber;
+    }
+
+    public void setConcatNumber(String concatNumber) {
+        this.concatNumber = concatNumber;
     }
 }

@@ -57,4 +57,28 @@
       </if>
       order by tyn.thank_you_note_id desc
   </select>
+
+  <select id="sum" resultType="java.lang.Long">
+      SELECT
+      sum(tyn.value)
+      FROM
+      thank_you_note tyn
+      LEFT JOIN user_info sender ON ( tyn.send_user = sender.user_id )
+      LEFT JOIN user_info received ON (tyn.received_user = received.user_id)
+      LEFT JOIN mmc_group senderg ON (senderg.group_id = sender.group_id)
+      LEFT JOIN mmc_group receivedg ON (receivedg.group_id = received.group_id)
+      where 1=1
+      <if test="params.name !=null and params.name !=''">
+          and (sender.`name` = #{params.name} or received.`name` = #{params.name})
+      </if>
+      <if test="params.groupId != null">
+          and (received.group_id = #{params.groupId} or sender.group_id =  #{params.groupId} )
+      </if>
+      <if test="params.startTime != null and params.endTime != null">
+          and tyn.send_time BETWEEN #{params.startTime} AND #{params.endTime}
+      </if>
+      <if test="params.receivedUser != null">
+          and tyn.received_user = #{params.receivedUser}
+      </if>
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.wanghuiwen.user.dao;
 
+import com.wanghuiwen.common.mybatis.ResultMap;
 import com.wanghuiwen.core.ApiMapper;
 import com.wanghuiwen.user.model.ThankYouNote;
 import com.wanghuiwen.user.vo.ThankYouNoteVo;
@@ -12,4 +13,6 @@ import java.util.Map;
 @Mapper
 public interface ThankYouNoteMapper extends ApiMapper<ThankYouNote> {
     List<ThankYouNoteVo> list(@Param("params") Map<String, Object> params);
+
+    Long sum(@Param("params") Map<String, Object> params);
 }

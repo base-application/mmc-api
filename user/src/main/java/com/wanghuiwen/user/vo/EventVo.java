@@ -4,7 +4,11 @@ import java.util.List;
 
 public class EventVo extends EventVoAdd {
 
-    List<AttendanceVo> attendance;
+    private List<AttendanceVo> attendance;
+
+    private Double attendanceProportion;
+
+    private Integer approveStatus;
 
     public List<AttendanceVo> getAttendance() {
         return attendance;
@@ -12,5 +16,21 @@ public class EventVo extends EventVoAdd {
 
     public void setAttendance(List<AttendanceVo> attendance) {
         this.attendance = attendance;
+    }
+
+    public Integer getApproveStatus() {
+        return approveStatus;
+    }
+
+    public void setApproveStatus(Integer approveStatus) {
+        this.approveStatus = approveStatus;
+    }
+
+    public Double getAttendanceProportion() {
+        return attendanceProportion;
+    }
+
+    public void setAttendanceProportion(Double attendanceProportion) {
+        this.attendanceProportion = attendanceProportion;
     }
 }

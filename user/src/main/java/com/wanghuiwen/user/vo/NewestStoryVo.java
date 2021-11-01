@@ -16,7 +16,8 @@ public class NewestStoryVo {
     private String description;
     private Long storyId;
     private String link;
-    private int pushTime;
+    private String title;
+    private Long pushTime;
     private List<ImageVo> poster;
 
     public String getDescription() {
@@ -43,11 +44,11 @@ public class NewestStoryVo {
         this.link = link;
     }
 
-    public int getPushTime() {
+    public Long getPushTime() {
         return pushTime;
     }
 
-    public void setPushTime(int pushTime) {
+    public void setPushTime(Long pushTime) {
         this.pushTime = pushTime;
     }
 
@@ -57,5 +58,13 @@ public class NewestStoryVo {
 
     public void setPoster(List<ImageVo> poster) {
         this.poster = poster;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

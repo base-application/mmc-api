@@ -2,6 +2,7 @@ package com.wanghuiwen.user.service;
 import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.user.model.MmcEvent;
 import com.wanghuiwen.core.service.Service;
+import com.wanghuiwen.user.vo.AttendanceVo;
 import com.wanghuiwen.user.vo.CheckHistoryVo;
 import com.wanghuiwen.user.vo.EventVo;
 import com.wanghuiwen.user.vo.EventVoAdd;
@@ -42,4 +43,6 @@ public interface MmcEventService extends Service<MmcEvent> {
     List<EventVoAdd> joinList(AuthUser authUser);
 
     List<EventVoAdd> userCreate(AuthUser authUser);
+
+    List<AttendanceVo> getAttendance(Long id, Long groupId, Long startTime, Long endTime);
 }

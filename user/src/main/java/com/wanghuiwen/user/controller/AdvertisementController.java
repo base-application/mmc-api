@@ -24,8 +24,8 @@ public class AdvertisementController extends Ctrl{
 
     @ApiOperation(value = "广告添加", tags = {"广告"}, notes = "广告添加")
     @PostMapping(value="/add",name="广告添加")
-    public Result add(@ApiParam Advertisement advertisement) {
-        advertisementService.save(advertisement);
+    public Result add(@RequestBody Advertisement advertisement) {
+        advertisementService.saveOrUpdate(advertisement);
         return resultGenerator.genSuccessResult();
     }
 

@@ -18,4 +18,6 @@ public interface ReferralService extends Service<Referral> {
     void send(ReferralAddVo addVo);
 
     void received(Long referralId, Integer status, String failMessage);
+
+    void remark(Long referralId, String remark);
 }

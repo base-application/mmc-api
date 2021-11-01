@@ -36,14 +36,15 @@ public class NewestStoryServiceImpl extends AbstractService<NewestStory> impleme
 
         newsetStoryPictureMapper.deleteByNew(story.getStoryId());
 
-        List<NewsetStoryPicture> pictureList =  newestStoryVo.getPoster().stream().map(imageVo -> {
-           NewsetStoryPicture picture =  new NewsetStoryPicture();
-           picture.setNewestStoryId(story.getStoryId());
-           picture.setNewestStoryPicture(imageVo.getUrl());
-           return picture;
-        }).collect(Collectors.toList());
-        newsetStoryPictureMapper.insertList(pictureList);
-
+        if(newestStoryVo.getPoster()!=null){
+            List<NewsetStoryPicture> pictureList =  newestStoryVo.getPoster().stream().map(imageVo -> {
+                NewsetStoryPicture picture =  new NewsetStoryPicture();
+                picture.setNewestStoryId(story.getStoryId());
+                picture.setNewestStoryPicture(imageVo.getUrl());
+                return picture;
+            }).collect(Collectors.toList());
+            newsetStoryPictureMapper.insertList(pictureList);
+        }
     }
 
     @Override

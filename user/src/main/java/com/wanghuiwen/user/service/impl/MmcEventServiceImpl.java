@@ -13,6 +13,7 @@ import com.wanghuiwen.user.model.EventGroup;
 import com.wanghuiwen.user.model.EventPicture;
 import com.wanghuiwen.user.model.MmcEvent;
 import com.wanghuiwen.user.service.MmcEventService;
+import com.wanghuiwen.user.vo.AttendanceVo;
 import com.wanghuiwen.user.vo.CheckHistoryVo;
 import com.wanghuiwen.user.vo.EventVo;
 import com.wanghuiwen.user.vo.EventVoAdd;
@@ -62,12 +63,12 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
         eventPictureMapper.insertList(pictureList);
 
         List<EventGroup> groups =  add.getGroups().stream().map(group -> {
-            EventGroup picture =  new EventGroup();
-            picture.setEventId(event.getEventId());
-            picture.setGroupId(group.getGroupId());
-            return picture;
+            EventGroup eventGroup =  new EventGroup();
+            eventGroup.setEventId(event.getEventId());
+            eventGroup.setGroupId(group.getGroupId());
+            return eventGroup;
         }).collect(Collectors.toList());
-        eventGroupMapper.insertList(groups);
+        eventGroupMapper.insertListNoAuto(groups);
 
     }
 
@@ -162,5 +163,10 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     @Override
     public List<EventVoAdd> userCreate(AuthUser authUser) {
         return mmcEventMapper.userCreate(authUser.getId());
+    }
+
+    @Override
+    public List<AttendanceVo> getAttendance(Long id, Long groupId, Long startTime, Long endTime) {
+        return mmcEventMapper.getAttendance(id,groupId,startTime,endTime);
     }
 }

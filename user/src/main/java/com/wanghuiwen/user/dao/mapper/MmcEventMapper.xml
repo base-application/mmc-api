@@ -18,9 +18,6 @@
     </resultMap>
 
     <resultMap id="vo" type="com.wanghuiwen.user.vo.EventVo">
-        <!--
-          WARNING - @mbg.generated
-        -->
         <id column="event_id" jdbcType="BIGINT" property="eventId"/>
         <result column="event_title" jdbcType="VARCHAR" property="eventTitle"/>
         <result column="event_description" jdbcType="VARCHAR" property="eventDescription"/>
@@ -30,14 +27,13 @@
         <result column="event_map_link" jdbcType="VARCHAR" property="eventMapLink"/>
         <result column="event_type" jdbcType="VARCHAR" property="eventType"/>
         <collection property="groups" column="event_id" ofType="com.wanghuiwen.user.model.MmcGroup" select="getGroup"/>
-        <collection property="eventPoster" column="event_id" ofType="com.wanghuiwen.user.vo.ImageVo" select="getPoster"/>
-        <collection property="attendance" column="event_id" ofType="com.wanghuiwen.user.vo.AttendanceVo" select="getAttendance"/>
+        <collection property="eventPoster" column="event_id" ofType="com.wanghuiwen.user.vo.ImageVo"
+                    select="getPoster"/>
+        <collection property="attendance" column="event_id" ofType="com.wanghuiwen.user.vo.AttendanceVo"
+                    select="getAttendance"/>
     </resultMap>
 
     <resultMap id="addVo" type="com.wanghuiwen.user.vo.EventVo">
-        <!--
-          WARNING - @mbg.generated
-        -->
         <id column="event_id" jdbcType="BIGINT" property="eventId"/>
         <result column="event_title" jdbcType="VARCHAR" property="eventTitle"/>
         <result column="event_description" jdbcType="VARCHAR" property="eventDescription"/>
@@ -46,22 +42,26 @@
         <result column="event_location" jdbcType="VARCHAR" property="eventLocation"/>
         <result column="event_map_link" jdbcType="VARCHAR" property="eventMapLink"/>
         <result column="event_type" jdbcType="VARCHAR" property="eventType"/>
-        <collection property="groups" column="event_id" ofType="com.wanghuiwen.user.model.MmcGroup" select="getGroup"/>
-        <collection property="eventPoster" column="event_id" ofType="com.wanghuiwen.user.vo.ImageVo" select="getPoster"/>
+        <result column="approve_status" jdbcType="INTEGER" property="approveStatus"/>
+        <result column="attendance_proportion" jdbcType="DOUBLE" property="attendanceProportion"/>
+        <collection property="groups" column="event_id" select="getGroup"/>
+        <collection property="eventPoster" column="event_id" select="getPoster"/>
+        <collection property="attendance" column="event_id" select="getAttendance"/>
     </resultMap>
 
     <resultMap id="attendance" type="com.wanghuiwen.user.vo.AttendanceVo">
-        <!--
-          WARNING - @mbg.generated
-        -->
         <id column="user_id" jdbcType="BIGINT" property="userId"/>
         <id column="event_id" jdbcType="BIGINT" property="eventId"/>
         <result column="check_in_time" jdbcType="BIGINT" property="checkInTime"/>
         <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime"/>
-        <result column="is_attendance" jdbcType="BIT" property="isAttendance"/>
+        <result column="is_attendance" jdbcType="BIT" property="attendance"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
         <result column="agent" jdbcType="VARCHAR" property="agent"/>
         <result column="agent_role" jdbcType="VARCHAR" property="agentRole"/>
+        <result column="absent_reason" jdbcType="VARCHAR" property="absentReason"/>
+        <result column="facebook_comment" jdbcType="BIT" property="facebookComment"/>
+        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber" />
+        <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
     </resultMap>
 
     <select id="detail" resultMap="vo">
@@ -75,59 +75,74 @@
         from mmc_group
         where exists(select *
                      from event_group
-                     where event_group.group_id = mmc_group.group_id and event_group.event_id = #{id})
+                     where event_group.group_id = mmc_group.group_id
+                       and event_group.event_id = #{id})
     </select>
 
-    <select id="getPoster">
+    <select id="getPoster" resultType="com.wanghuiwen.user.vo.ImageVo">
         select picture_id as id, url
         from event_picture
         where event_id = #{id}
     </select>
 
-    <select id="getAttendance">
-        SELECT a.*, ui.`name`, ui.picture
+    <select id="getAttendance" resultMap="attendance">
+        SELECT a.*, ui.`name`, ui.picture,ui.concat_number,g.grade_name
         from (select * from attendance where event_id = #{id}) a
-                     LEFT JOIN user_info ui ON (a.user_id = ui.user_id)
+        LEFT JOIN user_info ui ON (a.user_id = ui.user_id)
+        LEFT JOIN grade g ON(ui.grade_id = g.grade_id)
+        where 1=1
+        <if test="groupId!=null">
+            and ui.group_id = #{groupId}
+        </if>
+        <if test="startTime!=null and endTime !=null">
+            and a.check_in_time between #{startTime} and #{endTime}
+        </if>
     </select>
 
     <select id="list" resultMap="addVo">
         select *
-        from mmc_event where 1=1
+        from mmc_event me
+        LEFT JOIN event_attendance_proportion eap on (me.event_id = eap.event_id) where 1=1
         <if test="params.eventTitle != null and params.eventTitle != ''">
             and event_title like concat('%',#{params.eventTitle},'%')
         </if>
         <if test="params.groupId!=null">
-            and exists(select * from event_group eg where eg.group_id = #{params.groupId} and eg.event_id = mmc_event.event_id )
+            and exists(select * from event_group eg where eg.group_id = #{params.groupId} and eg.event_id =
+            mmc_event.event_id )
         </if>
         <if test="params.startTime!=null and params.endTime!=null">
-            and event_start_time between  #{params.startTime} and  #{params.endTime}
+            and event_start_time between #{params.startTime} and #{params.endTime}
         </if>
     </select>
 
     <select id="upcomingEvent" resultMap="addVo">
-        SELECT
-                *
-        FROM
-                mmc_event me
-        WHERE
-                event_start_time/1000 > UNIX_TIMESTAMP(NOW())
-          AND EXISTS (
-                SELECT
-                        *
-                FROM
-                        user_info ui
-                WHERE
-                        user_id = #{id}
-                  AND EXISTS ( SELECT * FROM event_group eg WHERE ui.group_id = eg.group_id AND eg.event_id = me.event_id ))
+        SELECT *
+        FROM mmc_event me
+        WHERE event_start_time / 1000 > UNIX_TIMESTAMP(NOW())
+          AND EXISTS(
+                SELECT *
+                FROM user_info ui
+                WHERE user_id = #{id}
+                  AND EXISTS(
+                        SELECT * FROM event_group eg WHERE ui.group_id = eg.group_id AND eg.event_id = me.event_id))
         order by event_start_time desc
-
     </select>
 
     <select id="joinList" resultMap="addVo">
-        select  * from mmc_event where exists(select  * from user_info where user_id = #{id} and exists(select * from attendance where attendance.user_id = user_info.user_id and mmc_event.event_id = attendance.event_id))
+        select *
+        from mmc_event
+        where exists(select *
+                     from user_info
+                     where user_id = #{id}
+                       and exists(select *
+                                  from attendance
+                                  where attendance.user_id = user_info.user_id
+                                    and mmc_event.event_id = attendance.event_id))
     </select>
 
     <select id="userCreate" resultMap="addVo">
-        select * from mmc_event where create_id =#{id}
+        select *
+        from mmc_event
+        where create_id = #{id}
     </select>
 </mapper>

@@ -8,6 +8,7 @@ import java.util.List;
 public class SliderVo {
     private Integer sliderId;
     private String sliderPoster;
+    private Long createTime;
     List<MmcGroup> group;
     List<Grade> grades;
 
@@ -41,6 +42,14 @@ public class SliderVo {
 
     public void setGrades(List<Grade> grades) {
         this.grades = grades;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
     }
 }
 

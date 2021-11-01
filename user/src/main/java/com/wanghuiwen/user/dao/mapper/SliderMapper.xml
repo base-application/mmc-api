@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wanghuiwen.user.dao.SliderMapper">
-    <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Slider">
-        <!--
-          WARNING - @mbg.generated
-        -->
-        <id column="slider_id" jdbcType="INTEGER" property="sliderId"/>
-        <result column="slider_poster" jdbcType="VARCHAR" property="sliderPoster"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Slider">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="slider_id" jdbcType="INTEGER" property="sliderId" />
+    <result column="slider_poster" jdbcType="VARCHAR" property="sliderPoster" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+  </resultMap>
+
 
     <resultMap id="vo" type="com.wanghuiwen.user.vo.SliderVo">
-        <!--
-          WARNING - @mbg.generated
-        -->
         <id column="slider_id" jdbcType="INTEGER" property="sliderId"/>
         <result column="slider_poster" jdbcType="VARCHAR" property="sliderPoster"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
         <collection property="grades" column="slider_id" select="getGrade"/>
         <collection property="group" column="slider_id" select="getGroup"/>
     </resultMap>

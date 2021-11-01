@@ -86,4 +86,14 @@ public class ReferralController extends Ctrl{
         PageInfo<ReferralVo> pageInfo = new PageInfo<>(vos);
         return resultGenerator.genSuccessResult(pageInfo);
     }
+
+    @ApiOperation(value = "添加备注", tags = {"推荐"}, notes = "添加备注")
+    @PutMapping(value="/remark",name="添加备注")
+    public Result remark(
+            @RequestParam Long referralId,
+            @RequestParam String remark
+    ) {
+        referralService.remark(referralId,remark);
+        return resultGenerator.genSuccessResult();
+    }
 }

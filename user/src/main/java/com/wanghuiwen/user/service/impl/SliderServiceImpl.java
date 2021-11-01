@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,9 @@ public class SliderServiceImpl extends AbstractService<Slider> implements Slider
 
         Slider mode = new Slider();
         BeanUtils.copyProperties(slider,mode);
+        if(mode.getSliderId()==null){
+            mode.setCreateTime(new Date().getTime());
+        }
         saveOrUpdate(mode);
 
         sliderGradeMapper.deleteBySlider(mode.getSliderId());

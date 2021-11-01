@@ -41,7 +41,7 @@ public class SliderController extends Ctrl {
     }
 
     @ApiOperation(value = "轮播图列表", tags = {"轮播图"}, notes = "轮播图列表")
-    @PostMapping(value = "/list", name = "轮播图列表")
+    @GetMapping(value = "/list", name = "轮播图列表")
     public Result list(@RequestParam(defaultValue = "1") Integer page,
                        @RequestParam(defaultValue = "10") Integer size) {
         PageHelper.startPage(page, size);
@@ -51,7 +51,7 @@ public class SliderController extends Ctrl {
     }
 
     @ApiOperation(value = "用户端轮播图", tags = {"轮播图"}, notes = "用户端轮播图")
-    @PostMapping(value = "/list/user", name = "用户端轮播图")
+    @GetMapping(value = "/list/user", name = "用户端轮播图")
     public Result userList(@RequestParam(defaultValue = "1") Integer page,
                            @RequestParam(defaultValue = "10") Integer size,
                            Authentication authentication) {

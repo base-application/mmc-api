@@ -5,10 +5,10 @@ import javax.persistence.*;
 
 @Table(name = "event_group")
 public class EventGroup implements Serializable {
-    @Id
     @Column(name = "event_id")
     private Long eventId;
 
+    @Id
     @Column(name = "group_id")
     private Integer groupId;
 

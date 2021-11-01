@@ -6,6 +6,7 @@ import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.model.Notification;
 import com.wanghuiwen.user.service.NotificationService;
+import com.wanghuiwen.user.vo.NotificationType;
 import com.wanghuiwen.user.vo.NotificationUserListVo;
 import com.wanghuiwen.user.vo.NotificationVo;
 import io.swagger.annotations.*;
@@ -13,10 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -31,10 +29,10 @@ public class NotificationController extends Ctrl{
 
     @ApiOperation(value = "通知添加", tags = {"通知"}, notes = "通知添加")
     @PostMapping(value="/add",name="通知添加")
-    public Result add(@ApiParam NotificationVo notification, Authentication authentication) {
-        notificationService.add(notification);
+    public Result add(@RequestBody NotificationVo notification, Authentication authentication) {
         notification.setCreateId(getAuthUser(authentication).getId());
         notification.setNotificationTime(new Date().getTime());
+        notificationService.add(notification);
         return resultGenerator.genSuccessResult();
     }
 
@@ -101,5 +99,20 @@ public class NotificationController extends Ctrl{
     public Result userDelete(@RequestParam Integer notificationId,Authentication authentication) {
         notificationService.userDelete(notificationId,getAuthUser(authentication).getId());
         return resultGenerator.genSuccessResult();
+    }
+
+
+    @ApiOperation(value = "通知类型", tags = {"通知"}, notes = "通知类型")
+    @GetMapping(value="/type/list",name="通知类型")
+    public Result types() {
+        List<NotificationType> types = new ArrayList<>();
+        String[] typeName = {"Loan genie","Property deal","News","Updates","System"};
+        for (int i = 0; i < typeName.length; i++) {
+            NotificationType type = new NotificationType();
+            type.setId(i);
+            type.setName(typeName[i]);
+            types.add(type);
+        }
+        return resultGenerator.genSuccessResult(types);
     }
 }

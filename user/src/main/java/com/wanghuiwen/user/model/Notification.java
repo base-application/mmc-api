@@ -6,6 +6,7 @@ import javax.persistence.*;
 public class Notification implements Serializable {
     @Id
     @Column(name = "notification_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer notificationId;
 
     /**

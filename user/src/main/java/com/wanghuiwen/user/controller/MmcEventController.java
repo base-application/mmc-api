@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.service.MmcEventService;
+import com.wanghuiwen.user.vo.AttendanceVo;
 import com.wanghuiwen.user.vo.CheckHistoryVo;
 import com.wanghuiwen.user.vo.EventVo;
 import com.wanghuiwen.user.vo.EventVoAdd;
@@ -32,7 +33,7 @@ public class MmcEventController extends Ctrl{
 
     @ApiOperation(value = "活动添加", tags = {"活动"}, notes = "活动添加")
     @PostMapping(value="/add",name="活动添加")
-    public Result add(@ApiParam EventVoAdd add) {
+    public Result add(@RequestBody EventVoAdd add) {
         mmcEventService.add(add);
         return resultGenerator.genSuccessResult();
     }
@@ -52,14 +53,14 @@ public class MmcEventController extends Ctrl{
     }
 
     @ApiOperation(value = "活动列表信息", tags = {"活动"}, notes = "活动列表信息")
-    @PostMapping(value = "/list", name = "活动列表信息")
+    @GetMapping(value = "/list", name = "活动列表信息")
     public Result list(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam String eventTitle,
-            @RequestParam Long groupId,
-            @RequestParam Long startTime,
-            @RequestParam Long endTime
+            @RequestParam(required = false) String eventTitle,
+            @RequestParam(required = false)  Long groupId,
+            @RequestParam(required = false)  Long startTime,
+            @RequestParam(required = false)  Long endTime
     ) {
         Map<String,Object> params = new HashMap<>();
         params.put("eventTitle",eventTitle);
@@ -210,5 +211,17 @@ public class MmcEventController extends Ctrl{
         List<EventVoAdd> res =mmcEventService.userCreate(getAuthUser(authentication));
         PageInfo<EventVoAdd> pageInfo = new PageInfo<>(res);
         return resultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @ApiOperation(value = "查询活动签到人员", tags = {"活动"}, notes = "查询活动签到人员")
+    @GetMapping(value = "/attendance", name = "查询活动签到人员")
+    public Result attendance(
+            @RequestParam Long id,
+            @RequestParam(required = false) Long groupId,
+            @RequestParam(required = false) Long startTime,
+            @RequestParam(required = false) Long endTime
+    ) {
+        List<AttendanceVo> res = mmcEventService.getAttendance(id,groupId,startTime,endTime);
+        return resultGenerator.genSuccessResult(res);
     }
 }

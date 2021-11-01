@@ -8,6 +8,7 @@ import javax.persistence.*;
 public class ThankYouNote implements Serializable {
     @Id
     @Column(name = "thank_you_note_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long thankYouNoteId;
 
     /**

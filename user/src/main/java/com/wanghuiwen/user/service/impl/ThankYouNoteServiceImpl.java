@@ -1,5 +1,6 @@
 package com.wanghuiwen.user.service.impl;
 
+import com.wanghuiwen.common.mybatis.ResultMap;
 import com.wanghuiwen.user.dao.ThankYouNoteMapper;
 import com.wanghuiwen.user.dao.ThankYouNotePictureMapper;
 import com.wanghuiwen.user.model.ThankYouNote;
@@ -49,5 +50,10 @@ public class ThankYouNoteServiceImpl extends AbstractService<ThankYouNote> imple
            return picture;
         }).collect(Collectors.toList());
         thankYouNotePictureMapper.insertListNoAuto(pictures);
+    }
+
+    @Override
+    public Long sum(Map<String, Object> params) {
+        return thankYouNoteMapper.sum(params);
     }
 }

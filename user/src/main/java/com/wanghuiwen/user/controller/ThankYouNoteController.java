@@ -2,6 +2,7 @@ package com.wanghuiwen.user.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wanghuiwen.common.mybatis.ResultMap;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.model.ThankYouNote;
@@ -11,10 +12,7 @@ import com.wanghuiwen.user.vo.ThankYouNoteVo;
 import com.wanghuiwen.user.vo.UserInfoVo;
 import io.swagger.annotations.*;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -42,7 +40,7 @@ public class ThankYouNoteController extends Ctrl{
 
 
     @ApiOperation(value = "用户收到的感谢", tags = {"感谢"}, notes = "用户收到的感谢")
-    @PostMapping(value="/user/list",name="用户收到的感谢")
+    @GetMapping(value="/user/list",name="用户收到的感谢")
     public Result userList(@RequestParam(defaultValue = "1") Integer page,
                            @RequestParam(defaultValue = "10") Integer size,
                            Authentication authentication) {
@@ -56,7 +54,7 @@ public class ThankYouNoteController extends Ctrl{
 
 
     @ApiOperation(value = "感谢列表信息", tags = {"感谢"}, notes = "感谢列表信息")
-    @PostMapping(value = "/list", name = "感谢列表信息")
+    @GetMapping(value = "/list", name = "感谢列表信息")
     public Result list(@RequestParam(defaultValue = "1") Integer page,
                        @RequestParam(defaultValue = "10") Integer size,
                        @RequestParam(required = false) String name,
@@ -69,9 +67,12 @@ public class ThankYouNoteController extends Ctrl{
         params.put("groupId",groupId);
         params.put("startTime",startTime);
         params.put("endTime",endTime);
+        Map<String,Object> res = new HashMap<>();
         PageHelper.startPage(page,size);
          List<ThankYouNoteVo> vos = thankYouNoteService.list(params);
         PageInfo<ThankYouNoteVo> pageInfo = new PageInfo<>(vos);
-        return resultGenerator.genSuccessResult(pageInfo);
+        res.put("list",pageInfo);
+        res.put("total",thankYouNoteService.sum(params));
+        return resultGenerator.genSuccessResult(res);
     }
 }
