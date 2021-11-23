@@ -10,16 +10,34 @@
   </resultMap>
 
   <resultMap id="vo" type="com.wanghuiwen.user.vo.GroupUserVo">
-    <!--
-      WARNING - @mbg.generated
-    -->
     <id column="group_id" jdbcType="INTEGER" property="groupId" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
-    <collection property="userInfoVos" column="group_id" ofType="com.wanghuiwen.user.vo.UserInfoVo" select="listGroupUser"/>
+    <result column="thankYouNote" jdbcType="INTEGER" property="thankYouNote" />
+    <collection property="userInfoVos" column="{groupId=group_id,uid=uid}" select="listGroupUser"/>
   </resultMap>
 
   <select id="listUser" resultMap="vo">
-    select  * from mmc_group
+      SELECT mg.*,
+             t.thankYouNote,
+             #{uid} as uid
+      FROM (select  * from mmc_group where 1=1
+                   <if test="groupName!=null and groupName !=''">
+                       and group_name like  concat('%',#{groupName},'%')
+                   </if>
+                   ) mg
+      LEFT JOIN (
+              SELECT ui.group_id,
+                     sum(tyn.VALUE) AS thankYouNote
+              FROM thank_you_note tyn
+                           LEFT JOIN user_info ui ON (tyn.send_user = ui.user_id)
+              GROUP BY ui.group_id
+              ) t on (mg.group_id = t.group_id)
+      left join (
+              SELECT COUNT(*) refer, ui.group_id  from referral r
+                                                               LEFT JOIN user_info ui on(r.send_user = ui.user_id)
+              GROUP BY ui.group_id
+              ) r on(r.group_id = mg.group_id)
+
   </select>
 
   <select id="listGroupUser" resultMap="com.wanghuiwen.user.dao.UserInfoMapper.vo">
@@ -31,8 +49,9 @@
     rgs.send_count as referralSend,
     rgr.received_count as referralReceived,
     tgs.thank_send_count as thankYouNote,
-    tgr.thank_received_count
-    FROM (select * from user_info where group_id = #{id} ) ui
+    tgr.thank_received_count,
+    uf.follow_id is not null as isFriend
+    FROM (select * from user_info where group_id = #{groupId} ) ui
     LEFT JOIN `user` u ON (ui.user_id = u.id)
     LEFT JOIN grade ON (grade.grade_id = ui.grade_id)
     LEFT JOIN mmc_group mg ON (mg.group_id = ui.group_id)
@@ -41,6 +60,7 @@
     LEFT JOIN referral_group_received rgr on (rgr.received_user = ui.user_id)
     LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.user_id)
     LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
+    LEFT JOIN user_follow uf on (uf.follow_user_id = #{uid} and uf.user_id = ui.user_id)
     order by mg.group_name ,grade_id
   </select>
 

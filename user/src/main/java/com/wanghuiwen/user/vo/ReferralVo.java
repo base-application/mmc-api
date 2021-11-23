@@ -41,6 +41,7 @@ public class ReferralVo {
     private Long receivedTime;
     private int status;
     private String remark;
+    private Boolean thank;
     private List<ImageVo> picture;
     public String getFromPicture() {
         return fromPicture;
@@ -184,5 +185,13 @@ public class ReferralVo {
 
     public void setToGroup(String toGroup) {
         this.toGroup = toGroup;
+    }
+
+    public Boolean getThank() {
+        return thank;
+    }
+
+    public void setThank(Boolean thank) {
+        this.thank = thank;
     }
 }

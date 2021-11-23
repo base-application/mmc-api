@@ -37,8 +37,8 @@ public class UserInfoVo {
     private String name;
     private String concatNumber;
     private String industry;
-    private int country;
-    private int state;
+    private Integer country;
+    private Integer state;
     private Long birthday;
     private String occupation;
     private String introduction;
@@ -47,9 +47,9 @@ public class UserInfoVo {
     private String linkedin;
     private String youtube;
     private String instagram;
-    private int gradeId;
+    private Integer gradeId;
     private String gradeName;
-    private int groupId;
+    private Integer groupId;
     private String groupName;
     private int attendance;
     private int referralSend;
@@ -62,6 +62,10 @@ public class UserInfoVo {
     private String member;
 
     List<CompanyVo> companyVos;
+
+    Achievement achievement;
+
+    private Boolean friend;
 
     public Long getUserId() {
         return userId;
@@ -101,22 +105,6 @@ public class UserInfoVo {
 
     public void setIndustry(String industry) {
         this.industry = industry;
-    }
-
-    public int getCountry() {
-        return country;
-    }
-
-    public void setCountry(int country) {
-        this.country = country;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
     }
 
     public Long getBirthday() {
@@ -183,28 +171,12 @@ public class UserInfoVo {
         this.instagram = instagram;
     }
 
-    public int getGradeId() {
-        return gradeId;
-    }
-
-    public void setGradeId(int gradeId) {
-        this.gradeId = gradeId;
-    }
-
     public String getGradeName() {
         return gradeName;
     }
 
     public void setGradeName(String gradeName) {
         this.gradeName = gradeName;
-    }
-
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
     }
 
     public String getGroupName() {
@@ -285,5 +257,53 @@ public class UserInfoVo {
 
     public void setMember(String member) {
         this.member = member;
+    }
+
+    public Achievement getAchievement() {
+        return achievement;
+    }
+
+    public void setAchievement(Achievement achievement) {
+        this.achievement = achievement;
+    }
+
+    public Boolean getFriend() {
+        return friend;
+    }
+
+    public void setFriend(Boolean friend) {
+        this.friend = friend;
+    }
+
+    public Integer getCountry() {
+        return country;
+    }
+
+    public void setCountry(Integer country) {
+        this.country = country;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Integer getGradeId() {
+        return gradeId;
+    }
+
+    public void setGradeId(Integer gradeId) {
+        this.gradeId = gradeId;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 }

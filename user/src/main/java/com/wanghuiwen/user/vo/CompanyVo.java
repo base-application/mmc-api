@@ -2,6 +2,7 @@ package com.wanghuiwen.user.vo;
 
 import com.wanghuiwen.user.model.CompanyProduce;
 
+import javax.persistence.Column;
 import java.util.List;
 
 public class CompanyVo {
@@ -45,6 +46,9 @@ public class CompanyVo {
     private String companyAccomplishments;
     private String companyInterests;
     private String serviceIntroduction;
+    private String city;
+    private String postCode;
+    private String companyWhatsapp;
     private List<CompanyProduce> producePictures;
 
     public Long getCompanyId() {
@@ -189,5 +193,29 @@ public class CompanyVo {
 
     public void setProducePictures(List<CompanyProduce> producePictures) {
         this.producePictures = producePictures;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getPostCode() {
+        return postCode;
+    }
+
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
+    }
+
+    public String getCompanyWhatsapp() {
+        return companyWhatsapp;
+    }
+
+    public void setCompanyWhatsapp(String companyWhatsapp) {
+        this.companyWhatsapp = companyWhatsapp;
     }
 }

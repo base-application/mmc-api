@@ -14,7 +14,6 @@
     <result column="component" jdbcType="VARCHAR" property="component" />
     <result column="hidden" jdbcType="BIT" property="hidden" />
     <result column="redirect" jdbcType="VARCHAR" property="redirect" />
-    <result column="alwaysShow" jdbcType="VARCHAR" property="alwaysshow" />
     <result column="meta" jdbcType="LONGVARCHAR" property="meta" />
   </resultMap>
 
@@ -23,6 +22,9 @@
   </select>
 
   <select id="getByRole" resultMap="BaseResultMap">
-    SELECT * FROM menu WHERE EXISTS (SELECT * FROM role_menu WHERE role_menu.menu_id = menu.id and role_menu.role_id = #{roleId} )
+    SELECT * FROM menu WHERE EXISTS (SELECT * FROM role_menu WHERE role_menu.menu_id = menu.id and role_menu.role_id = #{roleId} ) order by priority
+  </select>
+  <select id="selectByPid" resultMap="BaseResultMap">
+    select  * from menu where pid = #{id}
     </select>
 </mapper>

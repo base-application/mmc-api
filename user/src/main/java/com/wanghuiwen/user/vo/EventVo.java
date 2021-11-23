@@ -10,6 +10,8 @@ public class EventVo extends EventVoAdd {
 
     private Integer approveStatus;
 
+    private Boolean checkIn;
+
     public List<AttendanceVo> getAttendance() {
         return attendance;
     }
@@ -32,5 +34,13 @@ public class EventVo extends EventVoAdd {
 
     public void setAttendanceProportion(Double attendanceProportion) {
         this.attendanceProportion = attendanceProportion;
+    }
+
+    public Boolean getCheckIn() {
+        return checkIn;
+    }
+
+    public void setCheckIn(Boolean checkIn) {
+        this.checkIn = checkIn;
     }
 }

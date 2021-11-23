@@ -19,6 +19,9 @@ public class AuthUser implements UserDetails  {
     private Long expiredTime;
     private String nickName;
     private Integer grade;
+    private Integer position;
+    private String positionName;
+    private boolean createEvent;
 
 
     public AuthUser() {}
@@ -138,5 +141,29 @@ public class AuthUser implements UserDetails  {
 
     public void setGrade(Integer grade) {
         this.grade = grade;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+    public boolean isCreateEvent() {
+        return createEvent;
+    }
+
+    public void setCreateEvent(boolean createEvent) {
+        this.createEvent = createEvent;
     }
 }

@@ -2,10 +2,18 @@ package com.wanghuiwen.user.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.firebase.messaging.ApnsConfig;
+import com.google.firebase.messaging.Aps;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
+import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
+import com.wanghuiwen.user.config.Const;
+import com.wanghuiwen.user.config.FmcUtil;
 import com.wanghuiwen.user.model.Notification;
 import com.wanghuiwen.user.service.NotificationService;
+import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.user.vo.NotificationType;
 import com.wanghuiwen.user.vo.NotificationUserListVo;
 import com.wanghuiwen.user.vo.NotificationVo;
@@ -26,6 +34,8 @@ import java.util.*;
 public class NotificationController extends Ctrl{
     @Resource
     private NotificationService notificationService;
+    @Resource
+    private UserInfoService userInfoService;
 
     @ApiOperation(value = "通知添加", tags = {"通知"}, notes = "通知添加")
     @PostMapping(value="/add",name="通知添加")
@@ -33,6 +43,9 @@ public class NotificationController extends Ctrl{
         notification.setCreateId(getAuthUser(authentication).getId());
         notification.setNotificationTime(new Date().getTime());
         notificationService.add(notification);
+        List<User> users = userInfoService.findByGroupAndGrade(notification.getGroups(),notification.getGrades());
+
+        FmcUtil.sendNotification(users,notification.getNotificationTitle(),Const.REGEX_HTML.matcher(notification.getNotificationContent()).replaceAll(""),null);
         return resultGenerator.genSuccessResult();
     }
 

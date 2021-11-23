@@ -37,7 +37,7 @@
   <select id="list" resultMap="BaseResultMap">
     select * from address_countries where 1=1
     <if test="params.nativeName != null and params.nativeName != ''">
-      and native = #{params.nativeName}
+      and native like  concat('%',#{params.nativeName},'%')
     </if>
   </select>
 </mapper>

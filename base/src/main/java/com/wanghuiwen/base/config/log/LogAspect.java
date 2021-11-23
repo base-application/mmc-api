@@ -63,7 +63,7 @@ public class LogAspect extends Ctrl {
         try {
             info =  getAuthUser(authentication);
         }catch (Exception e){
-            logger.error("auth user "+ authentication.getPrincipal());
+            logger.debug("auth user "+ authentication.getPrincipal());
         }
         if(info!=null){
             log.setUserId(info.getId());

@@ -1,7 +1,3 @@
-jpush:
-  appKey: f3dafe79b392ad1d61bfc003
-  liveTime: 300000
-  masterSecret: 5040ec6f25f7bb09df566858
 jwt:
   expiration: 604800
   header: Authorization
@@ -15,14 +11,6 @@ logging:
           dao: debug
         user:
           dao: debug
-mybatis:
-  hot:
-    reload:
-      delaySeconds: 5
-      enabled: true
-      mapperLocation: classpath*:com/api/**/*.xml
-      mappingPath: mapper
-      sleepSeconds: 5
 server:
   port: 8005
   servlet:
@@ -39,9 +27,9 @@ spring:
       max-lifetime: 30000
       maximum-pool-size: 10
       minimum-idle: 3
-    password: 12345678
-    url: jdbc:mysql://127.0.0.1:3306/mmc?useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&&allowPublicKeyRetrieval=true
-    username: root
+    password: Twgdh@btzhy1
+    url: jdbc:mysql://47.107.84.246:3306/mmc?useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&&allowPublicKeyRetrieval=true
+    username: wanghuiwen
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     serialization:
@@ -51,7 +39,7 @@ spring:
     database: MYSQL
     show-sql: true
   messages:
-    basename: message,base/messages,ecommerce/messages,user/messages
+    basename: message,base/messages,user/messages
   mvc:
     static-path-pattern: /static/**
   redis:
@@ -79,3 +67,6 @@ upload:
     - jpeg
     - png
     - mp4
+mmc:
+  init:
+    grade: Crystal

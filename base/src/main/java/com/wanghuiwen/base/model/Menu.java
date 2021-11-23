@@ -47,9 +47,6 @@ public class Menu implements Serializable {
 
     private String redirect;
 
-    @Column(name = "alwaysShow")
-    private String alwaysshow;
-
     private String meta;
 
     private List<Menu> children;
@@ -208,20 +205,6 @@ public class Menu implements Serializable {
      */
     public void setRedirect(String redirect) {
         this.redirect = redirect;
-    }
-
-    /**
-     * @return alwaysShow
-     */
-    public String getAlwaysshow() {
-        return alwaysshow;
-    }
-
-    /**
-     * @param alwaysshow
-     */
-    public void setAlwaysshow(String alwaysshow) {
-        this.alwaysshow = alwaysshow;
     }
 
     /**

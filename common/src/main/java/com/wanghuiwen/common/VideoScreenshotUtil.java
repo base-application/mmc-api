@@ -1,8 +1,8 @@
 package com.wanghuiwen.common;
 
-import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.Java2DFrameConverter;
+//import org.bytedeco.javacv.FFmpegFrameGrabber;
+//import org.bytedeco.javacv.Frame;
+//import org.bytedeco.javacv.Java2DFrameConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,53 +18,53 @@ public class VideoScreenshotUtil {
 
 
 
-    /**
-     * @Description: 获取视频截图
-     * @throws IOException  void
-     */
-    public static void getScreenshot(File sourceFile, File targetImage) {
-        logger.debug("截取视频截图开始："+ System.currentTimeMillis());
-        try {
-
-        FFmpegFrameGrabber grabber = FFmpegFrameGrabber.createDefault(sourceFile);
-
-        grabber.start();
-        //设置视频截取帧（默认取第一帧）
-        Frame frame = grabber.grabImage();
-
-        //视频旋转度
-
-        Java2DFrameConverter converter = new Java2DFrameConverter();
-        //绘制图片
-        BufferedImage bi = converter.getBufferedImage(frame);
-
-        /**
-         * 因为手机拍摄的视频中存在 rotate(即旋转度的原因)
-         */
-        String rotate = grabber.getVideoMetadata("rotate");
-        if (rotate != null) {
-            // 旋转图片
-            bi = rotate(bi, Integer.parseInt(rotate));
-        }
-
-        //图片的类型
-        String imageMat = "jpg";
-        ImageIO.write(bi, imageMat, targetImage);
-
-        long duration = grabber.getLengthInTime() / (1000 * 1000);
-
-        logger.debug("视频的宽:" + bi.getWidth());
-        logger.debug("视频的高:" + bi.getHeight());
-        logger.debug("视频的旋转度：" + rotate);
-        logger.debug("视频的格式：" + grabber.getFormat());
-        logger.debug("此视频时长（s/秒）：" + duration);
-        grabber.stop();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        logger.debug("截取视频截图结束："+ System.currentTimeMillis());
-    }
+//    /**
+//     * @Description: 获取视频截图
+//     * @throws IOException  void
+//     */
+//    public static void getScreenshot(File sourceFile, File targetImage) {
+//        logger.debug("截取视频截图开始："+ System.currentTimeMillis());
+//        try {
+//
+//        FFmpegFrameGrabber grabber = FFmpegFrameGrabber.createDefault(sourceFile);
+//
+//        grabber.start();
+//        //设置视频截取帧（默认取第一帧）
+//        Frame frame = grabber.grabImage();
+//
+//        //视频旋转度
+//
+//        Java2DFrameConverter converter = new Java2DFrameConverter();
+//        //绘制图片
+//        BufferedImage bi = converter.getBufferedImage(frame);
+//
+//        /**
+//         * 因为手机拍摄的视频中存在 rotate(即旋转度的原因)
+//         */
+//        String rotate = grabber.getVideoMetadata("rotate");
+//        if (rotate != null) {
+//            // 旋转图片
+//            bi = rotate(bi, Integer.parseInt(rotate));
+//        }
+//
+//        //图片的类型
+//        String imageMat = "jpg";
+//        ImageIO.write(bi, imageMat, targetImage);
+//
+//        long duration = grabber.getLengthInTime() / (1000 * 1000);
+//
+//        logger.debug("视频的宽:" + bi.getWidth());
+//        logger.debug("视频的高:" + bi.getHeight());
+//        logger.debug("视频的旋转度：" + rotate);
+//        logger.debug("视频的格式：" + grabber.getFormat());
+//        logger.debug("此视频时长（s/秒）：" + duration);
+//        grabber.stop();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        logger.debug("截取视频截图结束："+ System.currentTimeMillis());
+//    }
 
     /**
      * @Description: 根据视频旋转度来调整图片

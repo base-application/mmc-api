@@ -13,4 +13,8 @@
   <select id="selectByCompanyId" resultMap="BaseResultMap">
     select * from company_produce where company_id = #{id}
   </select>
+
+  <delete id="deleteByCompanyId">
+    delete  from company_produce where company_id = #{companyId}
+  </delete>
 </mapper>

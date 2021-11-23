@@ -1,5 +1,7 @@
 package com.wanghuiwen.user.config;
 
+import java.util.regex.Pattern;
+
 public class Const {
     //未处理
     public static  final  int USER_FRIEND_APPLY_WAITING = 1;
@@ -24,5 +26,7 @@ public class Const {
     public static  final  int NOTIFICATION_READ = 1;
     //删除
     public static  final  int NOTIFICATION__DELETE= 2;
+
+    public static final Pattern  REGEX_HTML = Pattern.compile("<[^>]+>", Pattern.CASE_INSENSITIVE);
 
 }

@@ -1,5 +1,6 @@
 package com.wanghuiwen.user.vo;
 
+import com.wanghuiwen.user.model.Grade;
 import com.wanghuiwen.user.model.MmcGroup;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class EventVoAdd {
     private Long createId;
     List<ImageVo> eventPoster;
     List<MmcGroup> groups;
+    List<Grade> grades;
 
     public Long getEventId() {
         return eventId;
@@ -116,5 +118,13 @@ public class EventVoAdd {
 
     public void setCreateId(Long createId) {
         this.createId = createId;
+    }
+
+    public List<Grade> getGrades() {
+        return grades;
+    }
+
+    public void setGrades(List<Grade> grades) {
+        this.grades = grades;
     }
 }

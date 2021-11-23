@@ -12,12 +12,10 @@
     <result column="expired_time" jdbcType="BIGINT" property="expiredTime" />
     <result column="credentials_expired_time" jdbcType="BIGINT" property="credentialsExpiredTime" />
     <result column="locked" jdbcType="BIT" property="locked" />
+    <result column="push_id" jdbcType="VARCHAR" property="pushId" />
   </resultMap>
 
     <resultMap id="auth" type="com.wanghuiwen.core.config.AuthUser">
-        <!--
-          WARNING - @mbg.generated
-        -->
         <id column="id" jdbcType="BIGINT" property="id" />
         <result column="login_name" jdbcType="VARCHAR" property="userName" />
         <result column="password" jdbcType="VARCHAR" property="password" />
@@ -28,6 +26,9 @@
         <result column="grade_id" jdbcType="INTEGER" property="grade" />
         <result column="picture" jdbcType="VARCHAR" property="avatar" />
         <result column="name" jdbcType="VARCHAR" property="nickName" />
+        <result column="position_id" jdbcType="INTEGER" property="position" />
+        <result column="position_name" jdbcType="VARCHAR" property="positionName" />
+        <result column="create_event" jdbcType="BIT" property="createEvent" />
     </resultMap>
 
     <select id="list" resultMap="BaseResultMap">
@@ -83,7 +84,12 @@
     </select>
 
   <select id="findAuthUser" resultMap="auth">
-      SELECT a.*,ui.`name`,ui.grade_id,ui.picture from (SELECT * from user where login_name = #{s}) a
+      SELECT a.*,ui.`name`,ui.grade_id,ui.picture,p.* from (SELECT * from user where login_name = #{s}) a
        LEFT JOIN user_info ui on (ui.user_id = a.id )
+       left join position p on(p.position_id = ui.position_id)
     </select>
+
+  <update id="setPushToken">
+      update user set push_id = #{pushToken} where id = #{id}
+    </update>
 </mapper>

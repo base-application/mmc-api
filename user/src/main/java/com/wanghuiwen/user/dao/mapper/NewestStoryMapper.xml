@@ -10,6 +10,7 @@
     <result column="link" jdbcType="VARCHAR" property="link" />
     <result column="push_time" jdbcType="BIGINT" property="pushTime" />
     <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="cover" jdbcType="VARCHAR" property="cover" />
   </resultMap>
 
   <resultMap id="vo" type="com.wanghuiwen.user.vo.NewestStoryVo">
@@ -18,6 +19,7 @@
     <result column="link" jdbcType="VARCHAR" property="link" />
     <result column="push_time" jdbcType="BIGINT" property="pushTime" />
     <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="cover" jdbcType="VARCHAR" property="cover" />
     <collection column="story_id" property="poster" select="getPoster" />
   </resultMap>
 
@@ -29,9 +31,10 @@
     <if test="params.startDate!= null and params.endDate!= null">
       and push_time BETWEEN #{params.startDate} AND #{params.endDate}
     </if>
+    order by push_time desc
   </select>
 
   <select id="getPoster" resultType="com.wanghuiwen.user.vo.ImageVo">
-   select  newest_story_picture as url, newest_story_id as id from newset_story_picture where newest_story_id = #{id}
+   select  newest_story_picture as url, picture_id as id from newset_story_picture where newest_story_id = #{id}
   </select>
 </mapper>

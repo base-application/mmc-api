@@ -6,6 +6,7 @@ import javax.persistence.*;
 public class Referral implements Serializable {
     @Id
     @Column(name = "referral_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long referralId;
 
     private String reason;
@@ -49,6 +50,11 @@ public class Referral implements Serializable {
      *  备注
      */
     private String remark;
+
+    /**
+     * 是否发送thank you
+     */
+    private Boolean thank;
 
     private static final long serialVersionUID = 1L;
 
@@ -204,5 +210,23 @@ public class Referral implements Serializable {
      */
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    /**
+     * 获取是否发送thank you
+     *
+     * @return thank - 是否发送thank you
+     */
+    public Boolean getThank() {
+        return thank;
+    }
+
+    /**
+     * 设置是否发送thank you
+     *
+     * @param thank 是否发送thank you
+     */
+    public void setThank(Boolean thank) {
+        this.thank = thank;
     }
 }

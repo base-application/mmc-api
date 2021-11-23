@@ -53,7 +53,9 @@ public class SliderServiceImpl extends AbstractService<Slider> implements Slider
             return grade;
         }).collect(Collectors.toList());
 
-        sliderGradeMapper.insertListNoAuto(gradeList);
+        if(gradeList.size()>0){
+            sliderGradeMapper.insertListNoAuto(gradeList);
+        }
 
         List<SliderGroup> groups = slider.getGroup().stream().map(sg->{
             SliderGroup group = new SliderGroup();
@@ -61,7 +63,9 @@ public class SliderServiceImpl extends AbstractService<Slider> implements Slider
             group.setSliderId(mode.getSliderId());
             return group;
         }).collect(Collectors.toList());
-        sliderGroupMapper.insertListNoAuto(groups);
+        if(gradeList.size() > 0){
+            sliderGroupMapper.insertListNoAuto(groups);
+        }
     }
 
     @Override

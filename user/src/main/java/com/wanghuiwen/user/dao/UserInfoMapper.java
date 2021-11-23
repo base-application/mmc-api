@@ -1,7 +1,11 @@
 package com.wanghuiwen.user.dao;
 
+import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.core.ApiMapper;
+import com.wanghuiwen.user.model.Grade;
+import com.wanghuiwen.user.model.MmcGroup;
 import com.wanghuiwen.user.model.UserInfo;
+import com.wanghuiwen.user.vo.Achievement;
 import com.wanghuiwen.user.vo.UserInfoVo;
 import com.wanghuiwen.user.vo.UserNetWorkVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,7 +18,13 @@ import java.util.Map;
 public interface UserInfoMapper extends ApiMapper<UserInfo> {
     List<UserInfoVo> managerList(@Param("params") Map<String, Object> params);
 
-    List<UserNetWorkVo> network(Map<String, Object> params);
+    List<UserNetWorkVo> network(@Param("params")Map<String, Object> params);
 
     UserInfoVo detail(Long userId, Long id);
+
+    UserInfoVo detailUser(Long userId);
+
+    Achievement achievements(Long id, Integer type);
+
+    List<User> findByGroupAndGrade(@Param("groups")List<MmcGroup> groups, @Param("grades")List<Grade> grades);
 }

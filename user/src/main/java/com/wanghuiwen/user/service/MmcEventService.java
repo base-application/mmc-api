@@ -14,11 +14,11 @@ import java.util.Map;
  * Created by wanghuiwen on 2021/10/18.
  */
 public interface MmcEventService extends Service<MmcEvent> {
-    void add(EventVoAdd add);
+    Long add(EventVoAdd add);
 
     void approve(Long eventId, Integer approveStatus);
 
-    EventVo detail(Integer id);
+    EventVo detail(Long id, Long uid);
 
     List<EventVoAdd> list(Map<String, Object> params);
 
@@ -42,7 +42,13 @@ public interface MmcEventService extends Service<MmcEvent> {
 
     List<EventVoAdd> joinList(AuthUser authUser);
 
-    List<EventVoAdd> userCreate(AuthUser authUser);
+    List<EventVoAdd> userCreate(AuthUser authUser, Map<String, Object> params);
 
     List<AttendanceVo> getAttendance(Long id, Long groupId, Long startTime, Long endTime);
+
+    /**
+     * 今天后的
+     * @return
+     */
+    List<MmcEvent> findByStartDate();
 }

@@ -103,6 +103,14 @@ public class UserCompany implements Serializable {
     @Column(name = "service_introduction")
     private String serviceIntroduction;
 
+    private String city;
+
+    @Column(name = "post_code")
+    private String postCode;
+
+    @Column(name = "company_whatsapp")
+    private String companyWhatsapp;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -401,5 +409,47 @@ public class UserCompany implements Serializable {
      */
     public void setServiceIntroduction(String serviceIntroduction) {
         this.serviceIntroduction = serviceIntroduction;
+    }
+
+    /**
+     * @return city
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * @param city
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * @return post_code
+     */
+    public String getPostCode() {
+        return postCode;
+    }
+
+    /**
+     * @param postCode
+     */
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
+    }
+
+    /**
+     * @return company_whatsapp
+     */
+    public String getCompanyWhatsapp() {
+        return companyWhatsapp;
+    }
+
+    /**
+     * @param companyWhatsapp
+     */
+    public void setCompanyWhatsapp(String companyWhatsapp) {
+        this.companyWhatsapp = companyWhatsapp;
     }
 }

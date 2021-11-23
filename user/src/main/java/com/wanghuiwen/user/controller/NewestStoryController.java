@@ -1,18 +1,17 @@
 package com.wanghuiwen.user.controller;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
-import com.wanghuiwen.user.model.NewestStory;
+import com.wanghuiwen.user.config.FmcUtil;
 import com.wanghuiwen.user.service.NewestStoryService;
 import com.wanghuiwen.user.vo.NewestStoryVo;
-import com.wanghuiwen.user.vo.UserInfoVo;
-import org.apache.ibatis.annotations.Delete;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import io.swagger.annotations.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +29,9 @@ public class NewestStoryController extends Ctrl{
 
     @ApiOperation(value = "新闻添加", tags = {"新闻"}, notes = "新闻添加")
     @PostMapping(value="/add",name="新闻添加")
-    public Result add(@RequestBody NewestStoryVo NewestStoryVo) {
-        newestStoryService.add(NewestStoryVo);
+    public Result add(@RequestBody NewestStoryVo newestStoryVo) {
+        newestStoryService.add(newestStoryVo);
+        FmcUtil.sendAll(newestStoryVo.getTitle(), newestStoryVo.getDescription(),null);
         return resultGenerator.genSuccessResult();
     }
 

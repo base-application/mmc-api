@@ -46,6 +46,8 @@ public class UserNetWorkVo {
     private String youtube;
     private String instagram;
     private int gradeId;
+    private String gradeName;
+    private String groupName;
     private Double attendance;
     private int referralSend;
     private int referralReceived;
@@ -235,5 +237,29 @@ public class UserNetWorkVo {
 
     public void setIsFriend(boolean isFriend) {
         this.isFriend = isFriend;
+    }
+
+    public String getGradeName() {
+        return gradeName;
+    }
+
+    public void setGradeName(String gradeName) {
+        this.gradeName = gradeName;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public boolean isFriend() {
+        return isFriend;
+    }
+
+    public void setFriend(boolean friend) {
+        isFriend = friend;
     }
 }

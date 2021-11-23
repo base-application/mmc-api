@@ -26,4 +26,9 @@ public class MenuServiceImpl extends AbstractService<Menu> implements MenuServic
     public List<Menu> getByRole(Long roleId) {
         return menuMapper.getByRole(roleId);
     }
+
+    @Override
+    public List<Menu> findByPid(Long id) {
+        return menuMapper.selectByPid(id);
+    }
 }

@@ -1,25 +1,26 @@
 package com.wanghuiwen.user.service.impl;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
 import com.wanghuiwen.core.ServiceException;
 import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.service.AbstractService;
 import com.wanghuiwen.user.config.Const;
-import com.wanghuiwen.user.dao.AttendanceMapper;
-import com.wanghuiwen.user.dao.EventGroupMapper;
-import com.wanghuiwen.user.dao.EventPictureMapper;
-import com.wanghuiwen.user.dao.MmcEventMapper;
-import com.wanghuiwen.user.model.Attendance;
-import com.wanghuiwen.user.model.EventGroup;
-import com.wanghuiwen.user.model.EventPicture;
-import com.wanghuiwen.user.model.MmcEvent;
+import com.wanghuiwen.user.dao.*;
+import com.wanghuiwen.user.model.*;
+import com.wanghuiwen.user.service.GradeService;
 import com.wanghuiwen.user.service.MmcEventService;
 import com.wanghuiwen.user.vo.AttendanceVo;
 import com.wanghuiwen.user.vo.CheckHistoryVo;
 import com.wanghuiwen.user.vo.EventVo;
 import com.wanghuiwen.user.vo.EventVoAdd;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements MmcEventService {
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource
     private MmcEventMapper mmcEventMapper;
     @Resource
@@ -43,13 +45,18 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     private EventGroupMapper eventGroupMapper;
     @Resource
     private AttendanceMapper attendanceMapper;
+    @Resource
+    private GradeService gradeService;
+    @Resource
+    private EventGradeMapper eventGradeMapper;
 
     @Override
-    public void add(EventVoAdd add) {
+    public Long add(EventVoAdd add) {
         MmcEvent event = new MmcEvent();
         BeanUtils.copyProperties(add,event);
         event.setApproveStatus(Const.EVENT_WAITING);
         saveOrUpdate(event);
+
 
         eventPictureMapper.deleteByEvent(event.getEventId());
         eventGroupMapper.deleteByEvent(event.getEventId());
@@ -62,14 +69,28 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
         }).collect(Collectors.toList());
         eventPictureMapper.insertList(pictureList);
 
-        List<EventGroup> groups =  add.getGroups().stream().map(group -> {
-            EventGroup eventGroup =  new EventGroup();
-            eventGroup.setEventId(event.getEventId());
-            eventGroup.setGroupId(group.getGroupId());
-            return eventGroup;
-        }).collect(Collectors.toList());
-        eventGroupMapper.insertListNoAuto(groups);
+        if(!CollectionUtils.isEmpty( add.getGroups())){
+            List<EventGroup> groups =  add.getGroups().stream().map(group -> {
+                EventGroup eventGroup =  new EventGroup();
+                eventGroup.setEventId(event.getEventId());
+                eventGroup.setGroupId(group.getGroupId());
+                return eventGroup;
+            }).collect(Collectors.toList());
+            eventGroupMapper.insertListNoAuto(groups);
+        }
 
+
+        gradeService.deleteByEvent(event.getEventId());
+        if(!CollectionUtils.isEmpty(add.getGrades())){
+            List<EventGrade> grades = add.getGrades().stream().map(grade -> {
+                EventGrade eventGrade = new EventGrade();
+                eventGrade.setEventId(event.getEventId());
+                eventGrade.setGradeId(grade.getGradeId());
+                return  eventGrade;
+            }).collect(Collectors.toList());
+            eventGradeMapper.insertListNoAuto(grades);
+        }
+        return event.getEventId();
     }
 
     @Override
@@ -80,9 +101,8 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     }
 
     @Override
-    public EventVo detail(Integer id) {
-
-        return mmcEventMapper.detail(id);
+    public EventVo detail(Long id, Long uid) {
+        return mmcEventMapper.detail(id,uid);
     }
 
     @Override
@@ -108,10 +128,11 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     @Override
     public void join(Long eventId, Long userId) {
         Attendance attendance = attendanceMapper.selectUserEvent(userId,eventId);
-        if(attendance!=null) throw new ServiceException("用户已经加入活动");
+        if(attendance!=null) throw new ServiceException("用户已经加入活动","user.40003");
         Attendance join = new Attendance();
         join.setUserId(userId);
         join.setEventId(eventId);
+        join.setIsAttendance(false);
         attendanceMapper.insert(join);
     }
 
@@ -161,12 +182,17 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     }
 
     @Override
-    public List<EventVoAdd> userCreate(AuthUser authUser) {
-        return mmcEventMapper.userCreate(authUser.getId());
+    public List<EventVoAdd> userCreate(AuthUser authUser, Map<String, Object> params) {
+        return mmcEventMapper.userCreate(authUser.getId(),params);
     }
 
     @Override
     public List<AttendanceVo> getAttendance(Long id, Long groupId, Long startTime, Long endTime) {
         return mmcEventMapper.getAttendance(id,groupId,startTime,endTime);
+    }
+
+    @Override
+    public List<MmcEvent> findByStartDate() {
+        return mmcEventMapper.findByStartDate();
     }
 }

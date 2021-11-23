@@ -5,6 +5,8 @@ import java.util.List;
 public class GroupUserVo {
     private Integer groupId;
     private String groupName;
+    private Integer thankYouNote;
+    private Integer refer;
     List<UserInfoVo> userInfoVos;
 
     public Integer getGroupId() {
@@ -29,5 +31,21 @@ public class GroupUserVo {
 
     public void setUserInfoVos(List<UserInfoVo> userInfoVos) {
         this.userInfoVos = userInfoVos;
+    }
+
+    public Integer getThankYouNote() {
+        return thankYouNote;
+    }
+
+    public void setThankYouNote(Integer thankYouNote) {
+        this.thankYouNote = thankYouNote;
+    }
+
+    public Integer getRefer() {
+        return refer;
+    }
+
+    public void setRefer(Integer refer) {
+        this.refer = refer;
     }
 }

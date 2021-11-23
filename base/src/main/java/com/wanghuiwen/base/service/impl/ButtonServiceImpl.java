@@ -27,4 +27,9 @@ public class ButtonServiceImpl extends AbstractService<Button> implements Button
     public List<Button> getByRole(Long id) {
         return buttonMapper.getByRole(id);
     }
+
+    @Override
+    public List<Button> list(String modeName, String name) {
+        return buttonMapper.list(modeName, name);
+    }
 }

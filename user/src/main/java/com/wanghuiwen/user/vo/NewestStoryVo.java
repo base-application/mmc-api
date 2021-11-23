@@ -19,6 +19,7 @@ public class NewestStoryVo {
     private String title;
     private Long pushTime;
     private List<ImageVo> poster;
+    private String cover;
 
     public String getDescription() {
         return description;
@@ -66,5 +67,13 @@ public class NewestStoryVo {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }

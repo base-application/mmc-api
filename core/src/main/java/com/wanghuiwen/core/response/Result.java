@@ -2,7 +2,6 @@ package com.wanghuiwen.core.response;
 
 
 import com.wanghuiwen.common.JSONUtils;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 /**
  * 统一API响应结果封装

@@ -74,6 +74,8 @@
         <result column="grade_id" jdbcType="INTEGER" property="gradeId" />
         <result column="enable" jdbcType="INTEGER" property="enable" />
         <result column="isFriend" jdbcType="INTEGER" property="isFriend" />
+        <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
+        <result column="group_name" jdbcType="VARCHAR" property="groupName" />
     </resultMap>
 
 
@@ -122,7 +124,9 @@
         rgr.received_count as referralReceived,
         tgs.thank_send_count as thankYouNote,
         tgr.thank_received_count,
-        uf.create_time is not null as isFriend
+        uf.follow_id is not null as isFriend,
+        mg.group_name,
+        grade.grade_name
         FROM (select * from user_info where 1=1
         <if test="params.name!=null and params.name!=''">
             and name like concat('%',#{params.name},'%')
@@ -139,9 +143,11 @@
         <if test="params.groupId!=null">
             and group_id = #{params.groupId}
         </if>
+        <if test="params.userGrade!=null">
+            and grade_id &lt;  #{params.userGrade}
+        </if>
         <if test="params.onlySelf!=null">
-            and exists(select * from user_friend uf2 where (uf2.fans_id = #{params.userId} and uf2.fans_id =
-            user_info.user_id) or (uf2.idol_id = #{params.userId} and uf2.idol_id = user_info.user_id))
+            and exists(select * from user_follow uf2 where (uf2.follow_user_id = #{params.userId} and uf2.user_id = user_info.user_id))
         </if>
 
         ) ui
@@ -153,19 +159,20 @@
         LEFT JOIN referral_group_received rgr on (rgr.received_user = ui.user_id)
         LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.user_id)
         LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
-        LEFT JOIN user_friend uf on ((uf.fans_id = #{params.userId} and uf.idol_id = ui.user_id) or (uf.idol_id =
-        #{params.userId} and uf.fans_id = ui.user_id))
+        LEFT JOIN user_follow uf on (uf.follow_user_id = #{params.userId} and uf.user_id = ui.user_id)
     </select>
 
     <select id="detail" resultMap="vo">
         SELECT ui.*,
                u.`enable`,
+               grade_name,
+               group_name,
                ar.attendance_rate         as attendance,
                rgs.send_count             as referralSend,
                rgr.received_count         as referralReceived,
                tgs.thank_send_count       as thankYouNote,
                tgr.thank_received_count,
-               uf.create_time is not null as isFriend
+               uf.follow_id is not null as isFriend
         FROM (select * from user_info where user_id = #{userId}) ui
                      LEFT JOIN `user` u ON (ui.user_id = u.id)
                      LEFT JOIN grade ON (grade.grade_id = ui.grade_id)
@@ -175,8 +182,80 @@
                      LEFT JOIN referral_group_received rgr on (rgr.received_user = ui.user_id)
                      LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.user_id)
                      LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
-                     LEFT JOIN user_friend uf
-                on ((uf.fans_id = #{id} and uf.idol_id = ui.user_id) or
-                    (uf.idol_id = ${id} and uf.fans_id = ui.user_id))
+                     LEFT JOIN user_follow uf on (uf.follow_user_id = #{id} and uf.user_id = ui.user_id)
+    </select>
+
+  <select id="detailUser" resultMap="vo">
+      SELECT ui.*,
+             u.`enable`,
+             ar.attendance_rate         as attendance,
+             rgs.send_count             as referralSend,
+             rgr.received_count         as referralReceived,
+             tgs.thank_send_count       as thankYouNote,
+             tgr.thank_received_count
+      FROM (select * from user_info where user_id = #{userId}) ui
+                   LEFT JOIN `user` u ON (ui.user_id = u.id)
+                   LEFT JOIN grade ON (grade.grade_id = ui.grade_id)
+                   LEFT JOIN mmc_group mg ON (mg.group_id = ui.group_id)
+                   LEFT JOIN attendance_rate ar on (ar.user_id = ui.user_id)
+                   LEFT JOIN referral_group_send rgs on (rgs.send_user = ui.user_id)
+                   LEFT JOIN referral_group_received rgr on (rgr.received_user = ui.user_id)
+                   LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.user_id)
+                   LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
+    </select>
+
+  <select id="achievements" resultType="com.wanghuiwen.user.vo.Achievement">
+      <if test="type == 1">
+          SELECT
+          rgs.send_count             as referralSend,
+          rgr.received_count         as referralReceived,
+          tgs.thank_send_count       as thankYouNoteSend,
+          tgr.thank_received_count   as thankYouNoteReceived,
+          prgs.send_count             as prevReferralSend,
+          prgr.received_count         as prevReferralReceived,
+          ptgs.thank_send_count       as prevThankYouNoteSend,
+          ptgr.thank_received_count   as prevThankYouNoteReceived
+
+          FROM (select * from user where id = #{id}) ui
+          LEFT JOIN referral_send_month_group rgs on (rgs.send_user = ui.id and rgs.`month` = MONTH(NOW()) and rgs.`year` = YEAR(NOW()))
+          LEFT JOIN referral_received_month_group rgr on (rgr.received_user = ui.id and rgr.`month` =  MONTH(NOW()) and rgr.`year` =YEAR(NOW()) )
+          LEFT JOIN thank_send_group_month tgs on (tgs.send_user = ui.id and tgs.`month` =  MONTH(NOW())  and tgs.`year`=YEAR(NOW())  )
+          LEFT JOIN thank_received_group_month tgr on (tgr.received_user = ui.id and tgr.`month` = MONTH(NOW())  and tgr.`year` = YEAR	(NOW()))
+          LEFT JOIN referral_send_month_group prgs on (prgs.send_user = ui.id and prgs.`month` = MONTH(date_sub(now(),interval 1 month)) and prgs.`year` = YEAR(date_sub(now(),interval 1 month)))
+          LEFT JOIN referral_received_month_group prgr on (prgr.received_user = ui.id and prgr.`month` =  MONTH(date_sub(now(),interval 1 month)) and prgr.`year` =YEAR(date_sub(now(),interval 1 month)) )
+          LEFT JOIN thank_send_group_month ptgs on (ptgs.send_user = ui.id and ptgs.`month` =  MONTH(date_sub(now(),interval 1 month))  and ptgs.`year`=YEAR(date_sub(now(),interval 1 month))  )
+          LEFT JOIN thank_received_group_month ptgr on (ptgr.received_user = ui.id and ptgr.`month` = MONTH(date_sub(now(),interval 1 month))  and ptgr.`year` = YEAR(date_sub(now(),interval 1 month)))
+      </if>
+      <if test="type == 2">
+          SELECT
+          rgs.send_count             as referralSend,
+          rgr.received_count         as referralReceived,
+          tgs.thank_send_count       as thankYouNote,
+          tgr.thank_received_count
+          FROM (select * from user where id = #{id}) ui
+          LEFT JOIN referral_group_send rgs on (rgs.send_user = ui.id)
+          LEFT JOIN referral_group_received rgr on (rgr.received_user = ui.id)
+          LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.id)
+          LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.id)
+      </if>
+
+    </select>
+
+  <select id="findByGroupAndGrade" resultMap="com.wanghuiwen.base.dao.UserMapper.BaseResultMap">
+      select * from user_info
+      left join user u on (user_info.user_id = u.id)
+      where 1=1
+      <if test="groups!=null and groups.size > 0">
+          and group_id in
+          <foreach  item="item" collection="groups" index="index"  open="(" separator="," close=")">
+              #{item.groupId}
+          </foreach>
+      </if>
+      <if test="grades!=null and grades.size > 0">
+          and grade_id in
+          <foreach  item="item" collection="grades" index="index"  open="(" separator="," close=")">
+              #{item.gradeId}
+          </foreach>
+      </if>
     </select>
 </mapper>

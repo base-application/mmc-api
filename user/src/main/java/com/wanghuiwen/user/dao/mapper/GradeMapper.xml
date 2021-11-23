@@ -12,4 +12,8 @@
   <select id="findByName" resultMap="BaseResultMap">
     select  * from grade where  grade_name = #{name} limit 1
     </select>
+
+  <delete id="deleteByEvent">
+    delete from event_grade where event_id = #{eventId}
+    </delete>
 </mapper>

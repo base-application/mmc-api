@@ -1,5 +1,7 @@
 package com.wanghuiwen.user.service.impl;
 
+import com.wanghuiwen.address.model.AddressCountries;
+import com.wanghuiwen.address.service.AddressCountriesService;
 import com.wanghuiwen.base.config.ProjectConstant;
 import com.wanghuiwen.base.dao.RoleMapper;
 import com.wanghuiwen.base.dao.UserMapper;
@@ -7,17 +9,24 @@ import com.wanghuiwen.base.dao.UserRoleMapper;
 import com.wanghuiwen.base.model.Role;
 import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.base.model.UserRole;
+import com.wanghuiwen.base.service.RoleService;
+import com.wanghuiwen.base.service.UserRoleService;
 import com.wanghuiwen.common.UtilFun;
+import com.wanghuiwen.core.ServiceException;
+import com.wanghuiwen.user.config.Const;
 import com.wanghuiwen.user.dao.*;
 import com.wanghuiwen.user.model.*;
 import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.core.service.AbstractService;
+import com.wanghuiwen.user.vo.Achievement;
 import com.wanghuiwen.user.vo.UserInfoVo;
 import com.wanghuiwen.user.vo.UserNetWorkVo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +37,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.wanghuiwen.user.config.UserResultEnum.VERIFICATION_ERROR;
+import static com.wanghuiwen.user.config.UserResultEnum.VERIFICATION_INVALID;
 
 
 /**
@@ -53,6 +65,15 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
     private MmcGroupMapper mmcGroupMapper;
     @Resource
     private UserCompanyMapper userCompanyMapper;
+    @Resource
+    private AddressCountriesService addressCountriesService;
+    @Resource
+    private RedisTemplate<String,String> redisTemplate;
+    @Resource
+    private RoleService roleService;
+
+    @Value("${mmc.init.grade}")
+    private String initGradeName;
 
     @Override
     public List<UserInfoVo> managerList(Integer page, Integer size, Map<String, Object> params) {
@@ -161,5 +182,68 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
             userInfos.add(info);
         }
         //todo 发邮件
+    }
+
+    @Override
+    public void register(String phoneNumber, String verificationCode, String password, String countryCode) {
+        String key = verificationCodeKey(phoneNumber, Const.VERIFICATION_REGISTER);
+        String code = redisTemplate.opsForValue().get(key);
+        if(code == null){
+            throw new ServiceException("验证码不可用","user.40001");
+        }
+        if(!verificationCode.equals(code)){
+            throw new ServiceException("验证码不可用","user.40001");
+        }
+        password = new BCryptPasswordEncoder().encode(password);
+
+        User user = new User();
+        user.setPassword(password);
+        user.setLoginName(phoneNumber);
+        user.setEnable(true);
+        user.setLocked(false);
+        userMapper.insert(user);
+
+        Role role = roleService.findBy("name", ProjectConstant.ROLE_USER);
+        UserRole userRole = new UserRole();
+        userRole.setUserId(user.getId());
+        userRole.setRoleId(role.getId());
+        userRoleMapper.insertSelective(userRole);
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(user.getId());
+        Grade grade = gradeMapper.findByName(initGradeName);
+        userInfo.setGradeId(grade.getGradeId());
+        AddressCountries countries = addressCountriesService.findBy("phonecode",countryCode);
+        if(countries!=null){
+            userInfo.setCountry(countries.getId());
+        }
+        save(userInfo);
+        redisTemplate.delete(key);
+    }
+
+
+    /**
+     * 验证码redis key
+     * @param phoneNumber
+     * @param type 1 注册 2 忘记密码
+     * @return
+     */
+    public String verificationCodeKey(String phoneNumber, Integer type){
+        return "verification:type:"+type+":"+phoneNumber;
+    }
+
+    @Override
+    public UserInfoVo detail(Long userId) {
+        return userInfoMapper.detailUser(userId);
+    }
+
+    @Override
+    public Achievement achievements(Long id, Integer type) {
+        return userInfoMapper.achievements(id,type);
+    }
+
+    @Override
+    public List<User> findByGroupAndGrade(List<MmcGroup> groups, List<Grade> grades) {
+        return userInfoMapper.findByGroupAndGrade(groups,grades);
     }
 }

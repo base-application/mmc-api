@@ -8,5 +8,5 @@ import com.wanghuiwen.user.vo.CompanyVo;
  * Created by wanghuiwen on 2021/10/18.
  */
 public interface UserCompanyService extends Service<UserCompany> {
-    void companyUpdate(CompanyVo companyVo);
+    Long companyUpdate(CompanyVo companyVo);
 }

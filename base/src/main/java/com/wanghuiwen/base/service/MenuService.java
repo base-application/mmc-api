@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface MenuService extends Service<Menu> {
     List<Menu> getByRole(Long roleId);
+
+    List<Menu> findByPid(Long id);
 }

@@ -58,14 +58,14 @@
             <artifactId>springfox-boot-starter</artifactId>
         </dependency>
     </dependencies>
-
     <build>
-        <finalName>game</finalName>
+        <finalName>mmc</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <mainClass>com.wanghuiwen.GameApplication</mainClass>
                     <fork>true</fork>
                 </configuration>
             </plugin>

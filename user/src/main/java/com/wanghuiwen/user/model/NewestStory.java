@@ -7,7 +7,6 @@ import javax.persistence.*;
 public class NewestStory implements Serializable {
     @Id
     @Column(name = "story_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storyId;
 
     /**
@@ -30,6 +29,11 @@ public class NewestStory implements Serializable {
      * 标题
      */
     private String title;
+
+    /**
+     * 封面
+     */
+    private String cover;
 
     private static final long serialVersionUID = 1L;
 
@@ -117,5 +121,23 @@ public class NewestStory implements Serializable {
      */
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    /**
+     * 获取封面
+     *
+     * @return cover - 封面
+     */
+    public String getCover() {
+        return cover;
+    }
+
+    /**
+     * 设置封面
+     *
+     * @param cover 封面
+     */
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }

@@ -7,6 +7,7 @@
     -->
     <id column="position_id" jdbcType="INTEGER" property="positionId" />
     <result column="position_name" jdbcType="VARCHAR" property="positionName" />
+    <result column="create_event" jdbcType="BIT" property="createEvent" />
   </resultMap>
 
   <select id="findByName" resultMap="BaseResultMap">

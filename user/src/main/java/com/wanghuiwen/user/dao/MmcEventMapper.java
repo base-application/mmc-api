@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Mapper
 public interface MmcEventMapper extends ApiMapper<MmcEvent> {
-    EventVo detail(Integer id);
+    EventVo detail(Long id, Long uid);
 
     List<EventVoAdd> list(@Param("params") Map<String, Object> params);
 
@@ -21,7 +21,9 @@ public interface MmcEventMapper extends ApiMapper<MmcEvent> {
 
     List<EventVoAdd> joinList(Long id);
 
-    List<EventVoAdd> userCreate(Long id);
+    List<EventVoAdd> userCreate(Long id, @Param("params") Map<String, Object> params);
 
     List<AttendanceVo> getAttendance(Long id,Long groupId,Long startTime,Long endTime);
+
+    List<MmcEvent> findByStartDate();
 }

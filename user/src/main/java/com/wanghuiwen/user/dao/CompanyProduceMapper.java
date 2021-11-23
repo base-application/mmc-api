@@ -10,4 +10,6 @@ import java.util.List;
 public interface CompanyProduceMapper extends ApiMapper<CompanyProduce> {
 
    List<CompanyProduce> selectByCompanyId(Long id);
+
+  void  deleteByCompanyId(Long companyId);
 }

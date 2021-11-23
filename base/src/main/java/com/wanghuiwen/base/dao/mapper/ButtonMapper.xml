@@ -14,4 +14,15 @@
   <select id="getByRole" resultMap="BaseResultMap">
     select * from button where EXISTS (SELECT * from role_button where role_button.button_id = button.button_id and role_button.role_id = #{id})
   </select>
+
+  <select id="list" resultMap="BaseResultMap">
+    select  * from button where 1=1
+    <if test="name!=null">
+      and name like concat('%',#{name},'%')
+    </if>
+    <if test="modeName!=null">
+      and mode_name like concat('%',#{modeName},'%')
+    </if>
+    order by mode_name
+    </select>
 </mapper>

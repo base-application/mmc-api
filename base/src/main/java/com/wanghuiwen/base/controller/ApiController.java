@@ -186,7 +186,9 @@ public class ApiController extends Ctrl {
     }
 
     @GetMapping(value = "button/list",name = "按钮权限列表")
-    public Result buttons(Authentication authentication) {
+    public Result buttons(Authentication authentication,
+                          @RequestParam(required = false) String modeName,
+                          @RequestParam(required = false) String name) {
         AuthUser user = getAuthUser(authentication);
         List<Button> roles;
         /**
@@ -195,21 +197,9 @@ public class ApiController extends Ctrl {
         if(!user.getRoles().contains(ProjectConstant.ROLE_ADMIN)){
             roles = userService.getButtons(user.getId());
         }else {
-            roles = buttonService.findAll();
+            roles = buttonService.list(modeName,name);
         }
-
-        Map<String, List<Button>> res = roles.stream().collect(Collectors.groupingBy(Button::getModeName));
-
-        List<ElTree<Button>> elTrees = new ArrayList<>();
-        for (Map.Entry<String, List<Button>> m : res.entrySet()) {
-            ElTree<Button> elTree = new ElTree<>();
-            elTree.setDisabled(true);
-            elTree.setId(m.getKey());
-            elTree.setName(m.getKey());
-            elTree.setChildren(m.getValue());
-            elTrees.add(elTree);
-        }
-        return resultGenerator.genSuccessResult(elTrees);
+        return resultGenerator.genSuccessResult(roles);
     }
 
     @GetMapping(value = "role/button",name = "角色按钮列表")
@@ -253,14 +243,17 @@ public class ApiController extends Ctrl {
             menus = userService.getMenus(getAuthUser(authentication).getId());
         }else {
             menus = menuService.findAll();
+            menus = menus.stream().sorted(Comparator.comparing(Menu::getPriority)).collect(Collectors.toList());
         }
 
 
-        Map<Long, List<Menu>> res = menus.stream().collect(Collectors.groupingBy(Menu::getPid));
-        List<Menu> parent = res.get(0L);
-        addMenuChild(parent,res);
-
-        return resultGenerator.genSuccessResult(parent);
+        if(menus.size()>0){
+            Map<Long, List<Menu>> res = menus.stream().collect(Collectors.groupingBy(Menu::getPid));
+            List<Menu> parent = res.get(0L);
+            addMenuChild(parent,res);
+            return resultGenerator.genSuccessResult(parent);
+        }
+        return   resultGenerator.genSuccessResult(new ArrayList<>());
     }
 
     private void addMenuChild(List<Menu> menus, Map<Long, List<Menu>> res){
@@ -291,6 +284,7 @@ public class ApiController extends Ctrl {
 
     @DeleteMapping(value = "menu/delete",name = "菜单列表")
     public Result menu(Long id) {
+        List<Menu> menus =  menuService.findByPid(id);
         menuService.deleteById(id);
         return resultGenerator.genSuccessResult();
     }
@@ -422,6 +416,12 @@ public class ApiController extends Ctrl {
         List<ResultMap<String,Object>> sysLogs = sysLogService.list(params);
         PageInfo<ResultMap<String,Object>> pageInfo = new PageInfo<>(sysLogs);
         return resultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @PutMapping(value = "user/push/token",name = "设置用户推送token")
+    public Result setPushToken(@RequestParam(required = true) String pushToken,Authentication authentication) {
+        userService.setPushToken(pushToken,getAuthUser(authentication).getId());
+        return resultGenerator.genSuccessResult();
     }
 
 

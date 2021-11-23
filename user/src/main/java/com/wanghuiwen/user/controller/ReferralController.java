@@ -2,8 +2,11 @@ package com.wanghuiwen.user.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wanghuiwen.base.model.User;
+import com.wanghuiwen.base.service.UserService;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
+import com.wanghuiwen.user.config.FmcUtil;
 import com.wanghuiwen.user.model.Referral;
 import com.wanghuiwen.user.service.ReferralService;
 import com.wanghuiwen.user.vo.NewestStoryVo;
@@ -28,11 +31,17 @@ import java.util.Map;
 public class ReferralController extends Ctrl{
     @Resource
     private ReferralService referralService;
+    @Resource
+    private UserService userService;
 
     @ApiOperation(value = "发送推荐", tags = {"推荐"}, notes = "发送推荐")
     @PostMapping(value="/send",name="发送推荐")
-    public Result add(@ApiParam ReferralAddVo addVo) {
-        referralService.send(addVo);
+    public Result add(@RequestBody ReferralAddVo addVo,Authentication authentication) {
+        referralService.send(addVo,getAuthUser(authentication).getId());
+        User user = userService.findById(addVo.getReceivedUser());
+        if(user.getPushId()!=null){
+            FmcUtil.sendUser(user.getPushId(),"推荐","有朋友推荐给你",null);
+        }
         return resultGenerator.genSuccessResult();
     }
 

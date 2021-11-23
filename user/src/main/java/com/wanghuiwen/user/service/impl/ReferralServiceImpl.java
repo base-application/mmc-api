@@ -2,12 +2,10 @@ package com.wanghuiwen.user.service.impl;
 
 import com.wanghuiwen.user.dao.ReferralMapper;
 import com.wanghuiwen.user.dao.ReferralPictureMapper;
-import com.wanghuiwen.user.model.NewsetStoryPicture;
 import com.wanghuiwen.user.model.Referral;
 import com.wanghuiwen.user.model.ReferralPicture;
 import com.wanghuiwen.user.service.ReferralService;
 import com.wanghuiwen.core.service.AbstractService;
-import com.wanghuiwen.user.vo.NewestStoryVo;
 import com.wanghuiwen.user.vo.ReferralAddVo;
 import com.wanghuiwen.user.vo.ReferralVo;
 import org.springframework.beans.BeanUtils;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,9 +36,11 @@ public class ReferralServiceImpl extends AbstractService<Referral> implements Re
     }
 
     @Override
-    public void send(ReferralAddVo addVo) {
+    public void send(ReferralAddVo addVo, Long uid) {
         Referral referral = new Referral();
         BeanUtils.copyProperties(addVo,referral);
+        referral.setSendUser(uid);
+        referral.setSendTime(new Date().getTime());
         saveOrUpdate(referral);
         referralMapper.deleteByReferral(referral.getReferralId());
 

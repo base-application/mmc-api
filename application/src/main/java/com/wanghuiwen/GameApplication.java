@@ -33,12 +33,6 @@ public class GameApplication {
     }
 
     @Bean
-    public LocaleResolver localeResolver() {
-        SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-        localeResolver.setDefaultLocale(Locale.SIMPLIFIED_CHINESE);
-        return localeResolver;
-    }
-    @Bean
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
                 .apiInfo(apiInfo())

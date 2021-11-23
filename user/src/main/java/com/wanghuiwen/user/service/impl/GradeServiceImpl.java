@@ -18,4 +18,9 @@ import javax.annotation.Resource;
 public class GradeServiceImpl extends AbstractService<Grade> implements GradeService {
     @Resource
     private GradeMapper gradeMapper;
+
+    @Override
+    public void deleteByEvent(Long eventId) {
+        gradeMapper.deleteByEvent(eventId);
+    }
 }

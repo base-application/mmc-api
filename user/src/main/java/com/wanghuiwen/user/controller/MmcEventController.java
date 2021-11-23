@@ -2,16 +2,23 @@ package com.wanghuiwen.user.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
+import com.wanghuiwen.user.config.FmcUtil;
+import com.wanghuiwen.user.model.MmcEvent;
+import com.wanghuiwen.user.queue.NotificationQueueService;
 import com.wanghuiwen.user.service.MmcEventService;
+import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.user.vo.AttendanceVo;
 import com.wanghuiwen.user.vo.CheckHistoryVo;
 import com.wanghuiwen.user.vo.EventVo;
 import com.wanghuiwen.user.vo.EventVoAdd;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +35,18 @@ import java.util.Map;
 @RestController
 @RequestMapping("/event")
 public class MmcEventController extends Ctrl{
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource
     private MmcEventService mmcEventService;
+    @Resource
+    private UserInfoService userInfoService;
+    @Resource
+    private NotificationQueueService notificationQueueService;
 
     @ApiOperation(value = "活动添加", tags = {"活动"}, notes = "活动添加")
     @PostMapping(value="/add",name="活动添加")
-    public Result add(@RequestBody EventVoAdd add) {
+    public Result add(@RequestBody EventVoAdd add,Authentication authentication) {
+        add.setCreateId(getAuthUser(authentication).getId());
         mmcEventService.add(add);
         return resultGenerator.genSuccessResult();
     }
@@ -42,13 +55,23 @@ public class MmcEventController extends Ctrl{
     @PutMapping(value="/approve",name="审核活动")
     public Result approve(Long eventId,Integer approveStatus) {
         mmcEventService.approve(eventId,approveStatus);
+        EventVo event = mmcEventService.detail(eventId,null);
+        /**
+         * 新建是发送推送
+         */
+        List<User> users = userInfoService.findByGroupAndGrade(event.getGroups(),event.getGrades());
+        FmcUtil.sendNotification(users,event.getEventTitle(), event.getEventDescription(),null);
+        MmcEvent mmcEvent = new MmcEvent();
+        BeanUtils.copyProperties(event,mmcEvent);
+        notificationQueueService.add(mmcEvent);
+
         return resultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "活动详情", tags = {"活动"}, notes = "活动详情")
     @PostMapping(value="/detail",name="活动详情")
-    public Result detail(@RequestParam Integer id) {
-        EventVo vo = mmcEventService.detail(id);
+    public Result detail(@RequestParam Long id, Authentication authentication) {
+        EventVo vo = mmcEventService.detail(id,getAuthUser(authentication).getId());
         return resultGenerator.genSuccessResult(vo);
     }
 
@@ -137,7 +160,7 @@ public class MmcEventController extends Ctrl{
             Authentication authentication
     ) {
         mmcEventService.join(eventId,getAuthUser(authentication).getId());
-        return resultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult(mmcEventService.getAttendance(eventId,null,null,null));
     }
 
     @ApiOperation(value = "用户退出活动", tags = {"活动"}, notes = "用户退出活动")
@@ -147,7 +170,7 @@ public class MmcEventController extends Ctrl{
             Authentication authentication
     ) {
         mmcEventService.unjoin(eventId,getAuthUser(authentication).getId());
-        return resultGenerator.genSuccessResult();
+        return resultGenerator.genSuccessResult(mmcEventService.getAttendance(eventId,null,null,null));
     }
 
     @ApiOperation(value = "标记用户是否留言", tags = {"活动"}, notes = "标记用户是否留言")
@@ -167,12 +190,14 @@ public class MmcEventController extends Ctrl{
     public Result listUser(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam Long startTime,
-            @RequestParam Long endTime
+            @RequestParam(required = false) Long startTime,
+            @RequestParam(required = false) Long endTime,
+            Authentication authentication
     ) {
         Map<String,Object> params = new HashMap<>();
         params.put("startTime",startTime);
         params.put("endTime",endTime);
+        params.put("userId",getAuthUser(authentication).getId());
         PageHelper.startPage(page,size);
         List<EventVoAdd> res =mmcEventService.list(params);
         PageInfo<EventVoAdd> pageInfo = new PageInfo<>(res);
@@ -204,11 +229,16 @@ public class MmcEventController extends Ctrl{
 
     @ApiOperation(value = "用户创建的活动", tags = {"活动"}, notes = "用户创建的活动")
     @GetMapping(value = "/user/create", name = "用户创建的活动")
-    public Result userCreate(  @RequestParam(defaultValue = "1") Integer page,
+    public Result userCreate(@RequestParam(defaultValue = "1") Integer page,
                              @RequestParam(defaultValue = "10") Integer size,
+                             @RequestParam(required = false) Long startTime,
+                             @RequestParam(required = false) Long endTime,
                              Authentication authentication) {
         PageHelper.startPage(page,size);
-        List<EventVoAdd> res =mmcEventService.userCreate(getAuthUser(authentication));
+        Map<String,Object> params = new HashMap<>();
+        params.put("startTime",startTime);
+        params.put("endTime",endTime);
+        List<EventVoAdd> res =mmcEventService.userCreate(getAuthUser(authentication),params);
         PageInfo<EventVoAdd> pageInfo = new PageInfo<>(res);
         return resultGenerator.genSuccessResult(pageInfo);
     }

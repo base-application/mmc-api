@@ -32,7 +32,7 @@ public class ThankYouNoteController extends Ctrl{
 
     @ApiOperation(value = "用户发送感谢", tags = {"感谢"}, notes = "用户发送感谢")
     @PostMapping(value="/add",name="用户发送感谢")
-    public Result add(@ApiParam ThankYouAddVo thankYouNote, Authentication authentication) {
+    public Result add(@RequestBody ThankYouAddVo thankYouNote, Authentication authentication) {
         thankYouNote.setSender(getAuthUser(authentication).getId());
         thankYouNoteService.add(thankYouNote);
         return resultGenerator.genSuccessResult();

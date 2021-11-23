@@ -10,14 +10,13 @@ import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.config.Const;
 import com.wanghuiwen.user.model.UserInfo;
-import com.wanghuiwen.user.service.PositionService;
-import com.wanghuiwen.user.service.UserCompanyService;
-import com.wanghuiwen.user.service.UserInfoService;
-import com.wanghuiwen.user.vo.CompanyVo;
-import com.wanghuiwen.user.vo.UserInfoVo;
-import com.wanghuiwen.user.vo.UserNetWorkVo;
+import com.wanghuiwen.user.service.*;
+import com.wanghuiwen.user.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,22 +25,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static com.wanghuiwen.user.config.UserResultEnum.VERIFICATION_ERROR;
 import static com.wanghuiwen.user.config.UserResultEnum.VERIFICATION_INVALID;
 
 
 /**
-* Created by wanghuiwen on 2021/10/18.
-*/
+ * Created by wanghuiwen on 2021/10/18.
+ */
 @Api(value = "用户管理", tags = {"用户管理"})
 @RestController
 @RequestMapping("/user/info")
-public class UserInfoController extends Ctrl{
+public class UserInfoController extends Ctrl {
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource
     private UserInfoService userInfoService;
     @Resource
@@ -51,27 +50,23 @@ public class UserInfoController extends Ctrl{
     @Resource
     private PositionService positionService;
     @Resource
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
+    @Resource
+    private NewestStoryService newestStoryService;
+    @Resource
+    private MmcEventService mmcEventService;
+    @Resource
+    private SliderService sliderService;
 
     @ApiOperation(value = "用户注册", tags = {"用户管理"}, notes = "用户注册")
     @PostMapping("register")
-    public Result register(String phoneNumber,String verificationCode,String password){
-        String key = verificationCodeKey(phoneNumber, Const.VERIFICATION_REGISTER);
-        String code = redisTemplate.opsForValue().get(key);
-        if(code == null){
-            return resultGenerator.genFailResult(VERIFICATION_INVALID);
-        }
-        password = new BCryptPasswordEncoder().encode(password);
-
-        User user = new User();
-        user.setPassword(password);
-        user.setLoginName(phoneNumber);
-        user.setEnable(true);
-        user.setLocked(false);
-
-        userInfoService.register(user);
-
-        redisTemplate.delete(key);
+    public Result register(
+            String phoneNumber,
+            String verificationCode,
+            String password,
+            String countryCode
+    ) {
+        userInfoService.register(phoneNumber, verificationCode, password, countryCode);
 
         return resultGenerator.genSuccessResult();
     }
@@ -79,15 +74,17 @@ public class UserInfoController extends Ctrl{
 
     @ApiOperation(value = "发送验证码", tags = {"用户管理"}, notes = "发送验证码")
     @PostMapping("send/verification")
-    public Result sendVerification(String phoneNumber,Integer type){
-        String key = verificationCodeKey(phoneNumber,type);
+    public Result sendVerification(@RequestParam String phoneNumber, @RequestParam Integer type) {
+        String key = userInfoService.verificationCodeKey(phoneNumber, type);
 
         String code = redisTemplate.opsForValue().get(key);
-        if(code!=null) return  resultGenerator.genSuccessResult();
+        if (code != null) return resultGenerator.genSuccessResult();
 
-        String verificationCode =  UtilFun.getNumRandom(4);
+//        String verificationCode = UtilFun.getNumRandom(6);
+        String verificationCode = "987654";
+        logger.info("verification=======" + verificationCode);
         //5分钟有效时间
-        redisTemplate.opsForValue().set(key, verificationCode, 5,TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(key, verificationCode, 5, TimeUnit.MINUTES);
         //todo 发送短信
 
         return resultGenerator.genSuccessResult();
@@ -96,24 +93,26 @@ public class UserInfoController extends Ctrl{
 
     @ApiOperation(value = "修改用户公司信息", tags = {"用户管理"}, notes = "修改用户公司信息")
     @PutMapping("company/update")
-    public Result companyUpdate(CompanyVo companyVo){
-        userCompanyService.companyUpdate(companyVo);
-        return resultGenerator.genSuccessResult();
+    public Result companyUpdate(@RequestBody CompanyVo companyVo) {
+        return resultGenerator.genSuccessResult(userCompanyService.companyUpdate(companyVo));
     }
 
 
     @ApiOperation(value = "删除用户公司信息", tags = {"用户管理"}, notes = "删除用户公司信息")
     @DeleteMapping("/company/delete")
-    public Result companyDelete(Long companyId){
+    public Result companyDelete(Long companyId) {
         userCompanyService.deleteById(companyId);
         return resultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "修改用户信息", tags = {"用户管理"}, notes = "修改用户信息")
     @PutMapping("/update")
-    public Result update(@RequestBody UserInfo userInfo){
+    public Result update(@RequestBody UserInfo userInfo,Authentication authentication) {
         userInfoService.update(userInfo);
-        return resultGenerator.genSuccessResult();
+        UserInfoVo userInfoVo = userInfoService.detail(userInfo.getUserId(), getAuthUser(authentication).getId());
+        Achievement achievement =  userInfoService.achievements(userInfo.getUserId(),1);
+        userInfoVo.setAchievement(achievement);
+        return resultGenerator.genSuccessResult(userInfoVo);
     }
 
 
@@ -122,49 +121,51 @@ public class UserInfoController extends Ctrl{
     public Result network(@RequestParam(defaultValue = "1") Integer page,
                           @RequestParam(defaultValue = "10") Integer size,
                           @RequestParam(required = false) String name,
-                          @RequestParam(required = false) String Industry,
+                          @RequestParam(required = false) String industry,
                           @RequestParam(required = false) Long countryId,
                           @RequestParam(required = false) Long cityId,
-                          Authentication authentication){
-        Map<String,Object> params = new HashMap<>();
-        params.put("name",name);
-        params.put("Industry",Industry);
-        params.put("countryId",countryId);
-        params.put("cityId",cityId);
-        params.put("userId",getAuthUser(authentication).getId());
-        PageHelper.startPage(page,size);
+                          Authentication authentication) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", name);
+        params.put("Industry", industry);
+        params.put("countryId", countryId);
+        params.put("cityId", cityId);
+        params.put("userId", getAuthUser(authentication).getId());
+        params.put("userGrade", getAuthUser(authentication).getGrade());
+        PageHelper.startPage(page, size);
         List<UserNetWorkVo> netWorkVos = userInfoService.network(params);
         PageInfo<UserNetWorkVo> netWorkVoPageInfo = new PageInfo<>(netWorkVos);
         return resultGenerator.genSuccessResult(netWorkVoPageInfo);
     }
 
     @ApiOperation(value = "用户的network", tags = {"用户管理"}, notes = "用户的network")
-    @GetMapping(value="/my/network",name="用户的network")
+    @GetMapping(value = "/my/network", name = "用户的network")
     public Result myNetwork(@RequestParam(defaultValue = "1") Integer page,
                             @RequestParam(defaultValue = "10") Integer size,
                             @RequestParam(required = false) String name,
-                            @RequestParam(required = false) String Industry,
+                            @RequestParam(required = false) String industry,
                             @RequestParam(required = false) Long countryId,
                             @RequestParam(required = false) Long cityId,
+                            @RequestParam(required = false) Long groupId,
                             Authentication authentication) {
-        Map<String,Object> params = new HashMap<>();
-        params.put("name",name);
-        params.put("Industry",Industry);
-        params.put("countryId",countryId);
-        params.put("cityId",cityId);
-        params.put("userId",getAuthUser(authentication).getId());
-        params.put("onlySelf",true);
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", name);
+        params.put("Industry", industry);
+        params.put("countryId", countryId);
+        params.put("cityId", cityId);
+        params.put("groupId", groupId);
+        params.put("userId", getAuthUser(authentication).getId());
+        params.put("onlySelf", true);
 
-        PageHelper.startPage(page,size);
+        PageHelper.startPage(page, size);
         List<UserNetWorkVo> netWorkVos = userInfoService.network(params);
         PageInfo<UserNetWorkVo> netWorkVoPageInfo = new PageInfo<>(netWorkVos);
         return resultGenerator.genSuccessResult(netWorkVoPageInfo);
     }
 
 
-
     @ApiOperation(value = "用户管理列表信息", tags = {"用户管理"}, notes = "用户管理列表信息")
-    @GetMapping(value="/list",name="用户管理详细信息")
+    @GetMapping(value = "/list", name = "用户管理详细信息")
     public Result list(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
@@ -173,38 +174,59 @@ public class UserInfoController extends Ctrl{
             @RequestParam(required = false) Long gradeId,
             @RequestParam(required = false) Long positionId
     ) {
-        Map<String,Object> params = new HashMap<>();
-        params.put("name",name);
-        params.put("groupId",groupId);
-        params.put("gradeId",gradeId);
-        params.put("positionId",positionId);
-        PageHelper.startPage(page,size);
-        List<UserInfoVo> userInfoVoList = userInfoService.managerList(page,size,params);
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", name);
+        params.put("groupId", groupId);
+        params.put("gradeId", gradeId);
+        params.put("positionId", positionId);
+        PageHelper.startPage(page, size);
+        List<UserInfoVo> userInfoVoList = userInfoService.managerList(page, size, params);
         PageInfo<UserInfoVo> pageInfo = new PageInfo<>(userInfoVoList);
         return resultGenerator.genSuccessResult(pageInfo);
     }
 
     @ApiOperation(value = "用户端用户详情", tags = {"用户管理"}, notes = "用户端用户详情")
-    @GetMapping(value="/detail",name="用户端用户详情")
-    public Result detail(Long userId,Authentication authentication) {
-
-        UserInfoVo userInfoVo = userInfoService.detail(userId,getAuthUser(authentication).getId());
+    @GetMapping(value = "/detail", name = "用户端用户详情")
+    public Result detail(Long userId, Authentication authentication,@RequestParam(defaultValue = "1") Integer type) {
+        UserInfoVo userInfoVo = userInfoService.detail(userId, getAuthUser(authentication).getId());
+        Achievement achievement =  userInfoService.achievements(userId,type);
+        userInfoVo.setAchievement(achievement);
         return resultGenerator.genSuccessResult(userInfoVo);
     }
 
+    @ApiOperation(value = "首页数据", tags = {"用户管理"}, notes = "首页数据")
+    @GetMapping(value = "/index", name = "首页数据")
+    public Result detail(Authentication authentication) {
+        UserInfoVo userInfoVo = userInfoService.detail(getAuthUser(authentication).getId());
+        Map<String, Object> res = new HashMap<>();
+        res.put("user", userInfoVo);
+        res.put("notice", new ArrayList<>());
+        PageHelper.startPage(1, 2);
+        List<NewestStoryVo> newset = newestStoryService.list(new HashMap<>());
+        res.put("newset", newset);
+        PageHelper.startPage(1, 2);
+        List<EventVoAdd> events = mmcEventService.upcomingEvent(getAuthUser(authentication));
+        res.put("upcoming", events);
+        PageHelper.startPage(1, 3);
+        List<SliderVo> sliderVos = sliderService.userList(getAuthUser(authentication).getId());
+        res.put("slider",sliderVos);
+        return resultGenerator.genSuccessResult(res);
+    }
+
+
     @ApiOperation(value = "用户忘记密码", tags = {"用户管理"}, notes = "用户忘记密码")
-    @PutMapping(value="forgot/password",name="用户忘记密码")
+    @PutMapping(value = "forgot/password", name = "用户忘记密码")
     public Result forgotPassword(
             String phoneNumber,
             String verificationCode,
             String password
     ) {
-        String key = verificationCodeKey(phoneNumber, Const.VERIFICATION_FORGOT);
+        String key = userInfoService.verificationCodeKey(phoneNumber, Const.VERIFICATION_FORGOT);
         String code = redisTemplate.opsForValue().get(key);
-        if(code == null){
+        if (code == null) {
             return resultGenerator.genFailResult(VERIFICATION_INVALID);
         }
-        if(!verificationCode.equals(code)){
+        if (!verificationCode.equals(code)) {
             return resultGenerator.genFailResult(VERIFICATION_ERROR);
         }
         User user = userService.findByLoginName(phoneNumber);
@@ -215,28 +237,81 @@ public class UserInfoController extends Ctrl{
     }
 
     @ApiOperation(value = "用户职位下拉选项", tags = {"用户管理"}, notes = "用户职位下拉选项")
-    @GetMapping(value="/position/list",name="用户职位下拉选项")
+    @GetMapping(value = "/position/list", name = "用户职位下拉选项")
     public Result positionList() {
         return resultGenerator.genSuccessResult(positionService.findAll());
     }
 
 
     @ApiOperation(value = "导入用户", tags = {"用户管理"}, notes = "导入用户")
-    @PostMapping(value="import",name="导入用户")
+    @PostMapping(value = "import", name = "导入用户")
     public Result importUser(MultipartFile file) throws IOException {
-       List<List<String>> excelData = ExcelUtil.read(file);
+        List<List<String>> excelData = ExcelUtil.read(file);
         userInfoService.excelToUser(excelData);
         return resultGenerator.genSuccessResult();
     }
 
-    /**
-     * 验证码redis key
-     * @param phoneNumber
-     * @param type 1 注册 2 忘记密码
-     * @return
-     */
-    String verificationCodeKey(String phoneNumber,Integer type){
-        return "type"+type+":"+phoneNumber;
+    @ApiOperation(value = "用户数据统计", tags = {"用户管理"}, notes = "用户数据统计")
+    @GetMapping(value = "achievements", name = "用户数据统计")
+    public Result achievements(Authentication authentication,@RequestParam(defaultValue = "1") Integer type){
+        Achievement achievement =  userInfoService.achievements(getAuthUser(authentication).getId(),type);
+        return resultGenerator.genSuccessResult(achievement);
     }
 
+    @ApiOperation(value = "行业列表", tags = {"用户管理"}, notes = "行业列表")
+    @GetMapping(value = "industry", name = "行业列表")
+    public Result industry(){
+        List<Industry> industries = new ArrayList<>();
+        industries.add(new Industry("Accounting","会计"));
+        industries.add(new Industry("Administrative","行政"));
+        industries.add(new Industry("Agricultural","农业"));
+        industries.add(new Industry("Apparel","服装"));
+        industries.add(new Industry("Appearance","形象"));
+        industries.add(new Industry("Appliances","电器"));
+        industries.add(new Industry("Architecture","建筑"));
+        industries.add(new Industry("Art","艺术"));
+        industries.add(new Industry("Automotive","汽车"));
+        industries.add(new Industry("Cleaning","清洁"));
+        industries.add(new Industry("Computer","电脑"));
+        industries.add(new Industry("Delivery","递送"));
+        industries.add(new Industry("Education & Advisory","教育与咨询"));
+        industries.add(new Industry("Electronics & Gadget","电子产品"));
+        industries.add(new Industry("Employment","雇人"));
+        industries.add(new Industry("Engineering","工程"));
+        industries.add(new Industry("Entertainment","娱乐"));
+        industries.add(new Industry("Event Planning & Public Relation","活动策划与公关"));
+        industries.add(new Industry("Financial","金融"));
+        industries.add(new Industry("Food/Beverages","食品/饮料"));
+        industries.add(new Industry("Funeral","葬礼"));
+        industries.add(new Industry("Furniture","家具"));
+        industries.add(new Industry("Gifts","礼物"));
+        industries.add(new Industry("Groceries Supply","食品供应"));
+        industries.add(new Industry("Hardware","五金"));
+        industries.add(new Industry("Health & Wellness","卫生与健康"));
+        industries.add(new Industry("Home Living & Appliances","家庭用品与家电"));
+        industries.add(new Industry("IT","信息技术"));
+        industries.add(new Industry("Insurance","保险"));
+        industries.add(new Industry("Interior Design","室内设计"));
+        industries.add(new Industry("Jewelry & Accessories","珠宝与配件"));
+        industries.add(new Industry("Language","语言"));
+        industries.add(new Industry("Legal","法律"));
+        industries.add(new Industry("Logistic","物流"));
+        industries.add(new Industry("Marketing","市场营销"));
+        industries.add(new Industry("Media & Photography","媒体与摄影"));
+        industries.add(new Industry("Medical","医疗"));
+        industries.add(new Industry("Non-Profit","非营利性集团"));
+        industries.add(new Industry("Photography","摄影"));
+        industries.add(new Industry("Printing & Packaging","印刷与包装"));
+        industries.add(new Industry("Real Estate","房地产"));
+        industries.add(new Industry("Security","保安"));
+        industries.add(new Industry("Sports","体育"));
+        industries.add(new Industry("Stationery","文具"));
+        industries.add(new Industry("Telecommunication","电信"));
+        industries.add(new Industry("Travel","旅游业"));
+        Locale locale = LocaleContextHolder.getLocale();
+        if(locale.getCountry().equals(Locale.SIMPLIFIED_CHINESE.getCountry())){
+            return resultGenerator.genSuccessResult(industries.stream().map(Industry::getCnName).collect(Collectors.toList()));
+        }
+        return resultGenerator.genSuccessResult(industries.stream().map(Industry::getEnName).collect(Collectors.toList()));
+    }
 }

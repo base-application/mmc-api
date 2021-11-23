@@ -105,6 +105,9 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
         res.put("username", userDetails.getUsername());
         res.put("avatar", userDetails.getAvatar());
         res.put("grade", userDetails.getGrade());
+        res.put("position", userDetails.getPosition());
+        res.put("positionName", userDetails.getPositionName());
+        res.put("createEvent",userDetails.isCreateEvent());
 
         /**
          * 设置登陆过期时间
@@ -143,7 +146,8 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
             menus.addAll(roleApi);
         }
         //多个角色有重复的菜单 去重
-        menus =  menus.stream().distinct().collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(Menu::getId))), ArrayList::new));
+        menus = menus.stream().distinct().collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(Menu::getId))), ArrayList::new));
+        menus = menus.stream().sorted(Comparator.comparing(Menu::getPriority)).collect(Collectors.toList());
         return menus;
     }
 
@@ -203,5 +207,10 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
     public AuthUser getAuthUser(String s) {
 
         return userMapper.findAuthUser(s);
+    }
+
+    @Override
+    public void setPushToken(String pushToken, Long id) {
+        userMapper.setPushToken(pushToken,id);
     }
 }

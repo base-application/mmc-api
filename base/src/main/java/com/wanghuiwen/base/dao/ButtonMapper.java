@@ -9,4 +9,6 @@ import java.util.List;
 @Mapper
 public interface ButtonMapper extends ApiMapper<Button> {
     List<Button> getByRole(Long id);
+
+    List<Button> list(String modeName, String name);
 }

@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface ButtonService extends Service<Button> {
     List<Button> getByRole(Long id);
+
+    List<Button> list(String modeName, String name);
 }

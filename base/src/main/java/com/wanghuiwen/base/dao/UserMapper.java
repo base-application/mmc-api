@@ -20,4 +20,6 @@ public interface UserMapper extends ApiMapper<User> {
     List<User> getByDepartment(List<Long> id);
 
     AuthUser findAuthUser(String s);
+
+    void setPushToken(String pushToken, Long id);
 }

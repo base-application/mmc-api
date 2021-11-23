@@ -11,4 +11,6 @@ public interface MenuMapper extends ApiMapper<Menu> {
     List<Menu> getByUid(Long userId);
 
     List<Menu> getByRole(Long roleId);
+
+    List<Menu> selectByPid(Long id);
 }

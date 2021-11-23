@@ -16,7 +16,7 @@ public class ThankYouAddVo {
     private Long receivedUser;
     private Long sender;
     private String note;
-    private int value;
+    private double value;
     private Long referralId;
     private List<ImageVo> picture;
 
@@ -44,11 +44,11 @@ public class ThankYouAddVo {
         this.note = note;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(double value) {
         this.value = value;
     }
 

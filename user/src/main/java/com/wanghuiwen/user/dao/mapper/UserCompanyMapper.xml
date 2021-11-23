@@ -22,6 +22,9 @@
     <result column="company_accomplishments" jdbcType="VARCHAR" property="companyAccomplishments" />
     <result column="company_interests" jdbcType="VARCHAR" property="companyInterests" />
     <result column="service_introduction" jdbcType="VARCHAR" property="serviceIntroduction" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="post_code" jdbcType="VARCHAR" property="postCode" />
+    <result column="company_whatsapp" jdbcType="VARCHAR" property="companyWhatsapp" />
   </resultMap>
 
   <resultMap id="vo" type="com.wanghuiwen.user.vo.CompanyVo">
@@ -42,7 +45,10 @@
     <result column="company_accomplishments" jdbcType="VARCHAR" property="companyAccomplishments" />
     <result column="company_interests" jdbcType="VARCHAR" property="companyInterests" />
     <result column="service_introduction" jdbcType="VARCHAR" property="serviceIntroduction" />
-    <collection property="producePictures" column="company_id" select="com.wanghuiwen.user.dao.CompanyProduceMapper.selectByCompanyId"/>
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="post_code" jdbcType="VARCHAR" property="postCode" />
+    <result column="company_whatsapp" jdbcType="VARCHAR" property="companyWhatsapp" />
+    <collection column="company_id" property="producePictures" select="com.wanghuiwen.user.dao.CompanyProduceMapper.selectByCompanyId" />
   </resultMap>
 
   <select id="selectByUser" resultMap="vo">

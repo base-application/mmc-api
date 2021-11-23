@@ -16,6 +16,7 @@ import com.wanghuiwen.user.vo.NotificationVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -45,24 +46,27 @@ public class NotificationServiceImpl extends AbstractService<Notification> imple
         saveOrUpdate(notification);
 
         notificationGradeMapper.deleteByNotification(notification.getNotificationId());
-        List<NotificationGrade> grades = notificationVo.getGrades().stream().map(grade -> {
-            NotificationGrade notificationGrade = new NotificationGrade();
-            notificationGrade.setGradeId(grade.getGradeId());
-            notificationGrade.setNotificationId(notification.getNotificationId());
-            return notificationGrade;
-        }).collect(Collectors.toList());
-        notificationGradeMapper.insertListNoAuto(grades);
+        if(!CollectionUtils.isEmpty(notificationVo.getGrades())){
+            List<NotificationGrade> grades = notificationVo.getGrades().stream().map(grade -> {
+                NotificationGrade notificationGrade = new NotificationGrade();
+                notificationGrade.setGradeId(grade.getGradeId());
+                notificationGrade.setNotificationId(notification.getNotificationId());
+                return notificationGrade;
+            }).collect(Collectors.toList());
+            notificationGradeMapper.insertListNoAuto(grades);
+        }
 
 
-        notificationGroupMapper.deleteByNotification(notification.getNotificationId());
-        List<NotificationGroup> groups =  notificationVo.getGroups().stream().map(g -> {
-            NotificationGroup group = new NotificationGroup();
-            group.setGroupId(g.getGroupId());
-            group.setNotificationId(notification.getNotificationId());
-            return group;
-        }).collect(Collectors.toList());
-        notificationGroupMapper.insertListNoAuto(groups);
-
+        if(!CollectionUtils.isEmpty(notificationVo.getGroups())){
+            notificationGroupMapper.deleteByNotification(notification.getNotificationId());
+            List<NotificationGroup> groups =  notificationVo.getGroups().stream().map(g -> {
+                NotificationGroup group = new NotificationGroup();
+                group.setGroupId(g.getGroupId());
+                group.setNotificationId(notification.getNotificationId());
+                return group;
+            }).collect(Collectors.toList());
+            notificationGroupMapper.insertListNoAuto(groups);
+        }
     }
 
     @Override

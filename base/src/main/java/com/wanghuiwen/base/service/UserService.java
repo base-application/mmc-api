@@ -54,4 +54,6 @@ public interface UserService extends Service<User> {
     void register(User user,String roleName);
 
     AuthUser getAuthUser(String s);
+
+    void setPushToken(String pushToken, Long id);
 }

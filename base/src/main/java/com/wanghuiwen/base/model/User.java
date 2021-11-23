@@ -41,6 +41,12 @@ public class User implements Serializable {
      */
     private Boolean locked;
 
+    /**
+     * 推送Id
+     */
+    @Column(name = "push_id")
+    private String pushId;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -163,5 +169,23 @@ public class User implements Serializable {
      */
     public void setLocked(Boolean locked) {
         this.locked = locked;
+    }
+
+    /**
+     * 获取推送Id
+     *
+     * @return push_id - 推送Id
+     */
+    public String getPushId() {
+        return pushId;
+    }
+
+    /**
+     * 设置推送Id
+     *
+     * @param pushId 推送Id
+     */
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
     }
 }
