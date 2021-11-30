@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="notification_id" jdbcType="INTEGER" property="notificationId" />
+    <id column="notification_id" jdbcType="BIGINT" property="notificationId" />
     <id column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="status" jdbcType="INTEGER" property="status" />
   </resultMap>

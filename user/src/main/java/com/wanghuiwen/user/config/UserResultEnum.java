@@ -4,7 +4,8 @@ import com.wanghuiwen.core.response.IResultEnum;
 
 public enum UserResultEnum implements IResultEnum {
     VERIFICATION_INVALID(40001),
-    VERIFICATION_ERROR(40002)
+    VERIFICATION_ERROR(40002),
+    OLD_PASSWORD_NOT_MATCH(40006)
     ;
 
     private final int code;

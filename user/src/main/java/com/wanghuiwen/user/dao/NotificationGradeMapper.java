@@ -6,5 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface NotificationGradeMapper extends ApiMapper<NotificationGrade> {
-    void deleteByNotification(Integer notificationId);
+    void deleteByNotification(Long notificationId);
 }

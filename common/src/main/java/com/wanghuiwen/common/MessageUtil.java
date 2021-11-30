@@ -7,6 +7,15 @@ import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
+import com.amazonaws.services.sns.model.SetSMSAttributesRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +50,35 @@ public class MessageUtil {
             e.printStackTrace();
         }
     }
+
+
+    public static void amazonSMSSender(String phoneNumber,String message){
+        AmazonSNSClientBuilder clientBuilder = AmazonSNSClientBuilder.standard();
+        AWSCredentials awsCredentials = new BasicAWSCredentials("AKIAJBQ3TFD6K2U7JRJA", "XdvRP6bAN3ieDK7IS+Tsektw+Vf2BmnPlkfWRczs");
+        AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(awsCredentials);
+        clientBuilder.setCredentials(provider);
+        // Regions 就是你选择从哪个国家的服务器接入,价格参考 https://amazonaws-china.com/cn/sns/sms-pricing/
+        clientBuilder.setRegion(Regions.AP_SOUTHEAST_1.getName());
+
+        AmazonSNSClient snsClient = (AmazonSNSClient) clientBuilder.build();
+        SetSMSAttributesRequest setRequest = new SetSMSAttributesRequest().addAttributesEntry("MonthlySpendLimit", "20");
+        snsClient.setSMSAttributes(setRequest);
+        sendSMSMessage(snsClient, message, phoneNumber);
+    }
+    public static void sendSMSMessage(AmazonSNSClient snsClient, String message,
+                                      String phoneNumber) {
+        logger.info("+_+_+_+_+_+_+_+_+begin send sms +_+_+_+_+_+_+__+_+_+_+_+_+_+__+");
+        PublishResult result = snsClient.publish(new PublishRequest()
+                .withMessage(message)
+                .withPhoneNumber(phoneNumber));
+        logger.info(JSONUtils.obj2json(result));
+        logger.info("+_+_+_+_+_+_+_+_+end send sms +_+_+_+_+_+_+__+_+_+_+_+_+_+__+");
+    }
+
+    public static void main(String[] args) {
+        amazonSMSSender("+60 162118847","a test message");
+    }
+
 
 
 }

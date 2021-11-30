@@ -51,6 +51,7 @@ public class UserInfoVo {
     private String gradeName;
     private Integer groupId;
     private String groupName;
+    private String email;
     private int attendance;
     private int referralSend;
     private int referralReceived;
@@ -305,5 +306,13 @@ public class UserInfoVo {
 
     public void setGroupId(Integer groupId) {
         this.groupId = groupId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

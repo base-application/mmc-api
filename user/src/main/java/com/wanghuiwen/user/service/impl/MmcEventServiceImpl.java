@@ -11,10 +11,7 @@ import com.wanghuiwen.user.dao.*;
 import com.wanghuiwen.user.model.*;
 import com.wanghuiwen.user.service.GradeService;
 import com.wanghuiwen.user.service.MmcEventService;
-import com.wanghuiwen.user.vo.AttendanceVo;
-import com.wanghuiwen.user.vo.CheckHistoryVo;
-import com.wanghuiwen.user.vo.EventVo;
-import com.wanghuiwen.user.vo.EventVoAdd;
+import com.wanghuiwen.user.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -49,6 +46,8 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     private GradeService gradeService;
     @Resource
     private EventGradeMapper eventGradeMapper;
+    @Resource
+    private CheckLogMapper checkLogMapper;
 
     @Override
     public Long add(EventVoAdd add) {
@@ -120,9 +119,18 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     @Override
     public void checkin(Long eventId, Long userId) {
         Attendance attendance = attendanceMapper.selectUserEvent(userId,eventId);
+        if(attendance==null) throw  new ServiceException("用户未加入活动","user.40004");
+        if(attendance.getCheckInTime()!=null) throw  new ServiceException("用户已经签到","user.40005");
         attendance.setIsAttendance(true);
         attendance.setCheckInTime(new Date().getTime());
         attendanceMapper.updateUserEvent(attendance);
+        CheckLog log = new CheckLog();
+        log.setCheckType(1);
+        log.setCreateTime(new Date().getTime());
+        log.setEventId(eventId);
+        log.setUserId(userId);
+        checkLogMapper.insertSelective(log);
+
     }
 
     @Override
@@ -132,7 +140,6 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
         Attendance join = new Attendance();
         join.setUserId(userId);
         join.setEventId(eventId);
-        join.setIsAttendance(false);
         attendanceMapper.insert(join);
     }
 
@@ -146,6 +153,13 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
         Attendance attendance = attendanceMapper.selectUserEvent(userId,eventId);
         attendance.setCheckOutTime(new Date().getTime());
         attendanceMapper.updateUserEvent(attendance);
+
+        CheckLog log = new CheckLog();
+        log.setCheckType(2);
+        log.setCreateTime(new Date().getTime());
+        log.setEventId(eventId);
+        log.setUserId(userId);
+        checkLogMapper.insertSelective(log);
     }
 
     @Override
@@ -159,7 +173,7 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     }
 
     @Override
-    public List<CheckHistoryVo> checkHistory(Long id) {
+    public List<CheckLogVo> checkHistory(Long id) {
 
         return attendanceMapper.checkHistory(id);
     }

@@ -61,4 +61,12 @@ public class GroupController extends Ctrl{
         List<UserInfoVo> netWorkVos = mmcGroupService.groupUser(groupId,getAuthUser(authentication).getId());
         return resultGenerator.genSuccessResult(netWorkVos);
     }
+
+
+    @ApiOperation(value = "获取分组信息", tags = {"用户分组"}, notes = "获取分组信息")
+    @GetMapping(value = "/detail", name = "获取分组信息")
+    public Result detail(@RequestParam Long groupId, Authentication authentication) {
+        GroupUserVo detail = mmcGroupService.detail(groupId,getAuthUser(authentication).getId());
+        return resultGenerator.genSuccessResult(detail);
+    }
 }

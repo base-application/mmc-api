@@ -160,6 +160,7 @@
         LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.user_id)
         LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
         LEFT JOIN user_follow uf on (uf.follow_user_id = #{params.userId} and uf.user_id = ui.user_id)
+        where user.enable != 0
     </select>
 
     <select id="detail" resultMap="vo">
@@ -205,40 +206,34 @@
     </select>
 
   <select id="achievements" resultType="com.wanghuiwen.user.vo.Achievement">
-      <if test="type == 1">
-          SELECT
-          rgs.send_count             as referralSend,
-          rgr.received_count         as referralReceived,
-          tgs.thank_send_count       as thankYouNoteSend,
-          tgr.thank_received_count   as thankYouNoteReceived,
-          prgs.send_count             as prevReferralSend,
-          prgr.received_count         as prevReferralReceived,
-          ptgs.thank_send_count       as prevThankYouNoteSend,
-          ptgr.thank_received_count   as prevThankYouNoteReceived
+      SELECT
+      rgs.send_count             as referralSend,
+      rgr.received_count         as referralReceived,
+      tgs.thank_send_count       as thankYouNoteSend,
+      tgr.thank_received_count   as thankYouNoteReceived,
+      prgs.send_count             as prevReferralSend,
+      prgr.received_count         as prevReferralReceived,
+      ptgs.thank_send_count       as prevThankYouNoteSend,
+      ptgr.thank_received_count   as prevThankYouNoteReceived,
+      rgsc.send_count             as referralSendCount,
+      rgrc.received_count         as referralReceivedCount,
+      tgsc.thank_send_count       as thankYouNoteCount,
+      tgrc.thank_received_count  as thankYouNoteReceivedCount
 
-          FROM (select * from user where id = #{id}) ui
-          LEFT JOIN referral_send_month_group rgs on (rgs.send_user = ui.id and rgs.`month` = MONTH(NOW()) and rgs.`year` = YEAR(NOW()))
-          LEFT JOIN referral_received_month_group rgr on (rgr.received_user = ui.id and rgr.`month` =  MONTH(NOW()) and rgr.`year` =YEAR(NOW()) )
-          LEFT JOIN thank_send_group_month tgs on (tgs.send_user = ui.id and tgs.`month` =  MONTH(NOW())  and tgs.`year`=YEAR(NOW())  )
-          LEFT JOIN thank_received_group_month tgr on (tgr.received_user = ui.id and tgr.`month` = MONTH(NOW())  and tgr.`year` = YEAR	(NOW()))
-          LEFT JOIN referral_send_month_group prgs on (prgs.send_user = ui.id and prgs.`month` = MONTH(date_sub(now(),interval 1 month)) and prgs.`year` = YEAR(date_sub(now(),interval 1 month)))
-          LEFT JOIN referral_received_month_group prgr on (prgr.received_user = ui.id and prgr.`month` =  MONTH(date_sub(now(),interval 1 month)) and prgr.`year` =YEAR(date_sub(now(),interval 1 month)) )
-          LEFT JOIN thank_send_group_month ptgs on (ptgs.send_user = ui.id and ptgs.`month` =  MONTH(date_sub(now(),interval 1 month))  and ptgs.`year`=YEAR(date_sub(now(),interval 1 month))  )
-          LEFT JOIN thank_received_group_month ptgr on (ptgr.received_user = ui.id and ptgr.`month` = MONTH(date_sub(now(),interval 1 month))  and ptgr.`year` = YEAR(date_sub(now(),interval 1 month)))
-      </if>
-      <if test="type == 2">
-          SELECT
-          rgs.send_count             as referralSend,
-          rgr.received_count         as referralReceived,
-          tgs.thank_send_count       as thankYouNote,
-          tgr.thank_received_count
-          FROM (select * from user where id = #{id}) ui
-          LEFT JOIN referral_group_send rgs on (rgs.send_user = ui.id)
-          LEFT JOIN referral_group_received rgr on (rgr.received_user = ui.id)
-          LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.id)
-          LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.id)
-      </if>
+      FROM (select * from user where id = #{id}) ui
+      LEFT JOIN referral_send_month_group rgs on (rgs.send_user = ui.id and rgs.`month` = MONTH(NOW()) and rgs.`year` = YEAR(NOW()))
+      LEFT JOIN referral_received_month_group rgr on (rgr.received_user = ui.id and rgr.`month` =  MONTH(NOW()) and rgr.`year` =YEAR(NOW()) )
+      LEFT JOIN thank_send_group_month tgs on (tgs.send_user = ui.id and tgs.`month` =  MONTH(NOW())  and tgs.`year`=YEAR(NOW())  )
+      LEFT JOIN thank_received_group_month tgr on (tgr.received_user = ui.id and tgr.`month` = MONTH(NOW())  and tgr.`year` = YEAR	(NOW()))
+      LEFT JOIN referral_send_month_group prgs on (prgs.send_user = ui.id and prgs.`month` = MONTH(date_sub(now(),interval 1 month)) and prgs.`year` = YEAR(date_sub(now(),interval 1 month)))
+      LEFT JOIN referral_received_month_group prgr on (prgr.received_user = ui.id and prgr.`month` =  MONTH(date_sub(now(),interval 1 month)) and prgr.`year` =YEAR(date_sub(now(),interval 1 month)) )
+      LEFT JOIN thank_send_group_month ptgs on (ptgs.send_user = ui.id and ptgs.`month` =  MONTH(date_sub(now(),interval 1 month))  and ptgs.`year`=YEAR(date_sub(now(),interval 1 month))  )
+      LEFT JOIN thank_received_group_month ptgr on (ptgr.received_user = ui.id and ptgr.`month` = MONTH(date_sub(now(),interval 1 month))  and ptgr.`year` = YEAR(date_sub(now(),interval 1 month)))
 
+      LEFT JOIN referral_group_send rgsc on (rgsc.send_user = ui.id)
+      LEFT JOIN referral_group_received rgrc on (rgrc.received_user = ui.id)
+      LEFT JOIN thank_group_send tgsc on (tgsc.send_user = ui.id)
+      LEFT JOIN thank_group_received tgrc on (tgrc.received_user = ui.id)
     </select>
 
   <select id="findByGroupAndGrade" resultMap="com.wanghuiwen.base.dao.UserMapper.BaseResultMap">

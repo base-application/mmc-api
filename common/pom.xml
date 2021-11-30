@@ -83,6 +83,11 @@
       <artifactId>aliyun-java-sdk-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-sns</artifactId>
+      <version>1.11.922</version>
+    </dependency>
+    <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
       <version>1.4</version>

@@ -10,6 +10,11 @@ public class Achievement {
     private int prevThankYouNoteSend;
     private int prevThankYouNoteReceived;
 
+    private int referralSendCount;
+    private int referralReceivedCount;
+    private int thankYouNoteSendCount;
+    private int thankYouNoteReceivedCount;
+
     public int getReferralSend() {
         return referralSend;
     }
@@ -72,5 +77,37 @@ public class Achievement {
 
     public void setPrevThankYouNoteReceived(int prevThankYouNoteReceived) {
         this.prevThankYouNoteReceived = prevThankYouNoteReceived;
+    }
+
+    public int getReferralSendCount() {
+        return referralSendCount;
+    }
+
+    public void setReferralSendCount(int referralSendCount) {
+        this.referralSendCount = referralSendCount;
+    }
+
+    public int getReferralReceivedCount() {
+        return referralReceivedCount;
+    }
+
+    public void setReferralReceivedCount(int referralReceivedCount) {
+        this.referralReceivedCount = referralReceivedCount;
+    }
+
+    public int getThankYouNoteSendCount() {
+        return thankYouNoteSendCount;
+    }
+
+    public void setThankYouNoteSendCount(int thankYouNoteSendCount) {
+        this.thankYouNoteSendCount = thankYouNoteSendCount;
+    }
+
+    public int getThankYouNoteReceivedCount() {
+        return thankYouNoteReceivedCount;
+    }
+
+    public void setThankYouNoteReceivedCount(int thankYouNoteReceivedCount) {
+        this.thankYouNoteReceivedCount = thankYouNoteReceivedCount;
     }
 }

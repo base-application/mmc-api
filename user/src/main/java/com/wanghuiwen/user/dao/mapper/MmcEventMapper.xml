@@ -43,7 +43,11 @@
         <result column="event_type" jdbcType="VARCHAR" property="eventType"/>
         <result column="approve_status" jdbcType="INTEGER" property="approveStatus"/>
         <result column="attendance_proportion" jdbcType="DOUBLE" property="attendanceProportion"/>
-        <result column="is_attendance" jdbcType="BIT" property="checkIn"/>
+        <result column="checkIn" jdbcType="BIT" property="checkIn"/>
+        <result column="is_attendance" jdbcType="BIT" property="attend"/>
+        <result column="check_in_time" jdbcType="BIGINT" property="checkInTime"/>
+        <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime"/>
+        <result column="joind" jdbcType="BIT" property="join"/>
         <collection property="groups" column="event_id" select="getGroup"/>
         <collection property="eventPoster" column="event_id" select="getPoster"/>
         <collection property="attendance" column="{id=event_id}" select="getAttendance"/>
@@ -115,7 +119,8 @@
         select
         me.*,
         eap.attendance_proportion,
-        a.is_attendance
+        a.is_attendance,
+        a.user_id is not null as joind
         from mmc_event me
         LEFT JOIN event_attendance_proportion eap on (me.event_id = eap.event_id)
         left join  attendance a on (me.event_id = a.event_id and a.user_id = #{params.userId})
@@ -130,6 +135,7 @@
         <if test="params.startTime!=null and params.endTime!=null">
             and event_start_time between #{params.startTime} and #{params.endTime}
         </if>
+        order by me.event_start_time desc
     </select>
 
     <select id="upcomingEvent" resultMap="addVo">
@@ -148,8 +154,14 @@
     </select>
 
     <select id="joinList" resultMap="addVo">
-        select *
+        select
+            mmc_event.*,
+            a.is_attendance,
+            a.check_in_time is not null as checkIn,
+            a.check_in_time,
+            a.check_out_time
         from mmc_event
+        left join attendance a on (mmc_event.event_id = a.event_id and a.user_id = #{id})
         where exists(select *
                      from user_info
                      where user_id = #{id}
@@ -157,6 +169,7 @@
                                   from attendance
                                   where attendance.user_id = user_info.user_id
                                     and mmc_event.event_id = attendance.event_id))
+        order by event_start_time desc
     </select>
 
     <select id="userCreate" resultMap="addVo">
@@ -166,6 +179,7 @@
         <if test="params.startTime!=null and params.endTime!=null">
             and event_start_time between #{params.startTime} and #{params.endTime}
         </if>
+        order by event_start_time desc
     </select>
 
     <select id="findByStartDate" resultMap="BaseResultMap">

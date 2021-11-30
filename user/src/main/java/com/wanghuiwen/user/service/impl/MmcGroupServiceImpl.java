@@ -33,4 +33,9 @@ public class MmcGroupServiceImpl extends AbstractService<MmcGroup> implements Mm
     public List<UserInfoVo> groupUser(Long groupId, Long uid) {
         return  mmcGroupMapper.listGroupUser(groupId,uid);
     }
+
+    @Override
+    public GroupUserVo detail(Long groupId, Long id) {
+        return mmcGroupMapper.detail(groupId,id);
+    }
 }

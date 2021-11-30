@@ -6,7 +6,7 @@ import com.wanghuiwen.user.model.MmcGroup;
 import java.util.List;
 
 public class NotificationVo {
-    private Integer notificationId;
+    private Long notificationId;
 
     private String notificationTitle;
 
@@ -27,11 +27,11 @@ public class NotificationVo {
     List<Grade> grades;
     List<MmcGroup> groups;
 
-    public Integer getNotificationId() {
+    public Long getNotificationId() {
         return notificationId;
     }
 
-    public void setNotificationId(Integer notificationId) {
+    public void setNotificationId(Long notificationId) {
         this.notificationId = notificationId;
     }
 

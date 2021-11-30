@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class NotificationUser implements Serializable {
     @Id
     @Column(name = "notification_id")
-    private Integer notificationId;
+    private Long notificationId;
 
     @Column(name = "user_id")
     private Long userId;
@@ -22,14 +22,14 @@ public class NotificationUser implements Serializable {
     /**
      * @return notification_id
      */
-    public Integer getNotificationId() {
+    public Long getNotificationId() {
         return notificationId;
     }
 
     /**
      * @param notificationId
      */
-    public void setNotificationId(Integer notificationId) {
+    public void setNotificationId(Long notificationId) {
         this.notificationId = notificationId;
     }
 

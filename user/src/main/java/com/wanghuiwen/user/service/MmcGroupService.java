@@ -15,4 +15,6 @@ public interface MmcGroupService extends Service<MmcGroup> {
     List<GroupUserVo> listUser(Long uid, String groupName);
 
     List<UserInfoVo> groupUser(Long groupId, Long uid);
+
+    GroupUserVo detail(Long groupId, Long id);
 }

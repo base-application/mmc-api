@@ -7,7 +7,7 @@ public class Notification implements Serializable {
     @Id
     @Column(name = "notification_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer notificationId;
+    private Long notificationId;
 
     /**
      * 通知标题
@@ -68,14 +68,14 @@ public class Notification implements Serializable {
     /**
      * @return notification_id
      */
-    public Integer getNotificationId() {
+    public Long getNotificationId() {
         return notificationId;
     }
 
     /**
      * @param notificationId
      */
-    public void setNotificationId(Integer notificationId) {
+    public void setNotificationId(Long notificationId) {
         this.notificationId = notificationId;
     }
 

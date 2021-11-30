@@ -15,4 +15,6 @@ public interface MmcGroupMapper extends ApiMapper<MmcGroup> {
     MmcGroup findByName(String name);
 
     List<UserInfoVo> listGroupUser(Long groupId, Long uid);
+
+    GroupUserVo detail(Long groupId, Long uid);
 }

@@ -81,7 +81,7 @@ public class NotificationServiceImpl extends AbstractService<Notification> imple
     }
 
     @Override
-    public void read(Integer notificationId, Long userId) {
+    public void read(Long notificationId, Long userId) {
 
        NotificationUser notificationUser =  notificationUserMapper.selectByUser(notificationId,userId);
        if(notificationUser==null){
@@ -94,9 +94,19 @@ public class NotificationServiceImpl extends AbstractService<Notification> imple
     }
 
     @Override
-    public void userDelete(Integer notificationId, Long userId) {
-        NotificationUser notificationUser =  notificationUserMapper.selectByUser(notificationId,userId);
-        notificationUser.setStatus(Const.NOTIFICATION__DELETE);
-        notificationUserMapper.updateByUser(notificationUser);
+    public void userDelete(Long[] notificationId, Long userId) {
+        for (Long id : notificationId) {
+            NotificationUser notificationUser =  notificationUserMapper.selectByUser(id,userId);
+            if(notificationUser==null){
+                notificationUser = new NotificationUser();
+                notificationUser.setStatus(Const.NOTIFICATION__DELETE);
+                notificationUser.setUserId(userId);
+                notificationUser.setNotificationId(id);
+                notificationUserMapper.insertSelective(notificationUser);
+            }else {
+                notificationUser.setStatus(Const.NOTIFICATION__DELETE);
+                notificationUserMapper.updateByUser(notificationUser);
+            }
+        }
     }
 }

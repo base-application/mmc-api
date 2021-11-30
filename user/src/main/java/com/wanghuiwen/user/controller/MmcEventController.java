@@ -6,12 +6,13 @@ import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.config.FmcUtil;
+import com.wanghuiwen.user.model.CheckLog;
 import com.wanghuiwen.user.model.MmcEvent;
 import com.wanghuiwen.user.queue.NotificationQueueService;
 import com.wanghuiwen.user.service.MmcEventService;
 import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.user.vo.AttendanceVo;
-import com.wanghuiwen.user.vo.CheckHistoryVo;
+import com.wanghuiwen.user.vo.CheckLogVo;
 import com.wanghuiwen.user.vo.EventVo;
 import com.wanghuiwen.user.vo.EventVoAdd;
 import io.swagger.annotations.Api;
@@ -147,8 +148,8 @@ public class MmcEventController extends Ctrl{
             @RequestParam(defaultValue = "10") Integer size,
             Authentication authentication) {
         PageHelper.startPage(page,size);
-        List<CheckHistoryVo> res =mmcEventService.checkHistory(getAuthUser(authentication).getId());
-        PageInfo<CheckHistoryVo> pageInfo = new PageInfo<>(res);
+        List<CheckLogVo> res =mmcEventService.checkHistory(getAuthUser(authentication).getId());
+        PageInfo<CheckLogVo> pageInfo = new PageInfo<>(res);
         return resultGenerator.genSuccessResult(pageInfo);
     }
 

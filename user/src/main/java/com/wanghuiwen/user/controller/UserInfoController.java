@@ -9,6 +9,7 @@ import com.wanghuiwen.common.excel.ExcelUtil;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.config.Const;
+import com.wanghuiwen.user.config.UserResultEnum;
 import com.wanghuiwen.user.model.UserInfo;
 import com.wanghuiwen.user.service.*;
 import com.wanghuiwen.user.vo.*;
@@ -233,6 +234,23 @@ public class UserInfoController extends Ctrl {
         user.setPassword(new BCryptPasswordEncoder().encode(password));
         userService.update(user);
         redisTemplate.delete(key);
+        return resultGenerator.genSuccessResult();
+    }
+
+
+    @ApiOperation(value = "用户修改密码", tags = {"用户管理"}, notes = "用户修改密码")
+    @PutMapping(value = "update/password", name = "用户修改密码")
+    public Result forgotPassword(
+            String oldPassword,
+            String password,
+            Authentication authentication
+    ) {
+        User user = userService.findById(getAuthUser(authentication).getId());
+        if(!new BCryptPasswordEncoder().matches(oldPassword,user.getPassword())){
+            return  resultGenerator.genFailResult(UserResultEnum.OLD_PASSWORD_NOT_MATCH);
+        }
+        user.setPassword(new BCryptPasswordEncoder().encode(password));
+        userService.update(user);
         return resultGenerator.genSuccessResult();
     }
 

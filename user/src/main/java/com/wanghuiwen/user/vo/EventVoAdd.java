@@ -28,6 +28,10 @@ public class EventVoAdd {
     private String eventMapLink;
     private String eventType;
     private Long createId;
+    private Boolean attend;
+    private Boolean join;
+    private Long checkInTime;
+    private Long checkOutTime;
     List<ImageVo> eventPoster;
     List<MmcGroup> groups;
     List<Grade> grades;
@@ -126,5 +130,37 @@ public class EventVoAdd {
 
     public void setGrades(List<Grade> grades) {
         this.grades = grades;
+    }
+
+    public Boolean getAttend() {
+        return attend;
+    }
+
+    public void setAttend(Boolean attend) {
+        this.attend = attend;
+    }
+
+    public Boolean getJoin() {
+        return join;
+    }
+
+    public void setJoin(Boolean join) {
+        this.join = join;
+    }
+
+    public Long getCheckInTime() {
+        return checkInTime;
+    }
+
+    public void setCheckInTime(Long checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
+    public Long getCheckOutTime() {
+        return checkOutTime;
+    }
+
+    public void setCheckOutTime(Long checkOutTime) {
+        this.checkOutTime = checkOutTime;
     }
 }

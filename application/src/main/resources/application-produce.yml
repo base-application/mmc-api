@@ -1,0 +1,72 @@
+jwt:
+  expiration: 604800
+  header: Authorization
+  secret: mySecret
+  tokenHead: Bearer
+logging:
+  level:
+    com:
+      wanghuiwen:
+        base:
+          dao: debug
+        user:
+          dao: debug
+server:
+  port: 8005
+  servlet:
+    context-path: ''
+  tomcat:
+    uri-encoding: UTF-8
+spring:
+  cache:
+    type: redis
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-test-query: SELECT 1
+      max-lifetime: 30000
+      maximum-pool-size: 10
+      minimum-idle: 3
+    password: Gab2004lai!@#$
+    url: jdbc:mysql://127.0.0.1:3306/mmc?useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&&allowPublicKeyRetrieval=true
+    username: root
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: GMT+8
+  jpa:
+    database: MYSQL
+    show-sql: true
+  messages:
+    basename: message,base/messages,user/messages
+  mvc:
+    static-path-pattern: /static/**
+  redis:
+    database: 0
+    host: 127.0.0.1
+    password:
+    port: 6380
+    timeout: 5000
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+upload:
+  file-path: /opt/mmc/image/
+  host: http://47.250.49.83/mmc/api/
+  prefix: image/
+  type: location
+  supportExtension:
+    - jpg
+    - jpeg
+    - png
+    - mp4
+mmc:
+  init:
+    grade: Crystal

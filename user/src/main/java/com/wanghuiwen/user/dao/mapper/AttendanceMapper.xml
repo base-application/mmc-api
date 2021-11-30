@@ -69,15 +69,8 @@
           and user_id = #{userId}
     </select>
 
-    <select id="checkHistory" resultMap="userVo">
-        SELECT a.*,
-               me.event_title,
-               me.event_description,
-               me.event_start_time,
-               me.event_end_time,
-               me.event_location,
-               me.event_map_link
-        from (select * from attendance where user_id = #{id}) a
-                     LEFT JOIN mmc_event me on (me.event_id = a.event_id)
+    <select id="checkHistory" resultMap="com.wanghuiwen.user.dao.CheckLogMapper.vo">
+        SELECT c.*,me.event_title from  (SELECT * from check_log where  user_id = #{id}) c
+          LEFT JOIN mmc_event me on(c.event_id  = me.event_id)
     </select>
 </mapper>

@@ -18,7 +18,7 @@ public interface NotificationService extends Service<Notification> {
 
     List<NotificationUserListVo> userList(Map<String, Object> params);
 
-    void read(Integer notificationId, Long id);
+    void read(Long notificationId, Long id);
 
-    void userDelete(Integer notificationId, Long id);
+    void userDelete(Long[] notificationId, Long id);
 }

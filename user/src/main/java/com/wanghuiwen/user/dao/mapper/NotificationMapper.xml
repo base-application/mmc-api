@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wanghuiwen.user.dao.NotificationMapper">
-    <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Notification">
-        <!--
-          WARNING - @mbg.generated
-        -->
-        <id column="notification_id" jdbcType="INTEGER" property="notificationId"/>
-        <result column="notification_title" jdbcType="VARCHAR" property="notificationTitle"/>
-        <result column="registration_name" jdbcType="VARCHAR" property="registrationName"/>
-        <result column="registration_link" jdbcType="VARCHAR" property="registrationLink"/>
-        <result column="create_id" jdbcType="BIGINT" property="createId"/>
-        <result column="notification_time" jdbcType="BIGINT" property="notificationTime"/>
-        <result column="notification_type" jdbcType="INTEGER" property="notificationType"/>
-        <result column="link_id" jdbcType="VARCHAR" property="linkId"/>
-        <result column="link_type" jdbcType="INTEGER" property="linkType"/>
-        <result column="notification_content" jdbcType="LONGVARCHAR" property="notificationContent"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Notification">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="notification_id" jdbcType="BIGINT" property="notificationId" />
+    <result column="notification_title" jdbcType="VARCHAR" property="notificationTitle" />
+    <result column="registration_name" jdbcType="VARCHAR" property="registrationName" />
+    <result column="registration_link" jdbcType="VARCHAR" property="registrationLink" />
+    <result column="create_id" jdbcType="BIGINT" property="createId" />
+    <result column="notification_time" jdbcType="BIGINT" property="notificationTime" />
+    <result column="notification_type" jdbcType="INTEGER" property="notificationType" />
+    <result column="link_id" jdbcType="VARCHAR" property="linkId" />
+    <result column="link_type" jdbcType="INTEGER" property="linkType" />
+    <result column="notification_content" jdbcType="LONGVARCHAR" property="notificationContent" />
+  </resultMap>
 
 
     <resultMap id="vo" type="com.wanghuiwen.user.vo.NotificationVo">
-        <id column="notification_id" jdbcType="INTEGER" property="notificationId"/>
-        <result column="notification_title" jdbcType="VARCHAR" property="notificationTitle"/>
-        <result column="registration_name" jdbcType="VARCHAR" property="registrationName"/>
-        <result column="registration_link" jdbcType="VARCHAR" property="registrationLink"/>
-        <result column="create_id" jdbcType="BIGINT" property="createId"/>
-        <result column="notification_time" jdbcType="BIGINT" property="notificationTime"/>
-        <result column="notification_type" jdbcType="INTEGER" property="notificationType"/>
-        <result column="notification_content" jdbcType="LONGVARCHAR" property="notificationContent"/>
-        <collection property="grades" column="notification_id" select="getGrade"/>
-        <collection property="groups" column="notification_id" select="getGroup"/>
+        <id column="notification_id" jdbcType="BIGINT" property="notificationId" />
+        <result column="notification_title" jdbcType="VARCHAR" property="notificationTitle" />
+        <result column="registration_name" jdbcType="VARCHAR" property="registrationName" />
+        <result column="registration_link" jdbcType="VARCHAR" property="registrationLink" />
+        <result column="create_id" jdbcType="BIGINT" property="createId" />
+        <result column="notification_time" jdbcType="BIGINT" property="notificationTime" />
+        <result column="notification_type" jdbcType="INTEGER" property="notificationType" />
+        <result column="notification_content" jdbcType="LONGVARCHAR" property="notificationContent" />
+        <collection column="notification_id" property="grades" select="getGrade" />
+        <collection column="notification_id" property="groups" select="getGroup" />
     </resultMap>
 
     <resultMap id="listVo" type="com.wanghuiwen.user.vo.NotificationUserListVo">
-        <id column="notification_id" jdbcType="INTEGER" property="notificationId"/>
-        <result column="notification_title" jdbcType="VARCHAR" property="notificationTitle"/>
-        <result column="registration_name" jdbcType="VARCHAR" property="registrationName"/>
-        <result column="registration_link" jdbcType="VARCHAR" property="registrationLink"/>
-        <result column="create_id" jdbcType="BIGINT" property="createId"/>
-        <result column="notification_time" jdbcType="BIGINT" property="notificationTime"/>
-        <result column="notification_type" jdbcType="INTEGER" property="notificationType"/>
-        <result column="notification_content" jdbcType="LONGVARCHAR" property="notificationContent"/>
-        <result column="status" javaType="INTEGER" property="status"/>
+        <id column="notification_id" jdbcType="BIGINT" property="notificationId" />
+        <result column="notification_title" jdbcType="VARCHAR" property="notificationTitle" />
+        <result column="registration_name" jdbcType="VARCHAR" property="registrationName" />
+        <result column="registration_link" jdbcType="VARCHAR" property="registrationLink" />
+        <result column="create_id" jdbcType="BIGINT" property="createId" />
+        <result column="notification_time" jdbcType="BIGINT" property="notificationTime" />
+        <result column="notification_type" jdbcType="INTEGER" property="notificationType" />
+        <result column="notification_content" jdbcType="LONGVARCHAR" property="notificationContent" />
+        <result column="status" javaType="INTEGER" property="status" />
     </resultMap>
 
     <select id="list" resultMap="vo">
@@ -77,14 +77,24 @@
         select a.*,nu.status
         from (SELECT *
               from notification
-              where exists(select *
+              where (exists(select *
                            from notification_group
                            where notification.notification_id = notification_group.notification_id
-                             and group_id = #{params.groupId})
-                 or exists(select *
+                             and exists(select * from user_info where user_id = #{params.userId} and user_info.group_id = notification_group.group_id ))
+                  or not exists(select *
+                                from notification_group
+                                where notification.notification_id = notification_group.notification_id))
+                 or( exists(select *
                            from notification_grade
                            where notification.notification_id = notification_grade.notification_id
-                             and grade_id = #{params.gradeId})) a
-        left join notification_user nu on(a.notification_id = nu.notification_id)
+                               and exists(select * from user_info where user_id = #{params.userId} and user_info.grade_id = notification_grade.grade_id))
+                    or not exists(select *
+                               from notification_grade
+                               where notification.notification_id = notification_grade.notification_id)
+                      )
+                     ) a
+        left join notification_user nu on(a.notification_id = nu.notification_id )
+        where  IFNULL(nu.status,'')  != 2
+        ORDER BY a.notification_time desc
     </select>
 </mapper>

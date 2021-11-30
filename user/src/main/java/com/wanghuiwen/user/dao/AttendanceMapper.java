@@ -2,7 +2,7 @@ package com.wanghuiwen.user.dao;
 
 import com.wanghuiwen.core.ApiMapper;
 import com.wanghuiwen.user.model.Attendance;
-import com.wanghuiwen.user.vo.CheckHistoryVo;
+import com.wanghuiwen.user.vo.CheckLogVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,5 +15,5 @@ public interface AttendanceMapper extends ApiMapper<Attendance> {
 
     void deleteUserEvent(Long eventId, Long userId);
 
-    List<CheckHistoryVo> checkHistory(Long id);
+    List<CheckLogVo> checkHistory(Long id);
 }

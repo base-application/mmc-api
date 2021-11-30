@@ -54,27 +54,19 @@ public class EmailUtil extends Authenticator {
                         return new PasswordAuthentication(username, password);
                     }
                 });
-        // -- Create a new message --
+
         Message msg = new MimeMessage(session);
-
-
-        // -- Set the FROM and TO fields --
         try {
             msg.setFrom(new InternetAddress(username));
             msg.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(email));
             msg.setSubject("验证邮箱");
             msg.setContent(  content ,SEND_ENCODING_LAYOUT);
-//            msg.setText(prettyRegisterLayout("2小时",MAIL_ORGANIZATION,"https://www.xxxx.com/user/register/8asc824jnd741n2c"));
             msg.setSentDate(new Date());
             Transport.send(msg);
-        } catch (AddressException e) {
-            e.printStackTrace();
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
-
         System.out.println("Message sent.");
     }
 

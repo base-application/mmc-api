@@ -102,14 +102,14 @@ public class NotificationController extends Ctrl{
 
     @ApiOperation(value = "通知详细信息", tags = {"通知"}, notes = "通知详细信息")
     @PutMapping(value="/read",name="通知详细信息")
-    public Result read(@RequestParam Integer notificationId,Authentication authentication) {
+    public Result read(@RequestParam Long notificationId,Authentication authentication) {
         notificationService.read(notificationId,getAuthUser(authentication).getId());
         return resultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "用户删除通知", tags = {"通知"}, notes = "用户删除通知")
     @PutMapping(value="/user/delete",name="用户删除通知")
-    public Result userDelete(@RequestParam Integer notificationId,Authentication authentication) {
+    public Result userDelete(@RequestBody Long[] notificationId,Authentication authentication) {
         notificationService.userDelete(notificationId,getAuthUser(authentication).getId());
         return resultGenerator.genSuccessResult();
     }

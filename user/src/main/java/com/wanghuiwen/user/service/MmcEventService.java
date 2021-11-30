@@ -1,11 +1,9 @@
 package com.wanghuiwen.user.service;
 import com.wanghuiwen.core.config.AuthUser;
+import com.wanghuiwen.user.model.CheckLog;
 import com.wanghuiwen.user.model.MmcEvent;
 import com.wanghuiwen.core.service.Service;
-import com.wanghuiwen.user.vo.AttendanceVo;
-import com.wanghuiwen.user.vo.CheckHistoryVo;
-import com.wanghuiwen.user.vo.EventVo;
-import com.wanghuiwen.user.vo.EventVoAdd;
+import com.wanghuiwen.user.vo.*;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +32,7 @@ public interface MmcEventService extends Service<MmcEvent> {
 
     void confirmAttend(Long eventId, Long userId, String agent, String agentRole, String absentReason);
 
-    List<CheckHistoryVo> checkHistory(Long id);
+    List<CheckLogVo> checkHistory(Long id);
 
     void facebookComment(Long eventId, Long userId, Boolean facebookComment);
 
