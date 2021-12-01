@@ -4,6 +4,7 @@ public class Achievement {
     private int referralSend;
     private int referralReceived;
     private int thankYouNoteSend;
+    private int thankYouNoteSum;
     private int thankYouNoteReceived;
     private int prevReferralSend;
     private int prevReferralReceived;
@@ -109,5 +110,13 @@ public class Achievement {
 
     public void setThankYouNoteReceivedCount(int thankYouNoteReceivedCount) {
         this.thankYouNoteReceivedCount = thankYouNoteReceivedCount;
+    }
+
+    public int getThankYouNoteSum() {
+        return thankYouNoteSum;
+    }
+
+    public void setThankYouNoteSum(int thankYouNoteSum) {
+        this.thankYouNoteSum = thankYouNoteSum;
     }
 }

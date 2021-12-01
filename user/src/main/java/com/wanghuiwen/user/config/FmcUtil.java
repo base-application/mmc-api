@@ -60,6 +60,7 @@ public class FmcUtil {
                 )
                 .setApnsConfig(ApnsConfig.builder().setAps(Aps.builder().setBadge(1).build()).build())
                 .putAllData(data)
+                .setTopic("mmc")
                 .build();
         FirebaseMessaging.getInstance().sendAsync(message);
     }

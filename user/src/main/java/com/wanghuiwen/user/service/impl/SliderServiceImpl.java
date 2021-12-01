@@ -13,6 +13,7 @@ import com.wanghuiwen.user.vo.SliderVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -46,26 +47,27 @@ public class SliderServiceImpl extends AbstractService<Slider> implements Slider
         sliderGradeMapper.deleteBySlider(mode.getSliderId());
         sliderGroupMapper.deleteBySlider(mode.getSliderId());
 
-        List<SliderGrade> gradeList = slider.getGrades().stream().map(sg -> {
-            SliderGrade grade = new SliderGrade();
-            grade.setGradeId(sg.getGradeId());
-            grade.setSliderId(mode.getSliderId());
-            return grade;
-        }).collect(Collectors.toList());
+        if(!CollectionUtils.isEmpty(slider.getGrades())){
+            List<SliderGrade> gradeList = slider.getGrades().stream().map(sg -> {
+                SliderGrade grade = new SliderGrade();
+                grade.setGradeId(sg.getGradeId());
+                grade.setSliderId(mode.getSliderId());
+                return grade;
+            }).collect(Collectors.toList());
 
-        if(gradeList.size()>0){
             sliderGradeMapper.insertListNoAuto(gradeList);
         }
 
-        List<SliderGroup> groups = slider.getGroup().stream().map(sg->{
-            SliderGroup group = new SliderGroup();
-            group.setGroupId(sg.getGroupId());
-            group.setSliderId(mode.getSliderId());
-            return group;
-        }).collect(Collectors.toList());
-        if(gradeList.size() > 0){
+        if(!CollectionUtils.isEmpty(slider.getGroup())){
+            List<SliderGroup> groups = slider.getGroup().stream().map(sg->{
+                SliderGroup group = new SliderGroup();
+                group.setGroupId(sg.getGroupId());
+                group.setSliderId(mode.getSliderId());
+                return group;
+            }).collect(Collectors.toList());
             sliderGroupMapper.insertListNoAuto(groups);
         }
+
     }
 
     @Override

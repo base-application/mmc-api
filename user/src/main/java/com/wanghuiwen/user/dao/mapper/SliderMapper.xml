@@ -22,6 +22,7 @@
     <select id="list" resultMap="vo">
         select *
         from slider
+        order by create_time desc
     </select>
 
     <select id="getGrade" resultMap="com.wanghuiwen.user.dao.GradeMapper.BaseResultMap">

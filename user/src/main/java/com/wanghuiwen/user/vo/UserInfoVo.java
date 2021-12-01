@@ -56,6 +56,7 @@ public class UserInfoVo {
     private int referralSend;
     private int referralReceived;
     private int thankYouNote;
+    private int thankYouNoteSum;
     private boolean enable;
 
     private int positionId;
@@ -314,5 +315,13 @@ public class UserInfoVo {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getThankYouNoteSum() {
+        return thankYouNoteSum;
+    }
+
+    public void setThankYouNoteSum(int thankYouNoteSum) {
+        this.thankYouNoteSum = thankYouNoteSum;
     }
 }

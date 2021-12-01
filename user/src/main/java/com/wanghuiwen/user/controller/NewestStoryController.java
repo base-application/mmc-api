@@ -31,7 +31,7 @@ public class NewestStoryController extends Ctrl{
     @PostMapping(value="/add",name="新闻添加")
     public Result add(@RequestBody NewestStoryVo newestStoryVo) {
         newestStoryService.add(newestStoryVo);
-        FmcUtil.sendAll(newestStoryVo.getTitle(), newestStoryVo.getDescription(),null);
+        FmcUtil.sendAll(newestStoryVo.getTitle(), newestStoryVo.getDescription(),new HashMap<>());
         return resultGenerator.genSuccessResult();
     }
 

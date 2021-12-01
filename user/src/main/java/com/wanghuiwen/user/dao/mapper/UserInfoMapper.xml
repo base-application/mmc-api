@@ -89,7 +89,8 @@
         rgs.send_count as referralSend,
         rgr.received_count as referralReceived,
         tgs.thank_send_count as thankYouNote,
-        tgr.thank_received_count
+        tgs.thank_send_count_sum as thankYouNoteSum,
+        tgr.thank_received_count  as thankReceivedCount
         FROM (select * from user_info where 1=1
         <if test="params.name!=null and params.name!=''">
             and (name like concat('%',#{params.name},'%') or concat_number like concat('%',#{params.name},'%'))
@@ -160,7 +161,7 @@
         LEFT JOIN thank_group_send tgs on (tgs.send_user = ui.user_id)
         LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
         LEFT JOIN user_follow uf on (uf.follow_user_id = #{params.userId} and uf.user_id = ui.user_id)
-        where user.enable != 0
+        where u.enable != 0
     </select>
 
     <select id="detail" resultMap="vo">

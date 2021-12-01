@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.base.service.UserService;
+import com.wanghuiwen.common.MessageUtil;
 import com.wanghuiwen.common.UtilFun;
 import com.wanghuiwen.common.excel.ExcelUtil;
 import com.wanghuiwen.core.controller.Ctrl;
@@ -15,9 +16,13 @@ import com.wanghuiwen.user.service.*;
 import com.wanghuiwen.user.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.hssf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,7 +30,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -41,6 +48,10 @@ import static com.wanghuiwen.user.config.UserResultEnum.VERIFICATION_INVALID;
 @RestController
 @RequestMapping("/user/info")
 public class UserInfoController extends Ctrl {
+    @Autowired
+    Environment env;
+    @Resource
+    private MessageSource messageSource;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource
     private UserInfoService userInfoService;
@@ -75,18 +86,28 @@ public class UserInfoController extends Ctrl {
 
     @ApiOperation(value = "发送验证码", tags = {"用户管理"}, notes = "发送验证码")
     @PostMapping("send/verification")
-    public Result sendVerification(@RequestParam String phoneNumber, @RequestParam Integer type) {
+    public Result sendVerification(@RequestParam String phoneNumber,
+                                   @RequestParam String countryCode,
+                                   @RequestParam Integer type) {
         String key = userInfoService.verificationCodeKey(phoneNumber, type);
 
         String code = redisTemplate.opsForValue().get(key);
         if (code != null) return resultGenerator.genSuccessResult();
-
-//        String verificationCode = UtilFun.getNumRandom(6);
-        String verificationCode = "987654";
-        logger.info("verification=======" + verificationCode);
-        //5分钟有效时间
-        redisTemplate.opsForValue().set(key, verificationCode, 5, TimeUnit.MINUTES);
-        //todo 发送短信
+        String verificationCode;
+        if(Arrays.asList(env.getActiveProfiles()).contains("produce")){
+            verificationCode  = UtilFun.getNumRandom(6);
+            logger.info("verification=======" + verificationCode);
+            //5分钟有效时间
+            redisTemplate.opsForValue().set(key, verificationCode, 5, TimeUnit.MINUTES);
+            //发送短信
+            String message = messageSource.getMessage("user.verification.code", new String[]{verificationCode}, LocaleContextHolder.getLocale());
+            MessageUtil.amazonSMSSender(countryCode+ " "+phoneNumber,message);
+        }else{
+            verificationCode = "987654";
+            logger.info("verification=======" + verificationCode);
+            //5分钟有效时间
+            redisTemplate.opsForValue().set(key, verificationCode, 5, TimeUnit.MINUTES);
+        }
 
         return resultGenerator.genSuccessResult();
     }
@@ -185,6 +206,64 @@ public class UserInfoController extends Ctrl {
         PageInfo<UserInfoVo> pageInfo = new PageInfo<>(userInfoVoList);
         return resultGenerator.genSuccessResult(pageInfo);
     }
+
+
+    @ApiOperation(value = "用户导出", tags = {"用户管理"}, notes = "用户导出")
+    @GetMapping(value = "/export", name = "用户导出")
+    public void export(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long groupId,
+            @RequestParam(required = false) Long gradeId,
+            @RequestParam(required = false) Long positionId,
+            HttpServletResponse response
+    ) throws IOException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", name);
+        params.put("groupId", groupId);
+        params.put("gradeId", gradeId);
+        params.put("positionId", positionId);
+        List<UserInfoVo> userInfoVoList = userInfoService.managerList(1, 0, params);
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("用户信息");
+        // 设置要导出的文件的名字
+        String fileName = "mmc_users"  + new Date() + ".xls";
+        // 新增数据行，并且设置单元格数据
+        int rowNum = 1;
+
+        String[] headers = { "membership", "Name", "D.O.B", "Contact Num","Email","Industry","Company Name","group","Grade"};
+        HSSFRow row = sheet.createRow(0);
+        for(int i=0;i<headers.length;i++){
+            HSSFCell cell = row.createCell(i);
+            HSSFRichTextString text = new HSSFRichTextString(headers[i]);
+            cell.setCellValue(text);
+        }
+        //在表中存放查询到的数据放入对应的列
+        for (UserInfoVo item : userInfoVoList) {
+            HSSFRow row1 = sheet.createRow(rowNum);
+            row1.createCell(0).setCellValue(item.getGradeName());
+            row1.createCell(1).setCellValue(item.getName());
+            if(item.getBirthday() != null){
+                row1.createCell(2).setCellValue(UtilFun.DateToString(new Date(item.getBirthday()),"MM/dd/YYYY"));
+            }
+            row1.createCell(3).setCellValue(item.getConcatNumber());
+            row1.createCell(4).setCellValue(item.getEmail());
+            row1.createCell(5).setCellValue(item.getIndustry());
+            StringBuilder companyName = new StringBuilder();
+            for (CompanyVo companyVo : item.getCompanyVos()) {
+                companyName.append(companyVo.getCompanyName()).append("\n");
+            }
+            row1.createCell(6).setCellValue(companyName.toString());
+            row1.createCell(7).setCellValue(item.getGroupName());
+            row1.createCell(8).setCellValue(item.getPositionName());
+            rowNum++;
+        }
+
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
+    }
+
 
     @ApiOperation(value = "用户端用户详情", tags = {"用户管理"}, notes = "用户端用户详情")
     @GetMapping(value = "/detail", name = "用户端用户详情")

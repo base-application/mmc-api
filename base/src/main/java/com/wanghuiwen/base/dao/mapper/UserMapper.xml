@@ -46,6 +46,7 @@
             and EXISTS(SELECT * from user_role WHERE user_role.user_id = user.id and user_role.role_id =
             #{params.roleId})
         </if>
+        order by id desc
     </select>
 
     <delete id="deleteRoleById">

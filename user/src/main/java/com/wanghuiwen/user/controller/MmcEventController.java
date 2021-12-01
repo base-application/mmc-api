@@ -61,7 +61,7 @@ public class MmcEventController extends Ctrl{
          * 新建是发送推送
          */
         List<User> users = userInfoService.findByGroupAndGrade(event.getGroups(),event.getGrades());
-        FmcUtil.sendNotification(users,event.getEventTitle(), event.getEventDescription(),null);
+        FmcUtil.sendNotification(users,event.getEventTitle(), event.getEventDescription(),new HashMap<>());
         MmcEvent mmcEvent = new MmcEvent();
         BeanUtils.copyProperties(event,mmcEvent);
         notificationQueueService.add(mmcEvent);

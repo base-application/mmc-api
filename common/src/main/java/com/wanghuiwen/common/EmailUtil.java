@@ -1,5 +1,8 @@
 package com.wanghuiwen.common;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -9,6 +12,7 @@ import java.util.Properties;
 
 public class EmailUtil extends Authenticator {
 
+    static  Logger logger = LoggerFactory.getLogger("email.util");
 
     private static final String SEND_ENCODING_LAYOUT ="text/html;charset=utf-8";//发送邮件的编码格式
 
@@ -39,39 +43,23 @@ public class EmailUtil extends Authenticator {
     /*
      * 通过gmail邮箱发送邮件
      */
-    public static void gmailSender (String email,String content) {
+    public static void gmailSender (String email,String content) throws MessagingException {
 
         // Get a Properties object
         Properties props = new Properties();
-        //选择ssl方式
         gmailssl(props);
-
         final String username = "info@adrianwee.com";//gmail邮箱
         final String password = "P@ssw0rd!@#$%";//密码
-        Session session = Session.getDefaultInstance(props,
-                new Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
-                    }
-                });
+        Session session = Session.getDefaultInstance(props, new Authenticator() {protected PasswordAuthentication getPasswordAuthentication() { return new PasswordAuthentication(username, password); }});
 
         Message msg = new MimeMessage(session);
-        try {
-            msg.setFrom(new InternetAddress(username));
-            msg.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(email));
-            msg.setSubject("验证邮箱");
-            msg.setContent(  content ,SEND_ENCODING_LAYOUT);
-            msg.setSentDate(new Date());
-            Transport.send(msg);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Message sent.");
+        msg.setFrom(new InternetAddress(username));
+        msg.setRecipients(Message.RecipientType.TO,
+                InternetAddress.parse(email));
+        msg.setSubject("验证邮箱");
+        msg.setContent(content ,SEND_ENCODING_LAYOUT);
+        msg.setSentDate(new Date());
+        Transport.send(msg);
+        logger.info("email send success");
     }
-
-    public static void main(String[] args) {
-        gmailSender("wanghuiwen312@sina.com","text");
-    }
-
 }

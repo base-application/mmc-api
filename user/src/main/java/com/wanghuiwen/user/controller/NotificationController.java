@@ -45,7 +45,7 @@ public class NotificationController extends Ctrl{
         notificationService.add(notification);
         List<User> users = userInfoService.findByGroupAndGrade(notification.getGroups(),notification.getGrades());
 
-        FmcUtil.sendNotification(users,notification.getNotificationTitle(),Const.REGEX_HTML.matcher(notification.getNotificationContent()).replaceAll(""),null);
+        FmcUtil.sendNotification(users,notification.getNotificationTitle(),Const.REGEX_HTML.matcher(notification.getNotificationContent()).replaceAll(""),new HashMap<>());
         return resultGenerator.genSuccessResult();
     }
 

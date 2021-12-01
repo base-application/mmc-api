@@ -11,6 +11,7 @@ import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.base.model.UserRole;
 import com.wanghuiwen.base.service.RoleService;
 import com.wanghuiwen.base.service.UserRoleService;
+import com.wanghuiwen.common.EmailUtil;
 import com.wanghuiwen.common.UtilFun;
 import com.wanghuiwen.core.ServiceException;
 import com.wanghuiwen.user.config.Const;
@@ -110,6 +111,7 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
     @Override
     public void excelToUser(List<List<String>> excelData) {
         List<UserInfo> userInfos = new ArrayList<>();
+        List<String> passwords =  new ArrayList<>();
         for (List<String> excelDatum : excelData) {
             UserInfo info = new UserInfo();
             if(StringUtils.isNotEmpty(excelDatum.get(2))){
@@ -154,6 +156,7 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
             info.setGradeId(grade.getGradeId());
 
             String password = UtilFun.getNumRandom(8);
+            passwords.add(password);
             User user = new User();
             user.setPassword(new BCryptPasswordEncoder().encode(password));
             user.setLoginName(info.getConcatNumber());
@@ -181,7 +184,14 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
             }
             userInfos.add(info);
         }
-        //todo 发邮件
+        //发邮件
+        for (int i = 0; i < userInfos.size(); i++) {
+            try {
+                EmailUtil.gmailSender(userInfos.get(i).getEmail(),"您已经注册mmc，用户名"+ userInfos.get(i).getConcatNumber() + ".密码"+passwords.get(i));
+            }catch (Exception e){
+                logger.error("邮件发送出错"+userInfos.get(i).getEmail(),e);
+            }
+        }
     }
 
     @Override
@@ -217,6 +227,7 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
         if(countries!=null){
             userInfo.setCountry(countries.getId());
         }
+        userInfo.setConcatNumber(phoneNumber);
         save(userInfo);
         redisTemplate.delete(key);
     }
