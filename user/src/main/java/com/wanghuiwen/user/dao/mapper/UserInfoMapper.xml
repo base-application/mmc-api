@@ -208,6 +208,7 @@
 
   <select id="achievements" resultType="com.wanghuiwen.user.vo.Achievement">
       SELECT
+      ui.id,
       rgs.send_count             as referralSend,
       rgr.received_count         as referralReceived,
       tgs.thank_send_count       as thankYouNoteSend,
