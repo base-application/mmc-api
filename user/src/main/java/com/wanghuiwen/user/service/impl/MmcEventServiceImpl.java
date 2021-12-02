@@ -209,4 +209,9 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     public List<MmcEvent> findByStartDate() {
         return mmcEventMapper.findByStartDate();
     }
+
+    @Override
+    public List<EventVoAdd> listUser(Map<String, Object> params) {
+        return mmcEventMapper.listUser(params);
+    }
 }

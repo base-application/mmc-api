@@ -51,7 +51,7 @@
         <collection property="groups" column="event_id" select="getGroup"/>
         <collection property="eventPoster" column="event_id" select="getPoster"/>
         <collection property="attendance" column="{id=event_id}" select="getAttendance"/>
-        <collection property="grades"  column="event_id" select="getGrade"/>
+        <collection property="grades" column="event_id" select="getGrade"/>
     </resultMap>
 
     <resultMap id="attendance" type="com.wanghuiwen.user.vo.AttendanceVo">
@@ -65,15 +65,15 @@
         <result column="agent_role" jdbcType="VARCHAR" property="agentRole"/>
         <result column="absent_reason" jdbcType="VARCHAR" property="absentReason"/>
         <result column="facebook_comment" jdbcType="BIT" property="facebookComment"/>
-        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber" />
-        <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
+        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber"/>
+        <result column="grade_name" jdbcType="VARCHAR" property="gradeName"/>
     </resultMap>
 
     <select id="detail" resultMap="vo">
         select me.*,
-            a.is_attendance
+               a.is_attendance
         from mmc_event me
-        left join  attendance a on (me.event_id = a.event_id and a.user_id = #{uid})
+                     left join attendance a on (me.event_id = a.event_id and a.user_id = #{uid})
         where me.event_id = #{id}
     </select>
 
@@ -118,19 +118,16 @@
     <select id="list" resultMap="addVo">
         select
         me.*,
-        eap.attendance_proportion,
-        a.is_attendance,
-        a.user_id is not null as joind
-        from mmc_event me
+        eap.attendance_proportion
+        from (select * from mmc_event where approve_status = 2) me
         LEFT JOIN event_attendance_proportion eap on (me.event_id = eap.event_id)
-        left join  attendance a on (me.event_id = a.event_id and a.user_id = #{params.userId})
         where 1=1
         <if test="params.eventTitle != null and params.eventTitle != ''">
             and event_title like concat('%',#{params.eventTitle},'%')
         </if>
         <if test="params.groupId!=null">
-            and exists(select * from event_group eg where eg.group_id = #{params.groupId} and eg.event_id =
-            mmc_event.event_id )
+            and exists(select * from event_group eg where eg.group_id = #{params.groupId} and eg.event_id
+            =mmc_event.event_id )
         </if>
         <if test="params.startTime!=null and params.endTime!=null">
             and event_start_time between #{params.startTime} and #{params.endTime}
@@ -141,27 +138,36 @@
     <select id="upcomingEvent" resultMap="addVo">
         SELECT *,
                a.is_attendance
-        FROM mmc_event me
-        left join  attendance a on (me.event_id = a.event_id and a.user_id = #{id})
+        FROM (select * from mmc_event where approve_status = 2) me
+                     left join attendance a on (me.event_id = a.event_id and a.user_id = #{id})
         WHERE event_start_time / 1000 > UNIX_TIMESTAMP(NOW())
-          AND EXISTS(
-                SELECT *
-                FROM user_info ui
-                WHERE user_id = #{id}
-                  AND EXISTS(
-                        SELECT * FROM event_group eg WHERE ui.group_id = eg.group_id AND eg.event_id = me.event_id))
+          AND (EXISTS(
+                       SELECT *
+                       FROM user_info ui
+                       WHERE user_id = #{id}
+                         AND EXISTS(SELECT * FROM event_group eg WHERE ui.group_id = eg.group_id AND eg.event_id = me.event_id))
+
+                or
+               not EXISTS(SELECT * from event_group eg WHERE eg.event_id = me.event_id))
+          and (EXISTS(
+                      SELECT *
+                      FROM user_info ui
+                      WHERE user_id = #{id}
+                        AND EXISTS(
+                              SELECT * FROM event_grade egr WHERE ui.grade_id = egr.grade_id AND egr.event_id = me.event_id))
+
+                or 	not EXISTS(SELECT * from event_grade egr WHERE egr.event_id = me.event_id))
         order by event_start_time desc
     </select>
 
     <select id="joinList" resultMap="addVo">
-        select
-            mmc_event.*,
-            a.is_attendance,
-            a.check_in_time is not null as checkIn,
-            a.check_in_time,
-            a.check_out_time
+        select mmc_event.*,
+               a.is_attendance,
+               a.check_in_time is not null as checkIn,
+               a.check_in_time,
+               a.check_out_time
         from mmc_event
-        left join attendance a on (mmc_event.event_id = a.event_id and a.user_id = #{id})
+                     left join attendance a on (mmc_event.event_id = a.event_id and a.user_id = #{id})
         where exists(select *
                      from user_info
                      where user_id = #{id}
@@ -183,6 +189,47 @@
     </select>
 
     <select id="findByStartDate" resultMap="BaseResultMap">
-        select  * from mmc_event where  event_start_time/1000 > UNIX_TIMESTAMP(NOW())
+        select *
+        from mmc_event
+        where event_start_time / 1000 > UNIX_TIMESTAMP(NOW())
+    </select>
+
+    <select id="listUser" resultMap="addVo">
+        select
+        me.*,
+        eap.attendance_proportion,
+        a.is_attendance,
+        a.user_id is not null as joind
+        from (select * from mmc_event where approve_status = 2) me
+        LEFT JOIN event_attendance_proportion eap on (me.event_id = eap.event_id)
+        left join attendance a on (me.event_id = a.event_id and a.user_id = #{params.userId})
+        where
+        (EXISTS(
+        SELECT *
+        FROM user_info ui
+        WHERE user_id = #{params.userId}
+        AND EXISTS(SELECT * FROM event_group eg WHERE ui.group_id = eg.group_id AND eg.event_id = me.event_id))
+        or
+        not EXISTS(SELECT * from event_group eg WHERE eg.event_id = me.event_id))
+
+        and (EXISTS(
+        SELECT *
+        FROM user_info ui
+        WHERE user_id = #{params.userId}
+        AND EXISTS(
+        SELECT * FROM event_grade egr WHERE ui.grade_id = egr.grade_id AND egr.event_id = me.event_id))
+        or 	not EXISTS(SELECT * from event_grade egr WHERE egr.event_id = me.event_id))
+
+        <if test="params.eventTitle != null and params.eventTitle != ''">
+            and event_title like concat('%',#{params.eventTitle},'%')
+        </if>
+        <if test="params.groupId!=null">
+            and exists(select * from event_group eg where eg.group_id = #{params.groupId} and eg.event_id =
+            mmc_event.event_id )
+        </if>
+        <if test="params.startTime!=null and params.endTime!=null">
+            and event_start_time between #{params.startTime} and #{params.endTime}
+        </if>
+        order by me.event_start_time desc
     </select>
 </mapper>

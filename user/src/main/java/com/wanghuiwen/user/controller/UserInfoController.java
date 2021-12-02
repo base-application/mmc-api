@@ -146,12 +146,14 @@ public class UserInfoController extends Ctrl {
                           @RequestParam(required = false) String industry,
                           @RequestParam(required = false) Long countryId,
                           @RequestParam(required = false) Long cityId,
+                          @RequestParam(required = false) Long groupId,
                           Authentication authentication) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", name);
         params.put("Industry", industry);
         params.put("countryId", countryId);
         params.put("cityId", cityId);
+        params.put("groupId", groupId);
         params.put("userId", getAuthUser(authentication).getId());
         params.put("userGrade", getAuthUser(authentication).getGrade());
         PageHelper.startPage(page, size);
@@ -287,7 +289,6 @@ public class UserInfoController extends Ctrl {
         PageHelper.startPage(1, 2);
         List<EventVoAdd> events = mmcEventService.upcomingEvent(getAuthUser(authentication));
         res.put("upcoming", events);
-        PageHelper.startPage(1, 3);
         List<SliderVo> sliderVos = sliderService.userList(getAuthUser(authentication).getId());
         res.put("slider",sliderVos);
         return resultGenerator.genSuccessResult(res);

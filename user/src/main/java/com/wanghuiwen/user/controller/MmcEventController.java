@@ -200,7 +200,7 @@ public class MmcEventController extends Ctrl{
         params.put("endTime",endTime);
         params.put("userId",getAuthUser(authentication).getId());
         PageHelper.startPage(page,size);
-        List<EventVoAdd> res =mmcEventService.list(params);
+        List<EventVoAdd> res =mmcEventService.listUser(params);
         PageInfo<EventVoAdd> pageInfo = new PageInfo<>(res);
         return resultGenerator.genSuccessResult(pageInfo);
     }

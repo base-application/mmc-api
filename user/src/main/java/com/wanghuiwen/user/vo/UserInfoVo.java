@@ -59,7 +59,7 @@ public class UserInfoVo {
     private int thankYouNoteSum;
     private boolean enable;
 
-    private int positionId;
+    private Integer positionId;
     private String positionName;
     private String member;
 
@@ -237,11 +237,11 @@ public class UserInfoVo {
         this.companyVos = companyVos;
     }
 
-    public int getPositionId() {
+    public Integer getPositionId() {
         return positionId;
     }
 
-    public void setPositionId(int positionId) {
+    public void setPositionId(Integer positionId) {
         this.positionId = positionId;
     }
 

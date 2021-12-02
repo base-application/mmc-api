@@ -40,7 +40,7 @@ public class ReferralController extends Ctrl{
         referralService.send(addVo,getAuthUser(authentication).getId());
         User user = userService.findById(addVo.getReceivedUser());
         if(user.getPushId()!=null){
-            FmcUtil.sendUser(user.getPushId(),"推荐","有朋友推荐给你",null);
+            FmcUtil.sendUser(user.getPushId(),"推荐","有朋友推荐给你",new HashMap<>());
         }
         return resultGenerator.genSuccessResult();
     }

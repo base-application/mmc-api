@@ -49,4 +49,6 @@ public interface MmcEventService extends Service<MmcEvent> {
      * @return
      */
     List<MmcEvent> findByStartDate();
+
+    List<EventVoAdd> listUser(Map<String, Object> params);
 }

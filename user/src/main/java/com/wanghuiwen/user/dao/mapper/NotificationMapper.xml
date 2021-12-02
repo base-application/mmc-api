@@ -84,7 +84,7 @@
                   or not exists(select *
                                 from notification_group
                                 where notification.notification_id = notification_group.notification_id))
-                 or( exists(select *
+                 and( exists(select *
                            from notification_grade
                            where notification.notification_id = notification_grade.notification_id
                                and exists(select * from user_info where user_id = #{params.userId} and user_info.grade_id = notification_grade.grade_id))
@@ -93,7 +93,7 @@
                                where notification.notification_id = notification_grade.notification_id)
                       )
                      ) a
-        left join notification_user nu on(a.notification_id = nu.notification_id )
+        left join notification_user nu on(a.notification_id = nu.notification_id and nu.user_id = #{params.userId}  )
         where  IFNULL(nu.status,'')  != 2
         ORDER BY a.notification_time desc
     </select>

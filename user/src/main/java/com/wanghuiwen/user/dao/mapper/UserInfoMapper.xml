@@ -145,7 +145,7 @@
             and group_id = #{params.groupId}
         </if>
         <if test="params.userGrade!=null">
-            and grade_id &lt;  #{params.userGrade}
+            and grade_id &lt;=  #{params.userGrade}
         </if>
         <if test="params.onlySelf!=null">
             and exists(select * from user_follow uf2 where (uf2.follow_user_id = #{params.userId} and uf2.user_id = user_info.user_id))

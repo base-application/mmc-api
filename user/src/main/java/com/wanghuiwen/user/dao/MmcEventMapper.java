@@ -26,4 +26,6 @@ public interface MmcEventMapper extends ApiMapper<MmcEvent> {
     List<AttendanceVo> getAttendance(Long id,Long groupId,Long startTime,Long endTime);
 
     List<MmcEvent> findByStartDate();
+
+    List<EventVoAdd> listUser(@Param("params") Map<String, Object> params);
 }
