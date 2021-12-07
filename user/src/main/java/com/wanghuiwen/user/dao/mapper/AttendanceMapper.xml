@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wanghuiwen.user.dao.AttendanceMapper">
-    <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Attendance">
-        <!--
-          WARNING - @mbg.generated
-        -->
-        <id column="user_id" jdbcType="BIGINT" property="userId"/>
-        <id column="event_id" jdbcType="BIGINT" property="eventId"/>
-        <result column="check_in_time" jdbcType="BIGINT" property="checkInTime"/>
-        <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime"/>
-        <result column="is_attendance" jdbcType="BIT" property="isAttendance"/>
-        <result column="remark" jdbcType="VARCHAR" property="remark"/>
-        <result column="agent" jdbcType="VARCHAR" property="agent"/>
-        <result column="agent_role" jdbcType="VARCHAR" property="agentRole"/>
-        <result column="absent_reason" jdbcType="VARCHAR" property="absentReason"/>
-        <result column="facebook_comment" jdbcType="BIT" property="facebookComment"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.Attendance">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <id column="event_id" jdbcType="BIGINT" property="eventId" />
+    <result column="check_in_time" jdbcType="BIGINT" property="checkInTime" />
+    <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime" />
+    <result column="is_attendance" jdbcType="BIT" property="isAttendance" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="agent" jdbcType="VARCHAR" property="agent" />
+    <result column="agent_role" jdbcType="VARCHAR" property="agentRole" />
+    <result column="absent_reason" jdbcType="VARCHAR" property="absentReason" />
+    <result column="facebook_comment" jdbcType="BIT" property="facebookComment" />
+    <result column="join_time" jdbcType="BIGINT" property="joinTime" />
+  </resultMap>
 
     <resultMap id="userVo" type="com.wanghuiwen.user.vo.CheckHistoryVo">
-        <id column="user_id" jdbcType="BIGINT" property="userId"/>
-        <id column="event_id" jdbcType="BIGINT" property="eventId"/>
-        <result column="check_in_time" jdbcType="BIGINT" property="checkInTime"/>
-        <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime"/>
-        <result column="is_attendance" jdbcType="BIT" property="isAttendance"/>
-        <result column="remark" jdbcType="VARCHAR" property="remark"/>
-        <result column="agent" jdbcType="VARCHAR" property="agent"/>
-        <result column="agent_role" jdbcType="VARCHAR" property="agentRole"/>
-        <result column="absent_reason" jdbcType="VARCHAR" property="absentReason"/>
+        <id column="user_id" jdbcType="BIGINT" property="userId" />
+        <id column="event_id" jdbcType="BIGINT" property="eventId" />
+        <result column="check_in_time" jdbcType="BIGINT" property="checkInTime" />
+        <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime" />
+        <result column="is_attendance" jdbcType="BIT" property="isAttendance" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="agent" jdbcType="VARCHAR" property="agent" />
+        <result column="agent_role" jdbcType="VARCHAR" property="agentRole" />
+        <result column="absent_reason" jdbcType="VARCHAR" property="absentReason" />
     </resultMap>
 
     <select id="selectUserEvent" resultMap="BaseResultMap">

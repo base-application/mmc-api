@@ -36,6 +36,8 @@ public class NotificationController extends Ctrl{
     private NotificationService notificationService;
     @Resource
     private UserInfoService userInfoService;
+    @Resource
+    private FmcUtil fmcUtil;
 
     @ApiOperation(value = "通知添加", tags = {"通知"}, notes = "通知添加")
     @PostMapping(value="/add",name="通知添加")
@@ -45,7 +47,7 @@ public class NotificationController extends Ctrl{
         notificationService.add(notification);
         List<User> users = userInfoService.findByGroupAndGrade(notification.getGroups(),notification.getGrades());
 
-        FmcUtil.sendNotification(users,notification.getNotificationTitle(),Const.REGEX_HTML.matcher(notification.getNotificationContent()).replaceAll(""),new HashMap<>());
+        fmcUtil.sendNotification(users,notification.getNotificationTitle(),Const.REGEX_HTML.matcher(notification.getNotificationContent()).replaceAll(""),new HashMap<>());
         return resultGenerator.genSuccessResult();
     }
 

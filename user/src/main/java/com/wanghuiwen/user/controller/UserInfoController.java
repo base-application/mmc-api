@@ -7,6 +7,7 @@ import com.wanghuiwen.base.service.UserService;
 import com.wanghuiwen.common.MessageUtil;
 import com.wanghuiwen.common.UtilFun;
 import com.wanghuiwen.common.excel.ExcelUtil;
+import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.config.Const;
@@ -78,6 +79,10 @@ public class UserInfoController extends Ctrl {
             String password,
             String countryCode
     ) {
+        User user = userService.findByLoginName(phoneNumber);
+        if(user!=null){
+            return resultGenerator.genFailResult(UserResultEnum.USER_EXISTS);
+        }
         userInfoService.register(phoneNumber, verificationCode, password, countryCode);
 
         return resultGenerator.genSuccessResult();
@@ -154,8 +159,10 @@ public class UserInfoController extends Ctrl {
         params.put("countryId", countryId);
         params.put("cityId", cityId);
         params.put("groupId", groupId);
-        params.put("userId", getAuthUser(authentication).getId());
-        params.put("userGrade", getAuthUser(authentication).getGrade());
+        if(authentication!=null){
+            params.put("userId", getAuthUser(authentication).getId());
+            params.put("userGrade", getAuthUser(authentication).getGrade());
+        }
         PageHelper.startPage(page, size);
         List<UserNetWorkVo> netWorkVos = userInfoService.network(params);
         PageInfo<UserNetWorkVo> netWorkVoPageInfo = new PageInfo<>(netWorkVos);
@@ -279,18 +286,26 @@ public class UserInfoController extends Ctrl {
     @ApiOperation(value = "首页数据", tags = {"用户管理"}, notes = "首页数据")
     @GetMapping(value = "/index", name = "首页数据")
     public Result detail(Authentication authentication) {
-        UserInfoVo userInfoVo = userInfoService.detail(getAuthUser(authentication).getId());
         Map<String, Object> res = new HashMap<>();
-        res.put("user", userInfoVo);
-        res.put("notice", new ArrayList<>());
+
+        if(authentication!=null){
+            AuthUser user =getAuthUser(authentication);
+            UserInfo info =userInfoService.findById(user.getId());
+            UserInfoVo userInfoVo = userInfoService.detail(user.getId());
+            res.put("user", userInfoVo);
+            res.put("notice", new ArrayList<>());
+            List<EventVoAdd> events = mmcEventService.upcomingEvent(getAuthUser(authentication));
+            res.put("upcoming", events);
+            List<SliderVo> sliderVos = sliderService.userList(info.getGradeId(),info.getGroupId());
+            res.put("slider",sliderVos);
+        }else {
+            List<SliderVo> sliderVos = sliderService.userList(0,null);
+            res.put("slider",sliderVos);
+        }
         PageHelper.startPage(1, 2);
         List<NewestStoryVo> newset = newestStoryService.list(new HashMap<>());
         res.put("newset", newset);
-        PageHelper.startPage(1, 2);
-        List<EventVoAdd> events = mmcEventService.upcomingEvent(getAuthUser(authentication));
-        res.put("upcoming", events);
-        List<SliderVo> sliderVos = sliderService.userList(getAuthUser(authentication).getId());
-        res.put("slider",sliderVos);
+
         return resultGenerator.genSuccessResult(res);
     }
 
@@ -411,5 +426,13 @@ public class UserInfoController extends Ctrl {
             return resultGenerator.genSuccessResult(industries.stream().map(Industry::getCnName).collect(Collectors.toList()));
         }
         return resultGenerator.genSuccessResult(industries.stream().map(Industry::getEnName).collect(Collectors.toList()));
+    }
+
+
+    @ApiOperation(value = "用户未读消息", tags = {"用户管理"}, notes = "用户未读消息")
+    @GetMapping(value = "/message", name = "用户未读消息")
+    public Result message(Authentication authentication) {
+        MessageVo vo = userInfoService.message(getAuthUser(authentication).getId());
+        return resultGenerator.genSuccessResult(vo);
     }
 }

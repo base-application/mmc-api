@@ -43,6 +43,8 @@ public class MmcEventController extends Ctrl{
     private UserInfoService userInfoService;
     @Resource
     private NotificationQueueService notificationQueueService;
+    @Resource
+    private FmcUtil fmcUtil;
 
     @ApiOperation(value = "活动添加", tags = {"活动"}, notes = "活动添加")
     @PostMapping(value="/add",name="活动添加")
@@ -61,7 +63,7 @@ public class MmcEventController extends Ctrl{
          * 新建是发送推送
          */
         List<User> users = userInfoService.findByGroupAndGrade(event.getGroups(),event.getGrades());
-        FmcUtil.sendNotification(users,event.getEventTitle(), event.getEventDescription(),new HashMap<>());
+        fmcUtil.sendNotification(users,event.getEventTitle(), event.getEventDescription(),new HashMap<>());
         MmcEvent mmcEvent = new MmcEvent();
         BeanUtils.copyProperties(event,mmcEvent);
         notificationQueueService.add(mmcEvent);
@@ -72,7 +74,13 @@ public class MmcEventController extends Ctrl{
     @ApiOperation(value = "活动详情", tags = {"活动"}, notes = "活动详情")
     @PostMapping(value="/detail",name="活动详情")
     public Result detail(@RequestParam Long id, Authentication authentication) {
-        EventVo vo = mmcEventService.detail(id,getAuthUser(authentication).getId());
+        EventVo vo;
+
+        if(authentication==null){
+            vo = mmcEventService.detail(id,null);
+        }else {
+            vo = mmcEventService.detail(id,getAuthUser(authentication).getId());
+        }
         return resultGenerator.genSuccessResult(vo);
     }
 
@@ -198,7 +206,9 @@ public class MmcEventController extends Ctrl{
         Map<String,Object> params = new HashMap<>();
         params.put("startTime",startTime);
         params.put("endTime",endTime);
-        params.put("userId",getAuthUser(authentication).getId());
+        if(authentication!=null){
+            params.put("userId",getAuthUser(authentication).getId());
+        }
         PageHelper.startPage(page,size);
         List<EventVoAdd> res =mmcEventService.listUser(params);
         PageInfo<EventVoAdd> pageInfo = new PageInfo<>(res);

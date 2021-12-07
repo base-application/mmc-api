@@ -60,6 +60,7 @@ public class ReferralServiceImpl extends AbstractService<Referral> implements Re
         Referral referral = findById(referralId);
         referral.setStatus(status);
         referral.setFailMessage(failMessage);
+        referral.setReceivedTime(new Date().getTime());
         update(referral);
     }
 

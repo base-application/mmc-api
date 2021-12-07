@@ -12,4 +12,5 @@ import java.util.Map;
 @Mapper
 public interface NewestStoryMapper extends ApiMapper<NewestStory> {
     List<NewestStoryVo> list(@Param("params") Map<String, Object> params);
+    int notRead(Long userId);
 }

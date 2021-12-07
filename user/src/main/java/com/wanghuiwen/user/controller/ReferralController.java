@@ -9,6 +9,7 @@ import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.config.FmcUtil;
 import com.wanghuiwen.user.model.Referral;
 import com.wanghuiwen.user.service.ReferralService;
+import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.user.vo.NewestStoryVo;
 import com.wanghuiwen.user.vo.ReferralAddVo;
 import com.wanghuiwen.user.vo.ReferralVo;
@@ -33,6 +34,8 @@ public class ReferralController extends Ctrl{
     private ReferralService referralService;
     @Resource
     private UserService userService;
+    @Resource
+    private UserInfoService userInfoService;
 
     @ApiOperation(value = "发送推荐", tags = {"推荐"}, notes = "发送推荐")
     @PostMapping(value="/send",name="发送推荐")
@@ -40,7 +43,7 @@ public class ReferralController extends Ctrl{
         referralService.send(addVo,getAuthUser(authentication).getId());
         User user = userService.findById(addVo.getReceivedUser());
         if(user.getPushId()!=null){
-            FmcUtil.sendUser(user.getPushId(),"推荐","有朋友推荐给你",new HashMap<>());
+            FmcUtil.sendUser(user.getPushId(),"推荐","有朋友推荐给你",new HashMap<>(),userInfoService.message(user.getId()).getCount());
         }
         return resultGenerator.genSuccessResult();
     }

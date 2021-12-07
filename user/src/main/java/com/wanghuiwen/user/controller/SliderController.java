@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
+import com.wanghuiwen.user.model.UserInfo;
 import com.wanghuiwen.user.service.SliderService;
+import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.user.vo.ReferralVo;
 import com.wanghuiwen.user.vo.SliderVo;
 import io.swagger.annotations.Api;
@@ -25,6 +27,8 @@ import java.util.List;
 public class SliderController extends Ctrl {
     @Resource
     private SliderService sliderService;
+    @Resource
+    private UserInfoService userInfoService;
 
     @ApiOperation(value = "轮播图添加", tags = {"轮播图"}, notes = "轮播图添加")
     @PostMapping(value = "/add", name = "轮播图添加")
@@ -56,7 +60,8 @@ public class SliderController extends Ctrl {
                            @RequestParam(defaultValue = "10") Integer size,
                            Authentication authentication) {
         PageHelper.startPage(page, size);
-        List<SliderVo> sliderVos = sliderService.userList(getAuthUser(authentication).getId());
+        UserInfo info =userInfoService.findById(getAuthUser(authentication).getId());
+        List<SliderVo> sliderVos = sliderService.userList(info.getGradeId(),info.getGroupId());
         PageInfo<SliderVo> pageInfo = new PageInfo<>(sliderVos);
         return resultGenerator.genSuccessResult(pageInfo);
     }

@@ -48,6 +48,8 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     private EventGradeMapper eventGradeMapper;
     @Resource
     private CheckLogMapper checkLogMapper;
+    @Resource
+    private EventUserReadMapper eventUserReadMapper;
 
     @Override
     public Long add(EventVoAdd add) {
@@ -58,16 +60,18 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
 
 
         eventPictureMapper.deleteByEvent(event.getEventId());
+
+        if(!CollectionUtils.isEmpty(add.getEventPoster())){
+            List<EventPicture> pictureList =  add.getEventPoster().stream().map(imageVo -> {
+                EventPicture picture =  new EventPicture();
+                picture.setEventId(event.getEventId());
+                picture.setUrl(imageVo.getUrl());
+                return picture;
+            }).collect(Collectors.toList());
+            eventPictureMapper.insertList(pictureList);
+        }
+
         eventGroupMapper.deleteByEvent(event.getEventId());
-
-        List<EventPicture> pictureList =  add.getEventPoster().stream().map(imageVo -> {
-            EventPicture picture =  new EventPicture();
-            picture.setEventId(event.getEventId());
-            picture.setUrl(imageVo.getUrl());
-            return picture;
-        }).collect(Collectors.toList());
-        eventPictureMapper.insertList(pictureList);
-
         if(!CollectionUtils.isEmpty( add.getGroups())){
             List<EventGroup> groups =  add.getGroups().stream().map(group -> {
                 EventGroup eventGroup =  new EventGroup();
@@ -101,6 +105,15 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
 
     @Override
     public EventVo detail(Long id, Long uid) {
+        if(uid!=null){
+            EventUserRead eventUserRead = new EventUserRead();
+            eventUserRead.setEventId(id);
+            eventUserRead.setUserId(uid);
+            EventUserRead find =eventUserReadMapper.selectOne(eventUserRead);
+            if(find==null){
+                eventUserReadMapper.insertSelective(eventUserRead);
+            }
+        }
         return mmcEventMapper.detail(id,uid);
     }
 
@@ -140,6 +153,7 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
         Attendance join = new Attendance();
         join.setUserId(userId);
         join.setEventId(eventId);
+        join.setJoinTime(new Date().getTime());
         attendanceMapper.insert(join);
     }
 

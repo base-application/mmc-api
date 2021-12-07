@@ -33,6 +33,8 @@ public class NotificationQueueService {
     private MmcEventService mmcEventService;
     @Resource
     private UserInfoService userInfoService;
+    @Resource
+    private  FmcUtil fmcUtil;
 
 
     public void offer(NotificationDelayedMessage delayMessage){
@@ -64,7 +66,7 @@ public class NotificationQueueService {
     public void sendStareEvent(NotificationDelayedMessage delayMessage) {
         EventVo event = mmcEventService.detail(delayMessage.getEventId(),null);
         List<User> users =userInfoService.findByGroupAndGrade(event.getGroups(),event.getGrades());
-        FmcUtil.sendNotification(users,delayMessage.getNotificationTitle(), delayMessage.getNotificationContext(),delayMessage.getData());
+        fmcUtil.sendNotification(users,delayMessage.getNotificationTitle(), delayMessage.getNotificationContext(),delayMessage.getData());
     }
 
     public void  add(MmcEvent mmcEvent){

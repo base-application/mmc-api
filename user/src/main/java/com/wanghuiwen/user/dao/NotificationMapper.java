@@ -15,4 +15,6 @@ public interface NotificationMapper extends ApiMapper<Notification> {
     List<NotificationVo> list(@Param("params") Map<String, Object> params);
 
     List<NotificationUserListVo> userList(@Param("params")Map<String, Object> params);
+
+   int noRead(Long uid);
 }

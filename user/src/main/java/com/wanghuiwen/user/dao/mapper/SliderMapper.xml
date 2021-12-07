@@ -43,20 +43,18 @@
     <select id="userList" resultMap="vo">
         select *
         from slider
-        where exists(select *
-                     from user_info
-                     where user_id = #{userId}
-                       and exists(select *
-                                  from slider_grade
-                                  where user_info.grade_id = slider_grade.grade_id
-                                    and slider_grade.slider_id = slider.slider_id))
-          or exists(select *
-                     from user_info
-                     where user_id = #{userId}
-                       and exists(select *
-                                  from slider_group
-                                  where user_info.group_id = slider_group.group_id
-                                    and slider.slider_id = slider_group.slider_id
-                             ))
+        where  1=1 and
+        <if test="gradeId!=null">
+            exists(select *
+            from slider_grade
+            where slider_grade.grade_id = #{gradeId} and slider_grade.slider_id  = slider.slider_id)
+        </if>
+        <if test="groupId!=null">
+            or exists(select *
+            from slider_group
+            where slider_group.group_id = #{groupId} and slider_group.slider_id  = slider.slider_id)
+        </if>
+
+
     </select>
 </mapper>

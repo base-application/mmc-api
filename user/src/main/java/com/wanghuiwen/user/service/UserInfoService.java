@@ -5,6 +5,7 @@ import com.wanghuiwen.user.model.MmcGroup;
 import com.wanghuiwen.user.model.UserInfo;
 import com.wanghuiwen.core.service.Service;
 import com.wanghuiwen.user.vo.Achievement;
+import com.wanghuiwen.user.vo.MessageVo;
 import com.wanghuiwen.user.vo.UserInfoVo;
 import com.wanghuiwen.user.vo.UserNetWorkVo;
 
@@ -40,4 +41,6 @@ public interface UserInfoService extends Service<UserInfo> {
     Achievement achievements(Long id, Integer type);
 
     List<User> findByGroupAndGrade(List<MmcGroup> groups, List<Grade> grades);
+
+    MessageVo message(Long id);
 }

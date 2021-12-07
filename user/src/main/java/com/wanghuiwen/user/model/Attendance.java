@@ -57,6 +57,12 @@ public class Attendance implements Serializable {
     @Column(name = "facebook_comment")
     private Boolean facebookComment;
 
+    /**
+     * 加入时间
+     */
+    @Column(name = "join_time")
+    private Long joinTime;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -229,5 +235,23 @@ public class Attendance implements Serializable {
      */
     public void setFacebookComment(Boolean facebookComment) {
         this.facebookComment = facebookComment;
+    }
+
+    /**
+     * 获取加入时间
+     *
+     * @return join_time - 加入时间
+     */
+    public Long getJoinTime() {
+        return joinTime;
+    }
+
+    /**
+     * 设置加入时间
+     *
+     * @param joinTime 加入时间
+     */
+    public void setJoinTime(Long joinTime) {
+        this.joinTime = joinTime;
     }
 }

@@ -28,10 +28,10 @@ public class GoAuthenticationEntryPoint  implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
-        Result result = resultGenerator.genResult(ResultEnum.FORBIDDEN);
+        Result result = resultGenerator.genResult(ResultEnum.UNAUTHORIZED);
         logger.warn("身份验证出错",e);
         httpServletResponse.setHeader("Content-Type", "application/json;charset=utf-8");
-        httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
+        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
         httpServletResponse.getWriter().write(JSONUtils.obj2json(result));
         httpServletResponse.getWriter().flush();
     }

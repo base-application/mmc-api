@@ -16,6 +16,9 @@ public class Achievement {
     private Integer referralReceivedCount;
     private Integer thankYouNoteSendCount;
     private Integer thankYouNoteReceivedCount;
+    private Integer joinEvent;
+    private Integer joinEventCount;
+    private Integer joinEventPre;
 
     public Integer getReferralSend() {
         return referralSend;
@@ -127,5 +130,29 @@ public class Achievement {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getJoinEvent() {
+        return joinEvent;
+    }
+
+    public void setJoinEvent(Integer joinEvent) {
+        this.joinEvent = joinEvent;
+    }
+
+    public Integer getJoinEventCount() {
+        return joinEventCount;
+    }
+
+    public void setJoinEventCount(Integer joinEventCount) {
+        this.joinEventCount = joinEventCount;
+    }
+
+    public Integer getJoinEventPre() {
+        return joinEventPre;
+    }
+
+    public void setJoinEventPre(Integer joinEventPre) {
+        this.joinEventPre = joinEventPre;
     }
 }

@@ -53,6 +53,7 @@ public class ThankYouNoteServiceImpl extends AbstractService<ThankYouNote> imple
         note.setSendUser(thankYouNote.getSender());
         note.setValue(BigDecimal.valueOf(thankYouNote.getValue()));
         note.setSendTime(new Date().getTime());
+        note.setReceivedTime(new Date().getTime());
 
         saveOrUpdate(note);
         thankYouNotePictureMapper.deleteByThank(note.getThankYouNoteId());

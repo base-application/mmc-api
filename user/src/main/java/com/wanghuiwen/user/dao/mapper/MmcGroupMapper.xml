@@ -13,12 +13,14 @@
     <id column="group_id" jdbcType="INTEGER" property="groupId" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="thankYouNote" jdbcType="INTEGER" property="thankYouNote" />
+    <result column="refer" jdbcType="INTEGER" property="refer" />
     <collection property="userInfoVos" column="{groupId=group_id,uid=uid}" select="listGroupUser"/>
   </resultMap>
 
   <select id="listUser" resultMap="vo">
       SELECT mg.*,
              t.thankYouNote,
+             r.refer,
              #{uid} as uid
       FROM (select  * from mmc_group where 1=1
                    <if test="groupName!=null and groupName !=''">

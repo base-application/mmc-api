@@ -37,4 +37,8 @@
   <select id="getPoster" resultType="com.wanghuiwen.user.vo.ImageVo">
    select  newest_story_picture as url, picture_id as id from newset_story_picture where newest_story_id = #{id}
   </select>
+
+  <select id="notRead" resultType="int">
+    SELECT count(*) from newest_story ns WHERE not EXISTS(SELECT * from newset_user_read nur where nur.newest_id = ns.story_id and nur.user_id = #{userId})
+  </select>
 </mapper>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.NewsetUserReadMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.NewsetUserRead">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="newest_id" jdbcType="BIGINT" property="newestId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+</mapper>

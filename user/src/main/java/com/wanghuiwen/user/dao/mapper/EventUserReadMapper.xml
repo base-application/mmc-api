@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.EventUserReadMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.EventUserRead">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="event_id" jdbcType="BIGINT" property="eventId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+</mapper>

@@ -76,8 +76,8 @@ public class SliderServiceImpl extends AbstractService<Slider> implements Slider
     }
 
     @Override
-    public List<SliderVo> userList(Long userId) {
+    public List<SliderVo> userList(Integer gradeId,Integer groupId) {
 
-        return sliderMapper.userList(userId);
+        return sliderMapper.userList(gradeId,groupId);
     }
 }

@@ -28,4 +28,7 @@ public interface MmcEventMapper extends ApiMapper<MmcEvent> {
     List<MmcEvent> findByStartDate();
 
     List<EventVoAdd> listUser(@Param("params") Map<String, Object> params);
+
+    int noRead(Long uid);
+
 }

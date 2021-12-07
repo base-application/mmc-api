@@ -52,6 +52,8 @@ public class UserInfoVo {
     private Integer groupId;
     private String groupName;
     private String email;
+    private String countryName;
+    private String stateName;
     private int attendance;
     private int referralSend;
     private int referralReceived;
@@ -323,5 +325,21 @@ public class UserInfoVo {
 
     public void setThankYouNoteSum(int thankYouNoteSum) {
         this.thankYouNoteSum = thankYouNoteSum;
+    }
+
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
+
+    public String getStateName() {
+        return stateName;
+    }
+
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
     }
 }

@@ -2,6 +2,7 @@ package com.wanghuiwen.user.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Table(name = "guide_line")
 public class GuideLine implements Serializable {
@@ -10,9 +11,11 @@ public class GuideLine implements Serializable {
     private Long guideLineId;
 
     @Column(name = "guide_line_title")
+    @NotEmpty(message = "params.not.empty")
     private String guideLineTitle;
 
     @Column(name = "guide_line_image")
+    @NotEmpty(message = "params.not.empty")
     private String guideLineImage;
 
     private static final long serialVersionUID = 1L;

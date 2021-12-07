@@ -97,4 +97,29 @@
         where  IFNULL(nu.status,'')  != 2
         ORDER BY a.notification_time desc
     </select>
+
+  <select id="noRead" resultType="int">
+      SELECT count(*)
+      FROM notification
+      WHERE (
+              EXISTS(
+                      SELECT *
+                      FROM notification_group
+                      WHERE notification.notification_id = notification_group.notification_id
+                        AND EXISTS(
+                              SELECT * FROM user_info WHERE user_id = #{uid} AND user_info.group_id = notification_group.group_id))
+                      OR NOT EXISTS(
+                      SELECT * FROM notification_group WHERE notification.notification_id = notification_group.notification_id))
+        AND (
+              EXISTS(
+                      SELECT *
+                      FROM notification_grade
+                      WHERE notification.notification_id = notification_grade.notification_id
+                        AND EXISTS(
+                              SELECT * FROM user_info WHERE user_id = #{uid} AND user_info.grade_id = notification_grade.grade_id))
+                      OR NOT EXISTS(
+                      SELECT * FROM notification_grade WHERE notification.notification_id = notification_grade.notification_id)
+              )
+        and not exists(select  * from notification_user where user_id = #{uid} and notification_user.notification_id = notification.notification_id)
+    </select>
 </mapper>

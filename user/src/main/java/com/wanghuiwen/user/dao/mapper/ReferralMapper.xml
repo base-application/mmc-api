@@ -65,6 +65,7 @@
         LEFT JOIN user_info received ON (received.user_id = r.received_user)
         LEFT JOIN mmc_group sendg on (sendg.group_id = send.group_id)
         LEFT JOIN mmc_group receivedg on (receivedg.group_id = received.group_id)
+        order by r.send_time desc
     </select>
 
     <select id="getPicture" resultType="com.wanghuiwen.user.vo.ImageVo">

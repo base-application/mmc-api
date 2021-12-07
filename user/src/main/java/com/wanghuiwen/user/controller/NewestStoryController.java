@@ -9,6 +9,7 @@ import com.wanghuiwen.user.service.NewestStoryService;
 import com.wanghuiwen.user.vo.NewestStoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -39,6 +40,15 @@ public class NewestStoryController extends Ctrl{
     @DeleteMapping(value="/delete",name="新闻删除")
     public Result delete(@RequestParam Long id) {
         newestStoryService.deleteById(id);
+        return resultGenerator.genSuccessResult();
+    }
+
+    @ApiOperation(value = "新闻详情", tags = {"新闻"}, notes = "新闻详情")
+    @GetMapping(value="/detail",name="新闻详情")
+    public Result detail(@RequestParam Long id, Authentication authentication) {
+        if(authentication!=null){
+            newestStoryService.detail(id,getAuthUser(authentication).getId());
+        }
         return resultGenerator.genSuccessResult();
     }
 

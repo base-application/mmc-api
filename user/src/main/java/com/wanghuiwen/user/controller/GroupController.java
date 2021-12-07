@@ -51,7 +51,12 @@ public class GroupController extends Ctrl{
     @ApiOperation(value = "用户端分组信息", tags = {"用户分组"}, notes = "用户端分组信息")
     @GetMapping(value = "/list/user", name = "用户端分组信息")
     public Result userList(Authentication authentication,@RequestParam(required = false) String groupName) {
-        List<GroupUserVo> userVos =  mmcGroupService.listUser(getAuthUser(authentication).getId(),groupName);
+        List<GroupUserVo> userVos ;
+        if(authentication!=null){
+            userVos = mmcGroupService.listUser(getAuthUser(authentication).getId(),groupName);
+        }else {
+            userVos = mmcGroupService.listUser(0L,groupName);
+        }
         return resultGenerator.genSuccessResult(userVos);
     }
 

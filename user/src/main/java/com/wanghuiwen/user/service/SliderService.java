@@ -14,5 +14,5 @@ public interface SliderService extends Service<Slider> {
 
     List<SliderVo> list();
 
-    List<SliderVo> userList(Long id);
+    List<SliderVo> userList(Integer gradeId,Integer groupId);
 }

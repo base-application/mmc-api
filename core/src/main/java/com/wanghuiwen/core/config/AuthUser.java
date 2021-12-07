@@ -43,7 +43,7 @@ public class AuthUser implements UserDetails  {
 
     @Override
     public boolean isAccountNonExpired() {
-        return expiredTime==null || this.expiredTime.compareTo(new Date().getTime()) > 0;
+        return true;
     }
 
     @Override

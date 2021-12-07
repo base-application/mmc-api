@@ -14,4 +14,6 @@ public interface NewestStoryService extends Service<NewestStory> {
     void add(NewestStoryVo newestStoryVo);
 
     List<NewestStoryVo> list(Map<String, Object> params);
+
+    void detail(Long id, Long userId);
 }

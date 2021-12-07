@@ -5,6 +5,7 @@ import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.model.GuideLine;
 import com.wanghuiwen.user.service.GuideLineService;
 import io.swagger.annotations.*;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -23,7 +24,7 @@ public class GuideLineController extends Ctrl{
 
     @ApiOperation(value = "Guideline添加", tags = {"Guideline"}, notes = "Guideline添加")
     @PostMapping(value="/add",name="Guideline添加")
-    public Result add(@RequestBody GuideLine guideLine) {
+    public Result add(@RequestBody @Validated GuideLine guideLine) {
         guideLineService.save(guideLine);
         return resultGenerator.genSuccessResult();
     }

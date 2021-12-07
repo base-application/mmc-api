@@ -73,7 +73,7 @@
         select me.*,
                a.is_attendance
         from mmc_event me
-                     left join attendance a on (me.event_id = a.event_id and a.user_id = #{uid})
+        left join attendance a on (me.event_id = a.event_id and a.user_id = #{uid})
         where me.event_id = #{id}
     </select>
 
@@ -119,7 +119,7 @@
         select
         me.*,
         eap.attendance_proportion
-        from (select * from mmc_event where approve_status = 2) me
+        from mmc_event me
         LEFT JOIN event_attendance_proportion eap on (me.event_id = eap.event_id)
         where 1=1
         <if test="params.eventTitle != null and params.eventTitle != ''">
@@ -137,9 +137,12 @@
 
     <select id="upcomingEvent" resultMap="addVo">
         SELECT *,
-               a.is_attendance
+               a.is_attendance,
+               a.user_id is not null as joind,
+                eap.attendance_proportion
         FROM (select * from mmc_event where approve_status = 2) me
-                     left join attendance a on (me.event_id = a.event_id and a.user_id = #{id})
+         LEFT JOIN event_attendance_proportion eap on (me.event_id = eap.event_id)
+         left join attendance a on (me.event_id = a.event_id and a.user_id = #{id})
         WHERE event_start_time / 1000 > UNIX_TIMESTAMP(NOW())
           AND (EXISTS(
                        SELECT *
@@ -157,7 +160,7 @@
                               SELECT * FROM event_grade egr WHERE ui.grade_id = egr.grade_id AND egr.event_id = me.event_id))
 
                 or 	not EXISTS(SELECT * from event_grade egr WHERE egr.event_id = me.event_id))
-        order by event_start_time desc
+        order by event_start_time asc
     </select>
 
     <select id="joinList" resultMap="addVo">
@@ -231,5 +234,26 @@
             and event_start_time between #{params.startTime} and #{params.endTime}
         </if>
         order by me.event_start_time desc
+    </select>
+
+    <select id="noRead" resultType="int">
+        select count(*)
+        from (select * from mmc_event where approve_status = 2) me
+        where (EXISTS(
+                       SELECT *
+                       FROM user_info ui
+                       WHERE user_id = #{uid}
+                         AND EXISTS(SELECT * FROM event_group eg WHERE ui.group_id = eg.group_id AND eg.event_id = me.event_id))
+                or
+               not EXISTS(SELECT * from event_group eg WHERE eg.event_id = me.event_id))
+
+          and (EXISTS(
+                       SELECT *
+                       FROM user_info ui
+                       WHERE user_id = #{uid}
+                         AND EXISTS(
+                               SELECT * FROM event_grade egr WHERE ui.grade_id = egr.grade_id AND egr.event_id = me.event_id))
+                or not EXISTS(SELECT * from event_grade egr WHERE egr.event_id = me.event_id))
+          and not exists(select  * from event_user_read eur where eur.event_id = me.event_id and eur.user_id = #{uid})
     </select>
 </mapper>

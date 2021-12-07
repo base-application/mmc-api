@@ -20,6 +20,7 @@ import com.wanghuiwen.user.model.*;
 import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.core.service.AbstractService;
 import com.wanghuiwen.user.vo.Achievement;
+import com.wanghuiwen.user.vo.MessageVo;
 import com.wanghuiwen.user.vo.UserInfoVo;
 import com.wanghuiwen.user.vo.UserNetWorkVo;
 import org.apache.commons.lang3.StringUtils;
@@ -72,6 +73,12 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
     private RedisTemplate<String,String> redisTemplate;
     @Resource
     private RoleService roleService;
+    @Resource
+    private NewestStoryMapper newestStoryMapper;
+    @Resource
+    private NotificationMapper notificationMapper;
+    @Resource
+    private  MmcEventMapper mmcEventMapper;
 
     @Value("${mmc.init.grade}")
     private String initGradeName;
@@ -228,6 +235,7 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
             userInfo.setCountry(countries.getId());
         }
         userInfo.setConcatNumber(phoneNumber);
+        userInfo.setMember("Member");
         save(userInfo);
         redisTemplate.delete(key);
     }
@@ -256,5 +264,18 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
     @Override
     public List<User> findByGroupAndGrade(List<MmcGroup> groups, List<Grade> grades) {
         return userInfoMapper.findByGroupAndGrade(groups,grades);
+    }
+
+    @Override
+    public MessageVo message(Long id) {
+        int newNoRead =newestStoryMapper.notRead(id);
+        int notificationNoRead = notificationMapper.noRead(id);
+        int eventNoRead =  mmcEventMapper.noRead(id);
+        MessageVo vo = new MessageVo();
+        vo.setEvent(eventNoRead);
+        vo.setNewset(newNoRead);
+        vo.setNotification(notificationNoRead);
+        vo.setCount(newNoRead+notificationNoRead+eventNoRead);
+        return vo;
     }
 }

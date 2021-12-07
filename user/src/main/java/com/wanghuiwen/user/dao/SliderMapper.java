@@ -11,5 +11,5 @@ import java.util.List;
 public interface SliderMapper extends ApiMapper<Slider> {
     List<SliderVo> list();
 
-    List<SliderVo> userList(Long userId);
+    List<SliderVo> userList(Integer gradeId,Integer groupId);
 }
