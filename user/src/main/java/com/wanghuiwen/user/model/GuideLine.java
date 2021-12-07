@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 public class GuideLine implements Serializable {
     @Id
     @Column(name = "guide_line_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long guideLineId;
 
     @Column(name = "guide_line_title")

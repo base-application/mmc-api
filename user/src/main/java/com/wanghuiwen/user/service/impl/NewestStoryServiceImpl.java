@@ -12,6 +12,7 @@ import com.wanghuiwen.user.vo.NewestStoryVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -40,7 +41,7 @@ public class NewestStoryServiceImpl extends AbstractService<NewestStory> impleme
 
         newsetStoryPictureMapper.deleteByNew(story.getStoryId());
 
-        if(newestStoryVo.getPoster()!=null){
+        if(!CollectionUtils.isEmpty(newestStoryVo.getPoster())){
             List<NewsetStoryPicture> pictureList =  newestStoryVo.getPoster().stream().map(imageVo -> {
                 NewsetStoryPicture picture =  new NewsetStoryPicture();
                 picture.setNewestStoryId(story.getStoryId());

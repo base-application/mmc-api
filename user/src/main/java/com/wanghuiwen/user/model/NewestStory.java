@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class NewestStory implements Serializable {
     @Id
     @Column(name = "story_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storyId;
 
     /**
