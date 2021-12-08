@@ -17,6 +17,11 @@ public class NotificationDelayedMessage implements Delayed {
     private Long startDate;
     private String id;
     private Long eventId;
+    /**
+     * 1 通知
+     * 2 referral
+     */
+    private int type;
 
     /**
      * 获得延迟时间 过期时间减去当前时间
@@ -95,5 +100,13 @@ public class NotificationDelayedMessage implements Delayed {
 
     public void setData(Map<String, String> data) {
         this.data = data;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

@@ -21,6 +21,7 @@
   </select>
 
   <select id="findLast" parameterType="java.util.Map" resultMap="BaseResultMap">
-    select * from app_history where app_id =#{appId}  and create_date = (select max(create_date) from app_history where app_id =#{appId})
+    select * from app_history where app_id =#{appId}  and platform = #{platform}
+                                and create_date = (select max(create_date) from app_history where app_id =#{appId}  and platform = #{platform} and create_date &lt; now())
   </select>
 </mapper>

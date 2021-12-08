@@ -85,8 +85,8 @@ public class AppHistoryController extends Ctrl {
             @ApiImplicitParam(name = "size", value = "每页显示的条数", dataType = "String", paramType = "query",defaultValue="10")
     })
     @PostMapping(value="/last",name="app发布历史列表信息")
-    public Result lastVersion(@RequestParam Long appId) {
-        AppHistory last = appHistoryService.findLast(appId);
+    public Result lastVersion(@RequestParam Long appId,@RequestParam String platform) {
+        AppHistory last = appHistoryService.findLast(appId,platform);
         return resultGenerator.genSuccessResult(last);
     }
 }

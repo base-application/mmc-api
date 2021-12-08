@@ -4,6 +4,7 @@ import com.wanghuiwen.user.dao.ReferralMapper;
 import com.wanghuiwen.user.dao.ReferralPictureMapper;
 import com.wanghuiwen.user.model.Referral;
 import com.wanghuiwen.user.model.ReferralPicture;
+import com.wanghuiwen.user.queue.NotificationQueueService;
 import com.wanghuiwen.user.service.ReferralService;
 import com.wanghuiwen.core.service.AbstractService;
 import com.wanghuiwen.user.vo.ReferralAddVo;
@@ -11,6 +12,7 @@ import com.wanghuiwen.user.vo.ReferralVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -35,6 +37,9 @@ public class ReferralServiceImpl extends AbstractService<Referral> implements Re
         return referralMapper.list(params);
     }
 
+    @Resource
+    private NotificationQueueService notificationQueueService;
+
     @Override
     public void send(ReferralAddVo addVo, Long uid) {
         Referral referral = new Referral();
@@ -44,15 +49,17 @@ public class ReferralServiceImpl extends AbstractService<Referral> implements Re
         saveOrUpdate(referral);
         referralMapper.deleteByReferral(referral.getReferralId());
 
+        if(!CollectionUtils.isEmpty(addVo.getPicture())){
+            List<ReferralPicture> pictureList =  addVo.getPicture().stream().map(imageVo -> {
+                ReferralPicture picture =  new ReferralPicture();
+                picture.setReferralId(referral.getReferralId());
+                picture.setUrl(imageVo.getUrl());
+                return picture;
+            }).collect(Collectors.toList());
 
-        List<ReferralPicture> pictureList =  addVo.getPicture().stream().map(imageVo -> {
-            ReferralPicture picture =  new ReferralPicture();
-            picture.setReferralId(referral.getReferralId());
-            picture.setUrl(imageVo.getUrl());
-            return picture;
-        }).collect(Collectors.toList());
-
-        referralPictureMapper.insertList(pictureList);
+            referralPictureMapper.insertList(pictureList);
+        }
+        notificationQueueService.addReferral(referral);
     }
 
     @Override
@@ -69,5 +76,10 @@ public class ReferralServiceImpl extends AbstractService<Referral> implements Re
        Referral referral =  findById(referralId);
        referral.setRemark(remark);
        update(referral);
+    }
+
+    @Override
+    public List<Referral> findByNoThank() {
+        return referralMapper.findByNoThank();
     }
 }

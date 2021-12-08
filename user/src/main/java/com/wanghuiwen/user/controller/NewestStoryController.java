@@ -9,6 +9,8 @@ import com.wanghuiwen.user.service.NewestStoryService;
 import com.wanghuiwen.user.vo.NewestStoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,12 +29,16 @@ import java.util.Map;
 public class NewestStoryController extends Ctrl{
     @Resource
     private NewestStoryService newestStoryService;
+    @Resource
+    private MessageSource messageSource;
+
 
     @ApiOperation(value = "新闻添加", tags = {"新闻"}, notes = "新闻添加")
     @PostMapping(value="/add",name="新闻添加")
     public Result add(@RequestBody NewestStoryVo newestStoryVo) {
         newestStoryService.add(newestStoryVo);
-        FmcUtil.sendAll(newestStoryVo.getTitle(), newestStoryVo.getDescription(),new HashMap<>());
+        String message = messageSource.getMessage("new.send", null, LocaleContextHolder.getLocale());
+        FmcUtil.sendAll(newestStoryVo.getTitle(), message,new HashMap<>());
         return resultGenerator.genSuccessResult();
     }
 

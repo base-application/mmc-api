@@ -21,8 +21,8 @@ public class AdvertisementServiceImpl extends AbstractService<Advertisement> imp
     private AdvertisementMapper advertisementMapper;
 
     @Override
-    public Advertisement pull(AuthUser authUser) {
+    public Advertisement pull() {
 
-        return advertisementMapper.pull(authUser.getId());
+        return advertisementMapper.pull();
     }
 }

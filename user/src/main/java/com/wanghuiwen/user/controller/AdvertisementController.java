@@ -47,7 +47,7 @@ public class AdvertisementController extends Ctrl{
 
     @ApiOperation(value = "广告列表信息", tags = {"广告"}, notes = "广告列表信息")
     @GetMapping(value = "/pull", name = "广告列表信息")
-    public Result pull(Authentication authentication) {
-        return resultGenerator.genSuccessResult(advertisementService.pull(getAuthUser(authentication)));
+    public Result pull() {
+        return resultGenerator.genSuccessResult(advertisementService.pull());
     }
 }

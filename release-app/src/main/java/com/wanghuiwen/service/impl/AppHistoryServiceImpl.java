@@ -29,8 +29,8 @@ public class AppHistoryServiceImpl extends AbstractService<AppHistory> implement
     }
 
     @Override
-    public AppHistory findLast(Long appId) {
-        AppHistory last = appHistoryMapper.findLast(appId);
+    public AppHistory findLast(Long appId,String platform) {
+        AppHistory last = appHistoryMapper.findLast(appId,platform);
         return last;
     }
 }

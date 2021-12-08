@@ -15,4 +15,6 @@ public interface ReferralMapper extends ApiMapper<Referral> {
     List<ReferralVo> list(@Param("params") Map<String, Object> params);
 
     void deleteByReferral(Long referralId);
+
+    List<Referral> findByNoThank();
 }

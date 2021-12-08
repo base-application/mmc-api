@@ -2,15 +2,21 @@ package com.wanghuiwen.user.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wanghuiwen.base.model.User;
+import com.wanghuiwen.base.service.UserService;
 import com.wanghuiwen.common.mybatis.ResultMap;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
+import com.wanghuiwen.user.config.FmcUtil;
 import com.wanghuiwen.user.model.ThankYouNote;
 import com.wanghuiwen.user.service.ThankYouNoteService;
+import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.user.vo.ThankYouAddVo;
 import com.wanghuiwen.user.vo.ThankYouNoteVo;
 import com.wanghuiwen.user.vo.UserInfoVo;
 import io.swagger.annotations.*;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +35,23 @@ import java.util.Map;
 public class ThankYouNoteController extends Ctrl{
     @Resource
     private ThankYouNoteService thankYouNoteService;
+    @Resource
+    private UserService userService;
+    @Resource
+    private MessageSource messageSource;
+    @Resource
+    private UserInfoService userInfoService;
 
     @ApiOperation(value = "用户发送感谢", tags = {"感谢"}, notes = "用户发送感谢")
     @PostMapping(value="/add",name="用户发送感谢")
     public Result add(@RequestBody ThankYouAddVo thankYouNote, Authentication authentication) {
         thankYouNote.setSender(getAuthUser(authentication).getId());
         thankYouNoteService.add(thankYouNote);
+        User user = userService.findById(thankYouNote.getReceivedUser());
+        if(user.getPushId()!=null){
+            String message = messageSource.getMessage("thank.send", null, LocaleContextHolder.getLocale());
+            FmcUtil.sendUser(user.getPushId(),"Thank You",message,new HashMap<>(),userInfoService.message(user.getId()).getCount());
+        }
         return resultGenerator.genSuccessResult();
     }
 

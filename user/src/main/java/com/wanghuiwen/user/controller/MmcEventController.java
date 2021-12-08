@@ -20,6 +20,8 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +47,8 @@ public class MmcEventController extends Ctrl{
     private NotificationQueueService notificationQueueService;
     @Resource
     private FmcUtil fmcUtil;
+    @Resource
+    private MessageSource messageSource;
 
     @ApiOperation(value = "活动添加", tags = {"活动"}, notes = "活动添加")
     @PostMapping(value="/add",name="活动添加")
@@ -63,7 +67,8 @@ public class MmcEventController extends Ctrl{
          * 新建是发送推送
          */
         List<User> users = userInfoService.findByGroupAndGrade(event.getGroups(),event.getGrades());
-        fmcUtil.sendNotification(users,event.getEventTitle(), event.getEventDescription(),new HashMap<>());
+        String message = messageSource.getMessage("notification.create", null, LocaleContextHolder.getLocale());
+        fmcUtil.sendNotification(users,event.getEventTitle(), message,new HashMap<>());
         MmcEvent mmcEvent = new MmcEvent();
         BeanUtils.copyProperties(event,mmcEvent);
         notificationQueueService.add(mmcEvent);

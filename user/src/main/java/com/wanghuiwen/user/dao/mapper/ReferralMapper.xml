@@ -79,4 +79,10 @@
         from referral_picture
         where referral_id = #{referralId}
     </delete>
+
+  <select id="findByNoThank" resultMap="BaseResultMap">
+      select *
+      from referral
+      where send_time / 1000 > UNIX_TIMESTAMP(NOW()) and thank =0;
+    </select>
 </mapper>

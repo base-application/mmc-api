@@ -13,5 +13,5 @@ public interface AppHistoryService extends Service<AppHistory> {
 
     List<AppHistory> findeByAppId(Map<String, Object> params);
 
-    AppHistory findLast(Long appId);
+    AppHistory findLast(Long appId,String platform);
 }

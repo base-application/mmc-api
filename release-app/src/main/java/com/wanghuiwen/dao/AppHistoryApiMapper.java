@@ -9,5 +9,5 @@ import java.util.Map;
 public interface AppHistoryApiMapper extends ApiMapper<AppHistory> {
     List<AppHistory> selectByAppID(Map<String, Object> params);
 
-    AppHistory findLast(Long appid);
+    AppHistory findLast(Long appId,String platform);
 }

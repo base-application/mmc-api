@@ -8,12 +8,15 @@ import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.config.FmcUtil;
 import com.wanghuiwen.user.model.Referral;
+import com.wanghuiwen.user.queue.NotificationQueueService;
 import com.wanghuiwen.user.service.ReferralService;
 import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.user.vo.NewestStoryVo;
 import com.wanghuiwen.user.vo.ReferralAddVo;
 import com.wanghuiwen.user.vo.ReferralVo;
 import io.swagger.annotations.*;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +39,9 @@ public class ReferralController extends Ctrl{
     private UserService userService;
     @Resource
     private UserInfoService userInfoService;
+    @Resource
+    private MessageSource messageSource;
+
 
     @ApiOperation(value = "发送推荐", tags = {"推荐"}, notes = "发送推荐")
     @PostMapping(value="/send",name="发送推荐")
@@ -43,7 +49,8 @@ public class ReferralController extends Ctrl{
         referralService.send(addVo,getAuthUser(authentication).getId());
         User user = userService.findById(addVo.getReceivedUser());
         if(user.getPushId()!=null){
-            FmcUtil.sendUser(user.getPushId(),"推荐","有朋友推荐给你",new HashMap<>(),userInfoService.message(user.getId()).getCount());
+            String message = messageSource.getMessage("referral.send", null, LocaleContextHolder.getLocale());
+            FmcUtil.sendUser(user.getPushId(),"referral",message,new HashMap<>(),userInfoService.message(user.getId()).getCount());
         }
         return resultGenerator.genSuccessResult();
     }
