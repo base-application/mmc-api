@@ -1,5 +1,6 @@
 package com.wanghuiwen.user.service;
 import com.wanghuiwen.base.model.User;
+import com.wanghuiwen.common.mybatis.ResultMap;
 import com.wanghuiwen.user.model.Grade;
 import com.wanghuiwen.user.model.MmcGroup;
 import com.wanghuiwen.user.model.UserInfo;
@@ -43,4 +44,10 @@ public interface UserInfoService extends Service<UserInfo> {
     List<User> findByGroupAndGrade(List<MmcGroup> groups, List<Grade> grades);
 
     MessageVo message(Long id);
+
+    int count();
+
+    List<ResultMap<String, Object>> groupByGrade();
+
+    List<ResultMap<String, Object>> mapData();
 }

@@ -70,6 +70,12 @@ public class UserInfoController extends Ctrl {
     private MmcEventService mmcEventService;
     @Resource
     private SliderService sliderService;
+    @Resource
+    private ReferralService referralService;
+    @Resource
+    private ThankYouNoteService thankYouNoteService;
+    @Resource
+    private MmcGroupService mmcGroupService;
 
     @ApiOperation(value = "用户注册", tags = {"用户管理"}, notes = "用户注册")
     @PostMapping("register")
@@ -434,5 +440,21 @@ public class UserInfoController extends Ctrl {
     public Result message(Authentication authentication) {
         MessageVo vo = userInfoService.message(getAuthUser(authentication).getId());
         return resultGenerator.genSuccessResult(vo);
+    }
+
+
+    @ApiOperation(value = "首页统计信息", tags = {"用户管理"}, notes = "首页统计信息")
+    @GetMapping(value = "/statistics", name = "首页统计信息")
+    public Result statistics() {
+        Map<String,Object> res = new HashMap<>();
+        res.put("userCount",userInfoService.count());
+        res.put("userGroupGrade",userInfoService.groupByGrade());
+        res.put("eventCount",mmcEventService.count());
+        res.put("referCount",referralService.count());
+        res.put("supportCount",thankYouNoteService.count());
+        res.put("groupRank",mmcGroupService.groupRank());
+        res.put("map",userInfoService.mapData());
+
+        return resultGenerator.genSuccessResult(res);
     }
 }

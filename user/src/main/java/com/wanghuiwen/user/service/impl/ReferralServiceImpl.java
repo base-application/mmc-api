@@ -2,6 +2,7 @@ package com.wanghuiwen.user.service.impl;
 
 import com.wanghuiwen.user.dao.ReferralMapper;
 import com.wanghuiwen.user.dao.ReferralPictureMapper;
+import com.wanghuiwen.user.model.MmcEvent;
 import com.wanghuiwen.user.model.Referral;
 import com.wanghuiwen.user.model.ReferralPicture;
 import com.wanghuiwen.user.queue.NotificationQueueService;
@@ -13,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -81,5 +83,11 @@ public class ReferralServiceImpl extends AbstractService<Referral> implements Re
     @Override
     public List<Referral> findByNoThank() {
         return referralMapper.findByNoThank();
+    }
+
+    @Override
+    public int count() {
+        Condition where= new Condition(Referral.class);
+        return referralMapper.selectCountByCondition(where);
     }
 }

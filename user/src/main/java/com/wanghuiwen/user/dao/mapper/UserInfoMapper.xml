@@ -268,4 +268,18 @@
           </foreach>
       </if>
     </select>
+
+  <select id="groupByGrade" resultType="com.wanghuiwen.common.mybatis.ResultMap">
+      SELECT grade.grade_id,IFNULL(g.total,0) as total,grade.grade_name from grade
+      LEFT JOIN (select  grade_id,count(*) as total from user_info GROUP BY grade_id) g on(g.grade_id = grade.grade_id)
+      WHERE grade.grade_id > 0
+    </select>
+
+  <select id="mapData" resultType="com.wanghuiwen.common.mybatis.ResultMap">
+      SELECT ast.latitude,ast.longitude ,ast.`name`, count(*) as total from user_info ui
+       LEFT JOIN address_countries  ac on(ui.country = ac.id)
+       LEFT JOIN address_states ast on (ui.state = ast.id)
+      WHERE ui.state is not null and ast.id is not null
+      GROUP BY ast.name
+    </select>
 </mapper>

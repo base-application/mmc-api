@@ -182,8 +182,14 @@
     </select>
 
     <select id="userCreate" resultMap="addVo">
-        select *
-        from mmc_event
+        select
+        me.*,
+        eap.attendance_proportion,
+        a.is_attendance,
+        a.user_id is not null as joind
+        from mmc_event me
+        left join attendance a on (me.event_id = a.event_id and a.user_id = #{id})
+        LEFT JOIN event_attendance_proportion eap on (me.event_id = eap.event_id)
         where create_id = #{id}
         <if test="params.startTime!=null and params.endTime!=null">
             and event_start_time between #{params.startTime} and #{params.endTime}

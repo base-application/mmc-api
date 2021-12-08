@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -227,5 +228,11 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     @Override
     public List<EventVoAdd> listUser(Map<String, Object> params) {
         return mmcEventMapper.listUser(params);
+    }
+
+    @Override
+    public int count() {
+        Condition where= new Condition(MmcEvent.class);
+        return mmcEventMapper.selectCountByCondition(where);
     }
 }

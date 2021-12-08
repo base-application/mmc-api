@@ -20,4 +20,6 @@ public interface ReferralService extends Service<Referral> {
     void remark(Long referralId, String remark);
 
     List<Referral> findByNoThank();
+
+    int count();
 }

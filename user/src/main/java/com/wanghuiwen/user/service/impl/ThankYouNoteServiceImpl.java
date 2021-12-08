@@ -4,6 +4,7 @@ import com.wanghuiwen.common.mybatis.ResultMap;
 import com.wanghuiwen.user.dao.ReferralMapper;
 import com.wanghuiwen.user.dao.ThankYouNoteMapper;
 import com.wanghuiwen.user.dao.ThankYouNotePictureMapper;
+import com.wanghuiwen.user.model.MmcEvent;
 import com.wanghuiwen.user.model.Referral;
 import com.wanghuiwen.user.model.ThankYouNote;
 import com.wanghuiwen.user.model.ThankYouNotePicture;
@@ -16,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -74,5 +76,10 @@ public class ThankYouNoteServiceImpl extends AbstractService<ThankYouNote> imple
     @Override
     public Long sum(Map<String, Object> params) {
         return thankYouNoteMapper.sum(params);
+    }
+
+    @Override
+    public Long count() {
+        return thankYouNoteMapper.sumAll();
     }
 }

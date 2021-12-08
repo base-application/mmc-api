@@ -90,4 +90,20 @@
       GROUP BY ui.group_id
       ) r on(r.group_id = mg.group_id)
   </select>
+
+  <select id="groupRank" resultType="com.wanghuiwen.common.mybatis.ResultMap">
+      SELECT IFNULL(g.refer,0) refer  ,IFNULL(t.support,0) support, g.group_id,mg.group_name from mmc_group  mg
+                                                                                                          LEFT JOIN (
+              SELECT count(*) refer ,ui.group_id FROM referral r
+                                                              LEFT JOIN user_info ui on(r.received_user = ui.user_id)
+              WHERE ui.group_id is not null
+              GROUP BY ui.group_id) g on (mg.group_id = g.group_id)
+                                                                                                          LEFT JOIN (
+              SELECT ui.group_id,count(*) as support from thank_you_note tyn
+                                                                  LEFT JOIN user_info ui on(tyn.received_user = ui.user_id)
+              WHERE ui.group_id is not null
+              GROUP BY ui.group_id
+              ) t on(t.group_id = mg.group_id)
+      ORDER BY support desc
+  </select>
 </mapper>

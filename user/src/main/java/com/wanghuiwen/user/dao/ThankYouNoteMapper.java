@@ -15,4 +15,6 @@ public interface ThankYouNoteMapper extends ApiMapper<ThankYouNote> {
     List<ThankYouNoteVo> list(@Param("params") Map<String, Object> params);
 
     Long sum(@Param("params") Map<String, Object> params);
+
+    Long sumAll();
 }

@@ -13,6 +13,7 @@ import com.wanghuiwen.base.service.RoleService;
 import com.wanghuiwen.base.service.UserRoleService;
 import com.wanghuiwen.common.EmailUtil;
 import com.wanghuiwen.common.UtilFun;
+import com.wanghuiwen.common.mybatis.ResultMap;
 import com.wanghuiwen.core.ServiceException;
 import com.wanghuiwen.user.config.Const;
 import com.wanghuiwen.user.dao.*;
@@ -32,6 +33,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.security.acl.Group;
@@ -277,5 +280,21 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
         vo.setNotification(notificationNoRead);
         vo.setCount(newNoRead+notificationNoRead+eventNoRead);
         return vo;
+    }
+
+    @Override
+    public int count() {
+        Condition where= new Condition(UserInfo.class);
+      return userInfoMapper.selectCountByCondition(where);
+    }
+
+    @Override
+    public List<ResultMap<String, Object>> groupByGrade() {
+        return userInfoMapper.groupByGrade();
+    }
+
+    @Override
+    public List<ResultMap<String, Object>> mapData() {
+        return userInfoMapper.mapData();
     }
 }

@@ -18,4 +18,6 @@ public interface ThankYouNoteService extends Service<ThankYouNote> {
     void add(ThankYouAddVo thankYouNote);
 
     Long sum(Map<String, Object> params);
+
+    Long count();
 }

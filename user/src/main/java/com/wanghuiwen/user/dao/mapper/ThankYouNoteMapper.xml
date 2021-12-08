@@ -81,4 +81,11 @@
           and tyn.received_user = #{params.receivedUser}
       </if>
     </select>
+
+  <select id="sumAll" resultType="java.lang.Long">
+      SELECT
+              sum(tyn.value)
+      FROM
+              thank_you_note tyn
+    </select>
 </mapper>

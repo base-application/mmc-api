@@ -51,4 +51,6 @@ public interface MmcEventService extends Service<MmcEvent> {
     List<MmcEvent> findByStartDate();
 
     List<EventVoAdd> listUser(Map<String, Object> params);
+
+    int count();
 }

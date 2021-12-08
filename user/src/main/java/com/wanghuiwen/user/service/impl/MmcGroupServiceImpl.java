@@ -1,5 +1,6 @@
 package com.wanghuiwen.user.service.impl;
 
+import com.wanghuiwen.common.mybatis.ResultMap;
 import com.wanghuiwen.user.dao.MmcGroupMapper;
 import com.wanghuiwen.user.model.MmcGroup;
 import com.wanghuiwen.user.service.MmcGroupService;
@@ -37,5 +38,10 @@ public class MmcGroupServiceImpl extends AbstractService<MmcGroup> implements Mm
     @Override
     public GroupUserVo detail(Long groupId, Long id) {
         return mmcGroupMapper.detail(groupId,id);
+    }
+
+    @Override
+    public List<ResultMap<String, Object>> groupRank() {
+        return mmcGroupMapper.groupRank();
     }
 }
