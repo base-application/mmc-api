@@ -17,4 +17,6 @@ public interface ReferralMapper extends ApiMapper<Referral> {
     void deleteByReferral(Long referralId);
 
     List<Referral> findByNoThank();
+
+    int noRead(Long id);
 }

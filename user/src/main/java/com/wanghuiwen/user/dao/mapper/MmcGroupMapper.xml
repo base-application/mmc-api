@@ -74,6 +74,7 @@
   <select id="detail" resultMap="vo">
       SELECT mg.*,
       t.thankYouNote,
+      r.refer,
       #{uid} as uid
       FROM (select  * from mmc_group where group_id = #{groupId}
       ) mg

@@ -39,6 +39,6 @@ public class ExceptionHandler {
         if (e instanceof ServiceException) return resultGenerator.genExceptionResult(e,((ServiceException) e).getCode());
         if (e instanceof MethodArgumentNotValidException) return resultGenerator.genExceptionResult(e,((MethodArgumentNotValidException) e).getBindingResult().getAllErrors().get(0).getDefaultMessage());
         if (e instanceof BindException) return resultGenerator.genExceptionResult(e,((BindException) e).getAllErrors().get(0).getDefaultMessage());
-        return resultGenerator.genExceptionResult(e);
+        return resultGenerator.genResult(ResultEnum.INTERNAL_SERVER_ERROR);
     }
 }

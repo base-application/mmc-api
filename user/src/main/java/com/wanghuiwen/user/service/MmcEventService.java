@@ -53,4 +53,6 @@ public interface MmcEventService extends Service<MmcEvent> {
     List<EventVoAdd> listUser(Map<String, Object> params);
 
     int count();
+
+    void delete(Long id);
 }

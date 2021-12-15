@@ -5,6 +5,7 @@ import com.wanghuiwen.common.JSONUtils;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.core.response.ResultEnum;
 import com.wanghuiwen.core.response.ResultGenerator;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.RedisConnectionFailureException;
@@ -44,7 +45,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
         try {
 
         String authHeader = request.getHeader(tokenHeader);
@@ -64,12 +65,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
         }catch (Exception e){
             logger.error("TokenFilterException",e);
-            response.setHeader("Content-Type", "application/json;charset=utf-8");
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             Result result = resultGenerator.genExceptionResult(e);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             if(e instanceof RedisConnectionFailureException){
                 result = resultGenerator.genResult(ResultEnum.REDIS_CONNECTION_FAIL);
             }
+            if(e instanceof ExpiredJwtException){
+                result = resultGenerator.genResult(ResultEnum.UNAUTHORIZED);
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            }
+            response.setHeader("Content-Type", "application/json;charset=utf-8");
             response.getWriter().write(JSONUtils.obj2json(result));
             response.getWriter().flush();
         }

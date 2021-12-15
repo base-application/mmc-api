@@ -58,6 +58,15 @@ public class MmcEventController extends Ctrl{
         return resultGenerator.genSuccessResult();
     }
 
+
+    @ApiOperation(value = "活动删除", tags = {"活动"}, notes = "活动删除")
+    @DeleteMapping(value="/delete",name="活动删除")
+    public Result delete(Long id) {
+        mmcEventService.delete(id);
+        return resultGenerator.genSuccessResult();
+    }
+
+
     @ApiOperation(value = "审核活动", tags = {"活动"}, notes = "审核活动")
     @PutMapping(value="/approve",name="审核活动")
     public Result approve(Long eventId,Integer approveStatus) {

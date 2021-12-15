@@ -20,10 +20,7 @@ import com.wanghuiwen.user.dao.*;
 import com.wanghuiwen.user.model.*;
 import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.core.service.AbstractService;
-import com.wanghuiwen.user.vo.Achievement;
-import com.wanghuiwen.user.vo.MessageVo;
-import com.wanghuiwen.user.vo.UserInfoVo;
-import com.wanghuiwen.user.vo.UserNetWorkVo;
+import com.wanghuiwen.user.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -82,6 +79,8 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
     private NotificationMapper notificationMapper;
     @Resource
     private  MmcEventMapper mmcEventMapper;
+    @Resource
+    private ReferralMapper referralMapper;
 
     @Value("${mmc.init.grade}")
     private String initGradeName;
@@ -274,11 +273,13 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
         int newNoRead =newestStoryMapper.notRead(id);
         int notificationNoRead = notificationMapper.noRead(id);
         int eventNoRead =  mmcEventMapper.noRead(id);
+        int referNoRead =  referralMapper.noRead(id);
         MessageVo vo = new MessageVo();
         vo.setEvent(eventNoRead);
         vo.setNewset(newNoRead);
         vo.setNotification(notificationNoRead);
         vo.setCount(newNoRead+notificationNoRead+eventNoRead);
+        vo.setReferral(referNoRead);
         return vo;
     }
 
@@ -296,5 +297,10 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
     @Override
     public List<ResultMap<String, Object>> mapData() {
         return userInfoMapper.mapData();
+    }
+
+    @Override
+    public List<MapLineVo> mapLine() {
+        return userInfoMapper.mapLine();
     }
 }

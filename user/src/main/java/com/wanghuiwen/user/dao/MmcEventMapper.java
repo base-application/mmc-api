@@ -31,4 +31,5 @@ public interface MmcEventMapper extends ApiMapper<MmcEvent> {
 
     int noRead(Long uid);
 
+    void updateDel(Long id);
 }

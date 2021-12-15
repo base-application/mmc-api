@@ -5,6 +5,8 @@ public class MessageVo {
     private int event;
     private int newset;
     private int notification;
+    private int referral;
+    private int thank;
 
     public int getCount() {
         return count;
@@ -36,5 +38,21 @@ public class MessageVo {
 
     public void setNotification(int notification) {
         this.notification = notification;
+    }
+
+    public int getReferral() {
+        return referral;
+    }
+
+    public void setReferral(int referral) {
+        this.referral = referral;
+    }
+
+    public int getThank() {
+        return thank;
+    }
+
+    public void setThank(int thank) {
+        this.thank = thank;
     }
 }

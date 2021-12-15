@@ -6,7 +6,8 @@ public enum UserResultEnum implements IResultEnum {
     VERIFICATION_INVALID(40001),
     VERIFICATION_ERROR(40002),
     OLD_PASSWORD_NOT_MATCH(40006),
-    USER_EXISTS(40007)
+    USER_EXISTS(40007),
+    USER_NOT_EXISTS(40008)
     ;
 
     private final int code;

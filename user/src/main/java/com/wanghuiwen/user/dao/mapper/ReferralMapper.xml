@@ -85,4 +85,8 @@
       from referral
       where send_time / 1000 > UNIX_TIMESTAMP(NOW()) and thank =0;
     </select>
+
+  <select id="noRead" resultType="int">
+      SELECT count(*) from referral WHERE received_user = #{id} and `status` = 1
+    </select>
 </mapper>

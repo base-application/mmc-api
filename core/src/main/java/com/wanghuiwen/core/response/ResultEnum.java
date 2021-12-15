@@ -3,6 +3,7 @@ package com.wanghuiwen.core.response;
 public enum ResultEnum implements IResultEnum {
     SUCCESS_MESSAGE(200),
     UPLOADED(200),
+    UNAUTHORIZED(401),
     LOGIN_SUCCESS(20000),
     LOGIN_FAIL(400001),
     MODULE_EXISTS(400002),
@@ -18,7 +19,6 @@ public enum ResultEnum implements IResultEnum {
     NO_RELATED_USER(400012),
     FORBIDDEN(400013),
     ROLE_HAS_USER(400014),
-    UNAUTHORIZED(400015),
     NO_COUNTRY(400016),
     PARAMS_VALIDATED_ERROR(400017),
     ;

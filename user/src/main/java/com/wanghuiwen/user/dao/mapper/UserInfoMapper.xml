@@ -282,4 +282,32 @@
       WHERE ui.state is not null and ast.id is not null
       GROUP BY ast.name
     </select>
+
+    <select id="mapLine" resultType="com.wanghuiwen.user.vo.MapLineVo">
+        SELECT
+                astf.latitude AS formLat,
+                astf.longitude AS formLog,
+                astt.latitude AS toLat,
+                astt.longitude AS toLog,
+                CONCAT( state.sendUser, '-', state.receivedUser ) AS NAME
+        FROM
+                (
+                        SELECT
+                                a.*,
+                                uis.state AS fromState,
+                                uir.state AS toState,
+                                uis.`name` AS sendUser,
+                                uir.`name` AS receivedUser
+                        FROM
+                                ( SELECT * from (SELECT received_user, send_user FROM referral UNION ALL SELECT received_user, send_user FROM thank_you_note) temp GROUP BY received_user ,send_user ) a
+                                        LEFT JOIN user_info uir ON ( uir.user_id = a.received_user )
+                                        LEFT JOIN user_info uis ON ( uis.user_id = a.send_user )
+                        WHERE
+                                uir.state IS NOT NULL
+                          AND uis.state IS NOT NULL
+                        ) state
+                        LEFT JOIN address_states astf ON ( state.fromState = astf.id )
+                        LEFT JOIN address_states astt ON (state.toState = astt.id)
+
+    </select>
 </mapper>

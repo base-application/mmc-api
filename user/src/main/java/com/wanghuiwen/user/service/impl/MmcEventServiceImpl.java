@@ -1,8 +1,5 @@
 package com.wanghuiwen.user.service.impl;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
 import com.wanghuiwen.core.ServiceException;
 import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.service.AbstractService;
@@ -11,7 +8,10 @@ import com.wanghuiwen.user.dao.*;
 import com.wanghuiwen.user.model.*;
 import com.wanghuiwen.user.service.GradeService;
 import com.wanghuiwen.user.service.MmcEventService;
-import com.wanghuiwen.user.vo.*;
+import com.wanghuiwen.user.vo.AttendanceVo;
+import com.wanghuiwen.user.vo.CheckLogVo;
+import com.wanghuiwen.user.vo.EventVo;
+import com.wanghuiwen.user.vo.EventVoAdd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -132,9 +132,16 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
 
     @Override
     public void checkin(Long eventId, Long userId) {
+        long nh = 1000 * 60 * 60 * 2;// 2小时的毫秒数
+        MmcEvent event = findById(eventId);
+        if(event.getEventStartTime() - new Date().getTime() > nh ) throw  new ServiceException("活动两小时前开始签到","user.40009");
+
         Attendance attendance = attendanceMapper.selectUserEvent(userId,eventId);
+
+
         if(attendance==null) throw  new ServiceException("用户未加入活动","user.40004");
         if(attendance.getCheckInTime()!=null) throw  new ServiceException("用户已经签到","user.40005");
+
         attendance.setIsAttendance(true);
         attendance.setCheckInTime(new Date().getTime());
         attendanceMapper.updateUserEvent(attendance);
@@ -165,6 +172,9 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
 
     @Override
     public void checkout(Long eventId, Long userId) {
+        MmcEvent event =  findById(eventId);
+        if(event.getEventStartTime() > new Date().getTime()) throw new ServiceException("活动开始后才能签退","user.40010");
+
         Attendance attendance = attendanceMapper.selectUserEvent(userId,eventId);
         attendance.setCheckOutTime(new Date().getTime());
         attendanceMapper.updateUserEvent(attendance);
@@ -234,5 +244,10 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     public int count() {
         Condition where= new Condition(MmcEvent.class);
         return mmcEventMapper.selectCountByCondition(where);
+    }
+
+    @Override
+    public void delete(Long id) {
+        mmcEventMapper.updateDel(id);
     }
 }

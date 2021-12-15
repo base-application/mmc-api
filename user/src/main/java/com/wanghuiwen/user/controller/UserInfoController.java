@@ -34,6 +34,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -95,11 +96,24 @@ public class UserInfoController extends Ctrl {
     }
 
 
+    /**
+     *
+     * @param type 1 注册 2 忘记密码
+     * @return
+     */
     @ApiOperation(value = "发送验证码", tags = {"用户管理"}, notes = "发送验证码")
     @PostMapping("send/verification")
     public Result sendVerification(@RequestParam String phoneNumber,
                                    @RequestParam String countryCode,
                                    @RequestParam Integer type) {
+        User user = userService.findByLoginName(phoneNumber);
+        if(type == 1 && user !=null){
+            return resultGenerator.genFailResult(UserResultEnum.USER_EXISTS);
+        }
+        if(type == 2 && user ==null){
+            return resultGenerator.genFailResult(UserResultEnum.USER_NOT_EXISTS);
+        }
+
         String key = userInfoService.verificationCodeKey(phoneNumber, type);
 
         String code = redisTemplate.opsForValue().get(key);
@@ -332,6 +346,9 @@ public class UserInfoController extends Ctrl {
             return resultGenerator.genFailResult(VERIFICATION_ERROR);
         }
         User user = userService.findByLoginName(phoneNumber);
+        if(user ==null){
+            return resultGenerator.genFailResult(UserResultEnum.USER_NOT_EXISTS);
+        }
         user.setPassword(new BCryptPasswordEncoder().encode(password));
         userService.update(user);
         redisTemplate.delete(key);
@@ -454,6 +471,14 @@ public class UserInfoController extends Ctrl {
         res.put("supportCount",thankYouNoteService.count());
         res.put("groupRank",mmcGroupService.groupRank());
         res.put("map",userInfoService.mapData());
+        List<MapLineVo> mapLineVos = userInfoService.mapLine();
+        List<Map<String,Object>> mapLine = mapLineVos.stream().map(mapLineVo -> {
+            Map<String,Object> line = new HashMap<>();
+            line.put("coords",new BigDecimal[][]{new BigDecimal[]{mapLineVo.getFormLog(),mapLineVo.getFormLat()},new BigDecimal[]{mapLineVo.getToLog(),mapLineVo.getToLat()}});
+            line.put("name",mapLineVo.getName());
+            return line;
+        }).collect(Collectors.toList());
+        res.put("mapLine",mapLine);
 
         return resultGenerator.genSuccessResult(res);
     }

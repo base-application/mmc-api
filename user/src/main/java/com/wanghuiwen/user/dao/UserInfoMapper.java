@@ -7,6 +7,7 @@ import com.wanghuiwen.user.model.Grade;
 import com.wanghuiwen.user.model.MmcGroup;
 import com.wanghuiwen.user.model.UserInfo;
 import com.wanghuiwen.user.vo.Achievement;
+import com.wanghuiwen.user.vo.MapLineVo;
 import com.wanghuiwen.user.vo.UserInfoVo;
 import com.wanghuiwen.user.vo.UserNetWorkVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -32,4 +33,6 @@ public interface UserInfoMapper extends ApiMapper<UserInfo> {
     List<ResultMap<String, Object>> groupByGrade();
 
     List<ResultMap<String, Object>> mapData();
+
+    List<MapLineVo> mapLine();
 }
