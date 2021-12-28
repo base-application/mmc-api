@@ -1,9 +1,6 @@
 package com.wanghuiwen.user.config;
 
-import com.google.firebase.messaging.ApnsConfig;
-import com.google.firebase.messaging.Aps;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.*;
 import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.user.vo.MessageVo;
@@ -69,8 +66,13 @@ public class FmcUtil {
                 )
                 .setApnsConfig(ApnsConfig.builder().setAps(Aps.builder().setBadge(1).build()).build())
                 .putAllData(data)
-                .setTopic("mmc")
+                .setTopic("mmctest")
                 .build();
-        FirebaseMessaging.getInstance().sendAsync(message);
+        try {
+           String res =  FirebaseMessaging.getInstance().send(message);
+           System.out.println(res);
+        } catch (FirebaseMessagingException e) {
+            e.printStackTrace();
+        }
     }
 }

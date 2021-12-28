@@ -48,6 +48,7 @@
         <result column="check_in_time" jdbcType="BIGINT" property="checkInTime"/>
         <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime"/>
         <result column="joind" jdbcType="BIT" property="join"/>
+        <result column="create_id" jdbcType="BIT" property="createId"/>
         <collection property="groups" column="event_id" select="getGroup"/>
         <collection property="eventPoster" column="event_id" select="getPoster"/>
         <collection property="attendance" column="{id=event_id}" select="getAttendance"/>

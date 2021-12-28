@@ -46,7 +46,7 @@ spring:
     database: 0
     host: 127.0.0.1
     password:
-    port: 6380
+    port: 6379
     timeout: 5000
   servlet:
     multipart:

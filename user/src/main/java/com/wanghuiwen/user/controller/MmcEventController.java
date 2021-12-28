@@ -53,7 +53,11 @@ public class MmcEventController extends Ctrl{
     @ApiOperation(value = "活动添加", tags = {"活动"}, notes = "活动添加")
     @PostMapping(value="/add",name="活动添加")
     public Result add(@RequestBody EventVoAdd add,Authentication authentication) {
-        add.setCreateId(getAuthUser(authentication).getId());
+        if(add.getEventId()==null){
+            add.setCreateId(getAuthUser(authentication).getId());
+        }else {
+            add.setCreateId(null);
+        }
         mmcEventService.add(add);
         return resultGenerator.genSuccessResult();
     }

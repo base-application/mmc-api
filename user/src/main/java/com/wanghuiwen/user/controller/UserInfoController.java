@@ -11,6 +11,7 @@ import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.config.Const;
+import com.wanghuiwen.user.config.FmcUtil;
 import com.wanghuiwen.user.config.UserResultEnum;
 import com.wanghuiwen.user.model.UserInfo;
 import com.wanghuiwen.user.service.*;
@@ -481,5 +482,13 @@ public class UserInfoController extends Ctrl {
         res.put("mapLine",mapLine);
 
         return resultGenerator.genSuccessResult(res);
+    }
+
+
+    @ApiOperation(value = "测试推送", tags = {"用户管理"}, notes = "测试推送")
+    @GetMapping(value = "/send", name = "测试推送")
+    public Result send() {
+        FmcUtil.sendAll("test","test",new HashMap<>());
+        return resultGenerator.genSuccessResult();
     }
 }
