@@ -8,7 +8,9 @@ import com.wanghuiwen.common.mybatis.ResultMap;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.config.FmcUtil;
+import com.wanghuiwen.user.model.Referral;
 import com.wanghuiwen.user.model.ThankYouNote;
+import com.wanghuiwen.user.service.ReferralService;
 import com.wanghuiwen.user.service.ThankYouNoteService;
 import com.wanghuiwen.user.service.UserInfoService;
 import com.wanghuiwen.user.vo.ThankYouAddVo;
@@ -41,13 +43,16 @@ public class ThankYouNoteController extends Ctrl{
     private MessageSource messageSource;
     @Resource
     private UserInfoService userInfoService;
+    @Resource
+    private ReferralService referralService;
 
     @ApiOperation(value = "用户发送感谢", tags = {"感谢"}, notes = "用户发送感谢")
     @PostMapping(value="/add",name="用户发送感谢")
     public Result add(@RequestBody ThankYouAddVo thankYouNote, Authentication authentication) {
         thankYouNote.setSender(getAuthUser(authentication).getId());
+        Referral referral = referralService.findById(thankYouNote.getReferralId());
+        User user = userService.findById(referral.getSendUser());
         thankYouNoteService.add(thankYouNote);
-        User user = userService.findById(thankYouNote.getReceivedUser());
         if(user.getPushId()!=null){
             String message = messageSource.getMessage("thank.send", null, LocaleContextHolder.getLocale());
             FmcUtil.sendUser(user.getPushId(),"Thank You",message,new HashMap<>(),userInfoService.message(user.getId()).getCount());

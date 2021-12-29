@@ -50,7 +50,7 @@ public class ReferralController extends Ctrl{
         User user = userService.findById(addVo.getReceivedUser());
         if(user.getPushId()!=null){
             String message = messageSource.getMessage("referral.send", null, LocaleContextHolder.getLocale());
-            FmcUtil.sendUser(user.getPushId(),"referral",message,new HashMap<>(),userInfoService.message(user.getId()).getCount());
+            FmcUtil.sendUser(user.getPushId(),"Referral",message,new HashMap<>(),userInfoService.message(user.getId()).getCount());
         }
         return resultGenerator.genSuccessResult();
     }
