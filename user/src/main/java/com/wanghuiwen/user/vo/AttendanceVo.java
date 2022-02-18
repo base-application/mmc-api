@@ -24,6 +24,8 @@ public class AttendanceVo {
     private String agent;
     private String agentRole;
     private String name;
+    private String occupation;
+    private String industry;
     private String picture;
     private String gradeName;
     private String concatNumber;
@@ -142,5 +144,21 @@ public class AttendanceVo {
 
     public void setConcatNumber(String concatNumber) {
         this.concatNumber = concatNumber;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
     }
 }

@@ -59,12 +59,13 @@ public class FmcUtil {
     public static void sendAll(String title, String context, Map<String,String> data){
         Message message = Message.builder()
                 .setNotification(
-                        com.google.firebase.messaging.Notification.builder()
+                        Notification.builder()
                                 .setBody(context)
                                 .setTitle(title)
                                 .build()
                 )
                 .setApnsConfig(ApnsConfig.builder().setAps(Aps.builder().setBadge(1).build()).build())
+                .setAndroidConfig(AndroidConfig.builder().setPriority(AndroidConfig.Priority.HIGH).build())
                 .putAllData(data)
                 .setTopic("mmctest")
                 .build();

@@ -68,6 +68,8 @@
         <result column="facebook_comment" jdbcType="BIT" property="facebookComment"/>
         <result column="concat_number" jdbcType="VARCHAR" property="concatNumber"/>
         <result column="grade_name" jdbcType="VARCHAR" property="gradeName"/>
+        <result column="occupation" jdbcType="VARCHAR" property="occupation" />
+        <result column="industry" jdbcType="VARCHAR" property="industry" />
     </resultMap>
 
     <select id="detail" resultMap="vo">
@@ -103,7 +105,7 @@
     </select>
 
     <select id="getAttendance" resultMap="attendance">
-        SELECT a.*, ui.`name`, ui.picture,ui.concat_number,g.grade_name
+        SELECT a.*, ui.*,g.grade_name
         from (select * from attendance where event_id = #{id}) a
         LEFT JOIN user_info ui ON (a.user_id = ui.user_id)
         LEFT JOIN grade g ON(ui.grade_id = g.grade_id)

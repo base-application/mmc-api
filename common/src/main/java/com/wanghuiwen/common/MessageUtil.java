@@ -54,7 +54,7 @@ public class MessageUtil {
 
     public static void amazonSMSSender(String phoneNumber,String message){
         AmazonSNSClientBuilder clientBuilder = AmazonSNSClientBuilder.standard();
-        AWSCredentials awsCredentials = new BasicAWSCredentials("AKIAJBQ3TFD6K2U7JRJA", "XdvRP6bAN3ieDK7IS+Tsektw+Vf2BmnPlkfWRczs");
+        AWSCredentials awsCredentials = new BasicAWSCredentials("AKIAWFCDVR3QSWVR2UEP", "tPgnunwPZPTQLChN56CyvxFndT/DFvYXy+5RlUuf");
         AWSStaticCredentialsProvider provider = new AWSStaticCredentialsProvider(awsCredentials);
         clientBuilder.setCredentials(provider);
         // Regions 就是你选择从哪个国家的服务器接入,价格参考 https://amazonaws-china.com/cn/sns/sms-pricing/

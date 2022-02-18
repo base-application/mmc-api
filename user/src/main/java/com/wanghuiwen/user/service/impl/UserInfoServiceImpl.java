@@ -278,7 +278,7 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
         vo.setEvent(eventNoRead);
         vo.setNewset(newNoRead);
         vo.setNotification(notificationNoRead);
-        vo.setCount(newNoRead+notificationNoRead+eventNoRead);
+        vo.setCount(referNoRead+notificationNoRead+eventNoRead);
         vo.setReferral(referNoRead);
         return vo;
     }

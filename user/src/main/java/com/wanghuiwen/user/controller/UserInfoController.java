@@ -309,7 +309,6 @@ public class UserInfoController extends Ctrl {
     public Result detail(Authentication authentication) {
         Map<String, Object> res = new HashMap<>();
 
-        if(authentication!=null){
             AuthUser user =getAuthUser(authentication);
             UserInfo info =userInfoService.findById(user.getId());
             UserInfoVo userInfoVo = userInfoService.detail(user.getId());
@@ -319,16 +318,26 @@ public class UserInfoController extends Ctrl {
             res.put("upcoming", events);
             List<SliderVo> sliderVos = sliderService.userList(info.getGradeId(),info.getGroupId());
             res.put("slider",sliderVos);
-        }else {
-            List<SliderVo> sliderVos = sliderService.userList(0,null);
-            res.put("slider",sliderVos);
-        }
         PageHelper.startPage(1, 2);
         List<NewestStoryVo> newset = newestStoryService.list(new HashMap<>());
         res.put("newset", newset);
 
         return resultGenerator.genSuccessResult(res);
     }
+
+    @ApiOperation(value = "游客首页数据", tags = {"用户管理"}, notes = "游客首页数据")
+    @GetMapping(value = "/tourist", name = "游客首页数据")
+    public Result detail() {
+        Map<String, Object> res = new HashMap<>();
+        List<SliderVo> sliderVos = sliderService.userList(0,null);
+        res.put("slider",sliderVos);
+        PageHelper.startPage(1, 2);
+        List<NewestStoryVo> newset = newestStoryService.list(new HashMap<>());
+        res.put("newset", newset);
+
+        return resultGenerator.genSuccessResult(res);
+    }
+
 
 
     @ApiOperation(value = "用户忘记密码", tags = {"用户管理"}, notes = "用户忘记密码")

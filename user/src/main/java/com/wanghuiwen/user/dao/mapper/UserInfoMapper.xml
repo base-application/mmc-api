@@ -51,6 +51,7 @@
         <result column="position_name" jdbcType="VARCHAR" property="positionName" />
         <result column="position_id" jdbcType="INTEGER" property="positionId" />
         <result column="enable" jdbcType="BIT" property="enable" />
+        <result column="isFriend" jdbcType="BIT" property="friend" />
         <collection column="user_id" javaType="ArrayList" property="companyVos" select="com.wanghuiwen.user.dao.UserCompanyMapper.selectByUser" />
     </resultMap>
 
@@ -132,7 +133,7 @@
         uf.follow_id is not null as isFriend,
         mg.group_name,
         grade.grade_name
-        FROM (select * from user_info where 1=1
+        FROM (select * from user_info where  name is not null and concat_number is not null
         <if test="params.name!=null and params.name!=''">
             and name like concat('%',#{params.name},'%')
         </if>
@@ -148,13 +149,12 @@
         <if test="params.groupId!=null">
             and group_id = #{params.groupId}
         </if>
-        <if test="params.userGrade!=null">
-            and grade_id &lt;=  #{params.userGrade}
+        <if test="params.userGrade == 1 or params.userGrade == 2 or params.userGrade == 3">
+            and grade_id in(4,5)
         </if>
         <if test="params.onlySelf!=null">
             and exists(select * from user_follow uf2 where (uf2.follow_user_id = #{params.userId} and uf2.user_id = user_info.user_id))
         </if>
-
         ) ui
         LEFT JOIN `user` u ON (ui.user_id = u.id)
         LEFT JOIN grade ON (grade.grade_id = ui.grade_id)
@@ -166,6 +166,7 @@
         LEFT JOIN thank_group_received tgr on (tgr.received_user = ui.user_id)
         LEFT JOIN user_follow uf on (uf.follow_user_id = #{params.userId} and uf.user_id = ui.user_id)
         where u.enable != 0
+        order by rand()
     </select>
 
     <select id="detail" resultMap="vo">
