@@ -8,6 +8,7 @@ import com.wanghuiwen.user.model.CourseVideo;
 import com.wanghuiwen.user.model.MasterCourse;
 import com.wanghuiwen.user.service.MasterCourseService;
 import com.wanghuiwen.core.service.AbstractService;
+import com.wanghuiwen.user.vo.AppMasterCourseItemVo;
 import com.wanghuiwen.user.vo.CourseAddVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,5 +81,11 @@ public class MasterCourseServiceImpl extends AbstractService<MasterCourse> imple
     @Override
     public List<MasterCourse> list(Map<String, Object> params) {
         return masterCourseMapper.list(params);
+    }
+
+    @Override
+    public List<MasterCourse> listByCourse(Long courseId) {
+
+        return masterCourseMapper.listByCourse(courseId);
     }
 }

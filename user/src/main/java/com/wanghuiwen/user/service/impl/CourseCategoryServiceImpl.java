@@ -4,6 +4,7 @@ import com.wanghuiwen.user.dao.CourseCategoryMapper;
 import com.wanghuiwen.user.model.CourseCategory;
 import com.wanghuiwen.user.service.CourseCategoryService;
 import com.wanghuiwen.core.service.AbstractService;
+import com.wanghuiwen.user.vo.AppMasterCourseItemVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,5 +25,11 @@ public class CourseCategoryServiceImpl extends AbstractService<CourseCategory> i
     public List<CourseCategory> list() {
 
         return courseCategoryMapper.list();
+    }
+
+    @Override
+    public List<AppMasterCourseItemVo> listByCourse() {
+
+        return courseCategoryMapper.listByCourse();
     }
 }

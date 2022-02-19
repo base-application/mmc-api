@@ -14,4 +14,6 @@ public interface MasterCourseMapper extends ApiMapper<MasterCourse> {
     CourseAddVo detail(Integer id);
 
     List<MasterCourse> list(@Param("params")Map<String, Object> params);
+
+    List<MasterCourse> listByCourse(Long courseId);
 }

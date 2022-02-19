@@ -30,6 +30,8 @@ public class MasterCourse implements Serializable {
     @Column(name = "course_serial")
     private Integer courseSerial;
 
+    private Integer type;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -142,5 +144,19 @@ public class MasterCourse implements Serializable {
      */
     public void setCourseSerial(Integer courseSerial) {
         this.courseSerial = courseSerial;
+    }
+
+    /**
+     * @return type
+     */
+    public Integer getType() {
+        return type;
+    }
+
+    /**
+     * @param type
+     */
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

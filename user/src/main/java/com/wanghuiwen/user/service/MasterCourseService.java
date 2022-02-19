@@ -2,6 +2,7 @@ package com.wanghuiwen.user.service;
 import com.wanghuiwen.user.model.MasterCourse;
 import com.wanghuiwen.core.service.Service;
 import com.wanghuiwen.core.response.Result;
+import com.wanghuiwen.user.vo.AppMasterCourseItemVo;
 import com.wanghuiwen.user.vo.CourseAddVo;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface MasterCourseService extends Service<MasterCourse> {
     CourseAddVo detail(Integer id);
 
     List<MasterCourse> list(Map<String, Object> params);
+
+    List<MasterCourse> listByCourse(Long courseId);
 }

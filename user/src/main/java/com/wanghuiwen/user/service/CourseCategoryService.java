@@ -2,6 +2,7 @@ package com.wanghuiwen.user.service;
 import com.wanghuiwen.user.model.CourseCategory;
 import com.wanghuiwen.core.service.Service;
 import com.wanghuiwen.core.response.Result;
+import com.wanghuiwen.user.vo.AppMasterCourseItemVo;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ import java.util.List;
  */
 public interface CourseCategoryService extends Service<CourseCategory> {
     List<CourseCategory> list();
+
+    List<AppMasterCourseItemVo> listByCourse();
 }

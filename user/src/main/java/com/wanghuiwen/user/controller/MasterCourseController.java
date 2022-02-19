@@ -7,6 +7,7 @@ import com.wanghuiwen.user.model.CourseCategory;
 import com.wanghuiwen.user.model.MasterCourse;
 import com.wanghuiwen.user.service.CourseCategoryService;
 import com.wanghuiwen.user.service.MasterCourseService;
+import com.wanghuiwen.user.vo.AppMasterCourseItemVo;
 import com.wanghuiwen.user.vo.CourseAddVo;
 import com.wanghuiwen.user.vo.ReferralVo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -86,6 +87,18 @@ public class MasterCourseController extends Ctrl{
         return resultGenerator.genSuccessResult(pageInfo);
     }
 
+
+    @PostMapping(value = "/app/list", name = "APP课程列表信息")
+    public Result appList() {
+        List<AppMasterCourseItemVo> courses = courseCategoryService.listByCourse();
+        return resultGenerator.genSuccessResult(courses);
+    }
+
+    @PostMapping(value = "/app/course", name = "获取课程下的课程")
+    public Result appChildCourse(@RequestParam(required = false) Long courseId) {
+        List<MasterCourse> courses = masterCourseService.listByCourse(courseId);
+        return resultGenerator.genSuccessResult(courses);
+    }
 
 
     @ApiOperation(value = "课程分类添加", tags = {"课程分类"}, notes = "课程分类添加")

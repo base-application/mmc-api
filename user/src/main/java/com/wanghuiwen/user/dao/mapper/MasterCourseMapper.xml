@@ -13,6 +13,7 @@
     <result column="course_description" jdbcType="VARCHAR" property="courseDescription" />
     <result column="concat_us" jdbcType="VARCHAR" property="concatUs" />
     <result column="course_serial" jdbcType="INTEGER" property="courseSerial" />
+    <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
 
   <resultMap id="vo" type="com.wanghuiwen.user.vo.CourseAddVo">
@@ -28,6 +29,7 @@
     <result column="concat_us" jdbcType="VARCHAR" property="concatUs" />
     <result column="course_serial" jdbcType="INTEGER" property="courseSerial" />
     <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+    <result column="type" jdbcType="INTEGER" property="type" />
     <association property="parentCourseDetail" select="findById" column="parent_course"/>
     <collection column="id" property="videos" select="listVideos"/>
     <collection column="id" property="files" select="listFiles"/>
@@ -47,8 +49,10 @@
     <result column="concat_us" jdbcType="VARCHAR" property="concatUs" />
     <result column="course_serial" jdbcType="INTEGER" property="courseSerial" />
     <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+    <result column="type" jdbcType="INTEGER" property="type" />
     <association property="parentCourseDetail" select="findById" column="parent_course"/>
   </resultMap>
+
 
   <select id="detail" resultMap="vo">
     select  a.*,cc.category_name from (
@@ -91,4 +95,7 @@
                                         left join course_category cc on(a.id  = cc.category_id)
   </select>
 
+  <select id="listByCourse" resultMap="BaseResultMap">
+    select * from master_course where parent_course = #{courseId}
+  </select>
 </mapper>
