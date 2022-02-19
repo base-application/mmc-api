@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.CourseScheduleMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.CourseSchedule">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="schedule_id" jdbcType="BIGINT" property="scheduleId" />
+    <result column="course_id" jdbcType="BIGINT" property="courseId" />
+    <result column="schedule_url" jdbcType="VARCHAR" property="scheduleUrl" />
+    <result column="schedule_time" jdbcType="BIGINT" property="scheduleTime" />
+    <result column="schedule_title" jdbcType="VARCHAR" property="scheduleTitle" />
+    <result column="schedule_venue" jdbcType="VARCHAR" property="scheduleVenue" />
+  </resultMap>
+</mapper>

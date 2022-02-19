@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.MasterCourseMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.MasterCourse">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="course_photo" jdbcType="VARCHAR" property="coursePhoto" />
+    <result column="course_name" jdbcType="VARCHAR" property="courseName" />
+    <result column="parent_course" jdbcType="BIGINT" property="parentCourse" />
+    <result column="course_category" jdbcType="BIGINT" property="courseCategory" />
+    <result column="course_description" jdbcType="VARCHAR" property="courseDescription" />
+    <result column="concat_us" jdbcType="VARCHAR" property="concatUs" />
+  </resultMap>
+</mapper>
