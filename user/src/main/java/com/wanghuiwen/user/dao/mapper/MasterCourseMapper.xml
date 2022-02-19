@@ -12,5 +12,83 @@
     <result column="course_category" jdbcType="BIGINT" property="courseCategory" />
     <result column="course_description" jdbcType="VARCHAR" property="courseDescription" />
     <result column="concat_us" jdbcType="VARCHAR" property="concatUs" />
+    <result column="course_serial" jdbcType="INTEGER" property="courseSerial" />
   </resultMap>
+
+  <resultMap id="vo" type="com.wanghuiwen.user.vo.CourseAddVo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="course_photo" jdbcType="VARCHAR" property="coursePhoto" />
+    <result column="course_name" jdbcType="VARCHAR" property="courseName" />
+    <result column="parent_course" jdbcType="BIGINT" property="parentCourse" />
+    <result column="course_category" jdbcType="BIGINT" property="courseCategory" />
+    <result column="course_description" jdbcType="VARCHAR" property="courseDescription" />
+    <result column="concat_us" jdbcType="VARCHAR" property="concatUs" />
+    <result column="course_serial" jdbcType="INTEGER" property="courseSerial" />
+    <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+    <association property="parentCourseDetail" select="findById" column="parent_course"/>
+    <collection column="id" property="videos" select="listVideos"/>
+    <collection column="id" property="files" select="listFiles"/>
+    <collection column="id" property="schedules" select="listSchedule"/>
+  </resultMap>
+
+  <resultMap id="itemVo" type="com.wanghuiwen.user.vo.CourseItemVo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="course_photo" jdbcType="VARCHAR" property="coursePhoto" />
+    <result column="course_name" jdbcType="VARCHAR" property="courseName" />
+    <result column="parent_course" jdbcType="BIGINT" property="parentCourse" />
+    <result column="course_category" jdbcType="BIGINT" property="courseCategory" />
+    <result column="course_description" jdbcType="VARCHAR" property="courseDescription" />
+    <result column="concat_us" jdbcType="VARCHAR" property="concatUs" />
+    <result column="course_serial" jdbcType="INTEGER" property="courseSerial" />
+    <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+    <association property="parentCourseDetail" select="findById" column="parent_course"/>
+  </resultMap>
+
+  <select id="detail" resultMap="vo">
+    select  a.*,cc.category_name from (
+                                        select *
+                                        from master_course
+                                        where id = #{id}
+                                      ) a
+                                        left join course_category cc on(a.id  = cc.category_id)
+  </select>
+
+  <select id="listVideos" resultMap="com.wanghuiwen.user.dao.CourseVideoMapper.BaseResultMap">
+    select * from course_video where course_id = #{id}
+  </select>
+  <select id="listFiles" resultMap="com.wanghuiwen.user.dao.CourseFileMapper.BaseResultMap">
+    select * from course_file where course_id = #{id}
+  </select>
+  <select id="listSchedule" resultMap="com.wanghuiwen.user.dao.CourseScheduleMapper.BaseResultMap">
+    select * from course_schedule where course_id = #{id}
+  </select>
+
+  <select id="findById" resultMap="BaseResultMap">
+    select * from master_course where id = #{id}
+  </select>
+
+  <select id="list" resultMap="itemVo">
+    select  a.*,cc.category_name from (
+                                        select *
+                                        from master_course
+                                        where 1=1
+    <if test="params.courseName != null and params.courseName != ''">
+      and course_name like concat('%',#{params.courseName},'%')
+    </if>
+    <if test="params.categoryId != null">
+      and a.category_id  = #{params.categoryId}
+    </if>
+    <if test="params.courseId != null">
+      and a.parent_course  = #{courseName}
+    </if>
+                                      ) a
+                                        left join course_category cc on(a.id  = cc.category_id)
+  </select>
+
 </mapper>

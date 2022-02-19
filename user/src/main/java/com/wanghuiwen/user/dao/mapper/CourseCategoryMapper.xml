@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.CourseCategoryMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.CourseCategory">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="category_id" jdbcType="BIGINT" property="categoryId" />
+    <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+    <result column="category_serial" jdbcType="INTEGER" property="categorySerial" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+  </resultMap>
+  <select id="list" resultMap="BaseResultMap">
+    select * from course_category order by category_serial
+  </select>
+</mapper>

@@ -8,5 +8,6 @@
     <id column="file_id" jdbcType="BIGINT" property="fileId" />
     <result column="file_title" jdbcType="VARCHAR" property="fileTitle" />
     <result column="file_url" jdbcType="VARCHAR" property="fileUrl" />
+    <result column="course_id" jdbcType="BIGINT" property="courseId" />
   </resultMap>
 </mapper>

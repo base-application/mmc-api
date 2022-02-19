@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "course_file")
 public class CourseFile implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "file_id")
     private Long fileId;
 
@@ -14,6 +15,9 @@ public class CourseFile implements Serializable {
 
     @Column(name = "file_url")
     private String fileUrl;
+
+    @Column(name = "course_id")
+    private Long courseId;
 
     private static final long serialVersionUID = 1L;
 
@@ -57,5 +61,19 @@ public class CourseFile implements Serializable {
      */
     public void setFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
+    }
+
+    /**
+     * @return course_id
+     */
+    public Long getCourseId() {
+        return courseId;
+    }
+
+    /**
+     * @param courseId
+     */
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
     }
 }

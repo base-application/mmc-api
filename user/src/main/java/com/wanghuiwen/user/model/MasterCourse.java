@@ -27,6 +27,9 @@ public class MasterCourse implements Serializable {
     @Column(name = "concat_us")
     private String concatUs;
 
+    @Column(name = "course_serial")
+    private Integer courseSerial;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -125,5 +128,19 @@ public class MasterCourse implements Serializable {
      */
     public void setConcatUs(String concatUs) {
         this.concatUs = concatUs;
+    }
+
+    /**
+     * @return course_serial
+     */
+    public Integer getCourseSerial() {
+        return courseSerial;
+    }
+
+    /**
+     * @param courseSerial
+     */
+    public void setCourseSerial(Integer courseSerial) {
+        this.courseSerial = courseSerial;
     }
 }

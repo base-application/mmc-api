@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "course_video")
 public class CourseVideo implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "video_id")
     private Long videoId;
 

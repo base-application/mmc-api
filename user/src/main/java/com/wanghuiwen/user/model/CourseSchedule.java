@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "course_schedule")
 public class CourseSchedule implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_id")
     private Long scheduleId;
 
