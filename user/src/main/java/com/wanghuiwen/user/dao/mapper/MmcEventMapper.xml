@@ -17,6 +17,7 @@
     <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
     <result column="del" jdbcType="BIT" property="del" />
     <result column="point" jdbcType="DECIMAL" property="point" />
+    <result column="thumbnail" jdbcType="VARCHAR" property="thumbnail" />
   </resultMap>
 
     <resultMap id="vo" type="com.wanghuiwen.user.vo.EventVo">

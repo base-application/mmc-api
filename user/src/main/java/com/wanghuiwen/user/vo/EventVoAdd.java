@@ -28,6 +28,7 @@ public class EventVoAdd {
     private String eventLocation;
     private String eventMapLink;
     private String eventType;
+    private String thumbnail;
     private Long createId;
     private Boolean attend;
     private Boolean join;
@@ -172,5 +173,13 @@ public class EventVoAdd {
 
     public void setPoint(BigDecimal point) {
         this.point = point;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

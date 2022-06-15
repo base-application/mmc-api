@@ -8,7 +8,6 @@ import javax.persistence.*;
 public class MmcEvent implements Serializable {
     @Id
     @Column(name = "event_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eventId;
 
     /**
@@ -71,6 +70,11 @@ public class MmcEvent implements Serializable {
      * 分享积分
      */
     private BigDecimal point;
+
+    /**
+     * 封面
+     */
+    private String thumbnail;
 
     private static final long serialVersionUID = 1L;
 
@@ -280,5 +284,23 @@ public class MmcEvent implements Serializable {
      */
     public void setPoint(BigDecimal point) {
         this.point = point;
+    }
+
+    /**
+     * 获取封面
+     *
+     * @return thumbnail - 封面
+     */
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    /**
+     * 设置封面
+     *
+     * @param thumbnail 封面
+     */
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }
