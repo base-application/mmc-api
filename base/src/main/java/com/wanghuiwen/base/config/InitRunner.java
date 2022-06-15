@@ -44,10 +44,10 @@ public class InitRunner implements CommandLineRunner {
 
     @CacheEvict(value=ProjectConstant.API_LIST_CACHE_KEY, beforeInvocation=true,allEntries = true)
     public void run(String... strings) {
-        initPower();
-        initRole();
-        initDepartment();
-        initUser();
+//        initPower();
+//        initRole();
+//        initDepartment();
+//        initUser();
     }
 
     private void initUser() {

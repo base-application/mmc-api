@@ -3,6 +3,7 @@ package com.wanghuiwen.user.vo;
 import com.wanghuiwen.user.model.Grade;
 import com.wanghuiwen.user.model.MmcGroup;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class EventVoAdd {
@@ -32,6 +33,7 @@ public class EventVoAdd {
     private Boolean join;
     private Long checkInTime;
     private Long checkOutTime;
+    private BigDecimal point;
     List<ImageVo> eventPoster;
     List<MmcGroup> groups;
     List<Grade> grades;
@@ -162,5 +164,13 @@ public class EventVoAdd {
 
     public void setCheckOutTime(Long checkOutTime) {
         this.checkOutTime = checkOutTime;
+    }
+
+    public BigDecimal getPoint() {
+        return point;
+    }
+
+    public void setPoint(BigDecimal point) {
+        this.point = point;
     }
 }

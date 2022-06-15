@@ -35,4 +35,6 @@ public interface UserInfoMapper extends ApiMapper<UserInfo> {
     List<ResultMap<String, Object>> mapData();
 
     List<MapLineVo> mapLine();
+
+    List<ResultMap<String,Object>> referralList(Long userId);
 }

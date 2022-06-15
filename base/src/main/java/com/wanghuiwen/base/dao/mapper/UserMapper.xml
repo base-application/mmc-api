@@ -13,6 +13,11 @@
     <result column="credentials_expired_time" jdbcType="BIGINT" property="credentialsExpiredTime" />
     <result column="locked" jdbcType="BIT" property="locked" />
     <result column="push_id" jdbcType="VARCHAR" property="pushId" />
+    <result column="referral_code" jdbcType="VARCHAR" property="referralCode" />
+    <result column="referral_id" jdbcType="BIGINT" property="referralId" />
+    <result column="point" jdbcType="DECIMAL" property="point" />
+    <result column="referral_count" jdbcType="INTEGER" property="referralCount" />
+    <result column="registered_time" jdbcType="BIGINT" property="registeredTime" />
   </resultMap>
 
     <resultMap id="auth" type="com.wanghuiwen.core.config.AuthUser">
@@ -93,4 +98,8 @@
   <update id="setPushToken">
       update user set push_id = #{pushToken} where id = #{id}
     </update>
+
+  <select id="findByReferralCode" resultMap="BaseResultMap">
+      select * from user where  referral_code = #{referralCode}
+    </select>
 </mapper>

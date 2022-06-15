@@ -108,6 +108,7 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
         res.put("position", userDetails.getPosition());
         res.put("positionName", userDetails.getPositionName());
         res.put("createEvent",userDetails.isCreateEvent());
+        res.put("point",userDetails.getPoint());
 
         /**
          * 设置登陆过期时间

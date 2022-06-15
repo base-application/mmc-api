@@ -16,6 +16,7 @@
     <result column="absent_reason" jdbcType="VARCHAR" property="absentReason" />
     <result column="facebook_comment" jdbcType="BIT" property="facebookComment" />
     <result column="join_time" jdbcType="BIGINT" property="joinTime" />
+    <result column="singed_course" jdbcType="BIT" property="singedCourse" />
   </resultMap>
 
     <resultMap id="userVo" type="com.wanghuiwen.user.vo.CheckHistoryVo">
@@ -59,6 +60,9 @@
         </if>
         <if test="facebookComment!=null">
             , facebook_comment = #{facebookComment}
+        </if>
+        <if test="singedCourse!=null">
+            , singed_course = #{singedCourse}
         </if>
         where user_id = #{userId} and event_id = #{eventId}
     </update>

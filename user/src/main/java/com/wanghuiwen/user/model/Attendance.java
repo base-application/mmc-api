@@ -63,6 +63,12 @@ public class Attendance implements Serializable {
     @Column(name = "join_time")
     private Long joinTime;
 
+    /**
+     * 管理员确认报名状态
+     */
+    @Column(name = "singed_course")
+    private Boolean singedCourse;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -253,5 +259,23 @@ public class Attendance implements Serializable {
      */
     public void setJoinTime(Long joinTime) {
         this.joinTime = joinTime;
+    }
+
+    /**
+     * 获取管理员确认报名状态
+     *
+     * @return singed_course - 管理员确认报名状态
+     */
+    public Boolean getSingedCourse() {
+        return singedCourse;
+    }
+
+    /**
+     * 设置管理员确认报名状态
+     *
+     * @param singedCourse 管理员确认报名状态
+     */
+    public void setSingedCourse(Boolean singedCourse) {
+        this.singedCourse = singedCourse;
     }
 }

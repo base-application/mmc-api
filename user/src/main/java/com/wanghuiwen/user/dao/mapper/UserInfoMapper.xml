@@ -52,6 +52,9 @@
         <result column="position_id" jdbcType="INTEGER" property="positionId" />
         <result column="enable" jdbcType="BIT" property="enable" />
         <result column="isFriend" jdbcType="BIT" property="friend" />
+        <result column="referral_code" jdbcType="VARCHAR" property="referralCode" />
+        <result column="point" jdbcType="DECIMAL" property="point" />
+        <result column="referral_count" jdbcType="INTEGER" property="referralCount" />
         <collection column="user_id" javaType="ArrayList" property="companyVos" select="com.wanghuiwen.user.dao.UserCompanyMapper.selectByUser" />
     </resultMap>
 
@@ -83,6 +86,9 @@
     <select id="managerList" resultMap="vo">
         SELECT ui.*,
         u.`enable`,
+        u.referral_code,
+        u.point,
+        u.referral_count,
         mg.group_name,
         grade.grade_name,
         po.position_name,
@@ -310,5 +316,21 @@
                         LEFT JOIN address_states astf ON ( state.fromState = astf.id )
                         LEFT JOIN address_states astt ON (state.toState = astt.id)
 
+    </select>
+
+  <select id="referralList" resultType="com.wanghuiwen.common.mybatis.ResultMap">
+      SELECT
+              ui.`name`,
+              ui.picture,
+              ui.user_id as userId,
+              sum( rpl.foo_point ) AS fooPoint,
+              sum( rpl.costomer_point ) AS costomerPoint,
+              a.registered_time  as registeredTime
+      FROM
+              ( SELECT * FROM `user` WHERE referral_id = #{userId} ) a
+                      LEFT JOIN user_info ui ON ( ui.user_id = a.id )
+                      LEFT JOIN referral_point_log rpl ON ( rpl.costomer_id = a.id AND rpl.foo_id =  #{userId} )
+      GROUP BY
+              ui.user_id
     </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.wanghuiwen.core.config;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +23,7 @@ public class AuthUser implements UserDetails  {
     private Integer position;
     private String positionName;
     private boolean createEvent;
+    private BigDecimal point;
 
 
     public AuthUser() {}
@@ -165,5 +167,13 @@ public class AuthUser implements UserDetails  {
 
     public void setCreateEvent(boolean createEvent) {
         this.createEvent = createEvent;
+    }
+
+    public BigDecimal getPoint() {
+        return point;
+    }
+
+    public void setPoint(BigDecimal point) {
+        this.point = point;
     }
 }

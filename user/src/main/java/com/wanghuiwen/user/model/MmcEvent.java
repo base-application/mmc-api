@@ -1,6 +1,7 @@
 package com.wanghuiwen.user.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.persistence.*;
 
 @Table(name = "mmc_event")
@@ -60,6 +61,16 @@ public class MmcEvent implements Serializable {
      */
     @Column(name = "approve_status")
     private Integer approveStatus;
+
+    /**
+     * 是否删除
+     */
+    private Boolean del;
+
+    /**
+     * 分享积分
+     */
+    private BigDecimal point;
 
     private static final long serialVersionUID = 1L;
 
@@ -233,5 +244,41 @@ public class MmcEvent implements Serializable {
      */
     public void setApproveStatus(Integer approveStatus) {
         this.approveStatus = approveStatus;
+    }
+
+    /**
+     * 获取是否删除
+     *
+     * @return del - 是否删除
+     */
+    public Boolean getDel() {
+        return del;
+    }
+
+    /**
+     * 设置是否删除
+     *
+     * @param del 是否删除
+     */
+    public void setDel(Boolean del) {
+        this.del = del;
+    }
+
+    /**
+     * 获取分享积分
+     *
+     * @return point - 分享积分
+     */
+    public BigDecimal getPoint() {
+        return point;
+    }
+
+    /**
+     * 设置分享积分
+     *
+     * @param point 分享积分
+     */
+    public void setPoint(BigDecimal point) {
+        this.point = point;
     }
 }

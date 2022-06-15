@@ -22,4 +22,6 @@ public interface UserMapper extends ApiMapper<User> {
     AuthUser findAuthUser(String s);
 
     void setPushToken(String pushToken, Long id);
+
+    User findByReferralCode(String referralCode);
 }

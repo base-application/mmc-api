@@ -283,4 +283,15 @@ public class MmcEventController extends Ctrl{
         List<AttendanceVo> res = mmcEventService.getAttendance(id,groupId,startTime,endTime);
         return resultGenerator.genSuccessResult(res);
     }
+
+
+    @ApiOperation(value = "确认报名", tags = {"活动"}, notes = "确认报名")
+    @PostMapping(value = "/signed/up", name = "确认报名")
+    public Result signedUp(
+            @RequestParam Long id,
+            @RequestParam Long userId
+    ) {
+        mmcEventService.signedUp(id,userId);
+        return resultGenerator.genSuccessResult();
+    }
 }

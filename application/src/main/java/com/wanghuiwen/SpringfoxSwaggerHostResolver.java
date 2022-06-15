@@ -23,6 +23,9 @@ public class SpringfoxSwaggerHostResolver implements WebMvcOpenApiTransformation
         Server server1 = new Server();
         server1.setUrl("http://47.107.84.246/mmc/api/");
         servers.add(server1);
+        Server server2 = new Server();
+        server2.setUrl("http://127.0.0.1:8005/");
+        servers.add(server2);
         swagger.setServers(servers);
         return swagger;
     }

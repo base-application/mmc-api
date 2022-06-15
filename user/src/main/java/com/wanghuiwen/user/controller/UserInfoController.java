@@ -7,6 +7,8 @@ import com.wanghuiwen.base.service.UserService;
 import com.wanghuiwen.common.MessageUtil;
 import com.wanghuiwen.common.UtilFun;
 import com.wanghuiwen.common.excel.ExcelUtil;
+import com.wanghuiwen.common.mybatis.ResultMap;
+import com.wanghuiwen.core.ServiceException;
 import com.wanghuiwen.core.config.AuthUser;
 import com.wanghuiwen.core.controller.Ctrl;
 import com.wanghuiwen.core.response.Result;
@@ -85,21 +87,32 @@ public class UserInfoController extends Ctrl {
             String phoneNumber,
             String verificationCode,
             String password,
-            String countryCode
+            String countryCode,
+            String referralCode
     ) {
-        User user = userService.findByLoginName(phoneNumber);
-        if(user!=null){
-            return resultGenerator.genFailResult(UserResultEnum.USER_EXISTS);
+        String key = userInfoService.verificationCodeKey(phoneNumber, Const.VERIFICATION_REGISTER);
+        String code = redisTemplate.opsForValue().get(key);
+        if(code == null){
+            throw new ServiceException("验证码不可用","user.40001");
         }
-        userInfoService.register(phoneNumber, verificationCode, password, countryCode);
+        if(!verificationCode.equals(code)){
+            throw new ServiceException("验证码不可用","user.40001");
+        }
+        User user = userService.findByLoginName(phoneNumber);
 
-        return resultGenerator.genSuccessResult();
+        if(user!=null){
+            AuthUser authUser = userService.getAuthUser(phoneNumber);
+            return userService.login(authUser);
+        }
+        userInfoService.register(phoneNumber, verificationCode, password, countryCode,referralCode);
+        AuthUser authUser = userService.getAuthUser(phoneNumber);
+        return userService.login(authUser);
     }
 
 
     /**
      *
-     * @param type 1 注册 2 忘记密码
+     * @param type 1 注册/登录 2 忘记密码
      * @return
      */
     @ApiOperation(value = "发送验证码", tags = {"用户管理"}, notes = "发送验证码")
@@ -108,9 +121,6 @@ public class UserInfoController extends Ctrl {
                                    @RequestParam String countryCode,
                                    @RequestParam Integer type) {
         User user = userService.findByLoginName(phoneNumber);
-        if(type == 1 && user !=null){
-            return resultGenerator.genFailResult(UserResultEnum.USER_EXISTS);
-        }
         if(type == 2 && user ==null){
             return resultGenerator.genFailResult(UserResultEnum.USER_NOT_EXISTS);
         }
@@ -499,5 +509,12 @@ public class UserInfoController extends Ctrl {
     public Result send() {
         FmcUtil.sendAll("test","test",new HashMap<>());
         return resultGenerator.genSuccessResult();
+    }
+
+    @ApiOperation(value = "邀请列表", tags = {"用户管理"}, notes = "测试推送")
+    @GetMapping(value = "/referral/list", name = "测试推送")
+    public Result referralList(Long userId) {
+        List<ResultMap<String,Object>> res = userInfoService.referralList(userId);
+        return resultGenerator.genSuccessResult(res);
     }
 }

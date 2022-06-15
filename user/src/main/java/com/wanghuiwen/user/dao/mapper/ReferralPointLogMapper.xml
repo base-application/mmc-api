@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuiwen.user.dao.ReferralPointLogMapper">
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.ReferralPointLog">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="referral_log_id" jdbcType="BIGINT" property="referralLogId" />
+    <result column="costomer_id" jdbcType="BIGINT" property="costomerId" />
+    <result column="foo_id" jdbcType="BIGINT" property="fooId" />
+    <result column="costomer_point" jdbcType="DECIMAL" property="costomerPoint" />
+    <result column="foo_point" jdbcType="DECIMAL" property="fooPoint" />
+    <result column="create_time" jdbcType="BIGINT" property="createTime" />
+  </resultMap>
+</mapper>

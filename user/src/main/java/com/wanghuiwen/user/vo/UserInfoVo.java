@@ -1,5 +1,6 @@
 package com.wanghuiwen.user.vo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class UserInfoVo {
@@ -64,6 +65,9 @@ public class UserInfoVo {
     private Integer positionId;
     private String positionName;
     private String member;
+    private Integer referralCount;
+    private BigDecimal point;
+    private String referralCode;
 
     List<CompanyVo> companyVos;
 
@@ -341,5 +345,29 @@ public class UserInfoVo {
 
     public void setStateName(String stateName) {
         this.stateName = stateName;
+    }
+
+    public Integer getReferralCount() {
+        return referralCount;
+    }
+
+    public void setReferralCount(Integer referralCount) {
+        this.referralCount = referralCount;
+    }
+
+    public BigDecimal getPoint() {
+        return point;
+    }
+
+    public void setPoint(BigDecimal point) {
+        this.point = point;
+    }
+
+    public String getReferralCode() {
+        return referralCode;
+    }
+
+    public void setReferralCode(String referralCode) {
+        this.referralCode = referralCode;
     }
 }

@@ -1,7 +1,10 @@
 package com.wanghuiwen.user.service.impl;
 
+import com.wanghuiwen.base.dao.UserMapper;
+import com.wanghuiwen.base.model.User;
 import com.wanghuiwen.core.ServiceException;
 import com.wanghuiwen.core.config.AuthUser;
+import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.core.service.AbstractService;
 import com.wanghuiwen.user.config.Const;
 import com.wanghuiwen.user.dao.*;
@@ -21,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +55,10 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     private CheckLogMapper checkLogMapper;
     @Resource
     private EventUserReadMapper eventUserReadMapper;
+    @Resource
+    private ReferralPointLogMapper referralPointLogMapper;
+    @Resource
+    private UserMapper userMapper;
 
     @Override
     public Long add(EventVoAdd add) {
@@ -249,5 +257,34 @@ public class MmcEventServiceImpl extends AbstractService<MmcEvent> implements Mm
     @Override
     public void delete(Long id) {
         mmcEventMapper.updateDel(id);
+    }
+
+    @Override
+    public void signedUp(Long id, Long userId) {
+        Attendance attendance = attendanceMapper.selectUserEvent(userId,id);
+        if(attendance.getSingedCourse()!=null) return;
+
+        attendance.setSingedCourse(true);
+        attendanceMapper.updateUserEvent(attendance);
+        User user = userMapper.selectByPrimaryKey(userId);
+        ///收益分配
+        if(user.getReferralId()!=null){
+            User referralUser = userMapper.selectByPrimaryKey(user.getReferralId());
+            MmcEvent mmcEvent = mmcEventMapper.selectByPrimaryKey(id);
+            BigDecimal costomerPoint = mmcEvent.getPoint().multiply(new BigDecimal("0.5"));
+
+            ReferralPointLog pointLog = new ReferralPointLog();
+            pointLog.setCostomerId(userId);
+            pointLog.setFooId(user.getReferralId());
+            pointLog.setCreateTime(new Date().getTime());
+            pointLog.setCostomerPoint(mmcEvent.getPoint());
+            pointLog.setFooPoint(mmcEvent.getPoint());
+            referralPointLogMapper.insert(pointLog);
+
+            referralUser.setPoint(referralUser.getPoint().add(costomerPoint));
+            userMapper.updateByPrimaryKeySelective(referralUser);
+            user.setPoint(user.getPoint().add(costomerPoint));
+            userMapper.updateByPrimaryKeySelective(user);
+        }
     }
 }

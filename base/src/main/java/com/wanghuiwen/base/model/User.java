@@ -1,6 +1,7 @@
 package com.wanghuiwen.base.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.persistence.*;
 
 public class User implements Serializable {
@@ -46,6 +47,35 @@ public class User implements Serializable {
      */
     @Column(name = "push_id")
     private String pushId;
+
+    /**
+     * 邀请码
+     */
+    @Column(name = "referral_code")
+    private String referralCode;
+
+    /**
+     * 被邀请人
+     */
+    @Column(name = "referral_id")
+    private Long referralId;
+
+    /**
+     * 用户积分
+     */
+    private BigDecimal point;
+
+    /**
+     * 邀请人数
+     */
+    @Column(name = "referral_count")
+    private Integer referralCount;
+
+    /**
+     * 注册时间
+     */
+    @Column(name = "registered_time")
+    private Long registeredTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -187,5 +217,95 @@ public class User implements Serializable {
      */
     public void setPushId(String pushId) {
         this.pushId = pushId;
+    }
+
+    /**
+     * 获取邀请码
+     *
+     * @return referral_code - 邀请码
+     */
+    public String getReferralCode() {
+        return referralCode;
+    }
+
+    /**
+     * 设置邀请码
+     *
+     * @param referralCode 邀请码
+     */
+    public void setReferralCode(String referralCode) {
+        this.referralCode = referralCode;
+    }
+
+    /**
+     * 获取被邀请人
+     *
+     * @return referral_id - 被邀请人
+     */
+    public Long getReferralId() {
+        return referralId;
+    }
+
+    /**
+     * 设置被邀请人
+     *
+     * @param referralId 被邀请人
+     */
+    public void setReferralId(Long referralId) {
+        this.referralId = referralId;
+    }
+
+    /**
+     * 获取用户积分
+     *
+     * @return point - 用户积分
+     */
+    public BigDecimal getPoint() {
+        return point;
+    }
+
+    /**
+     * 设置用户积分
+     *
+     * @param point 用户积分
+     */
+    public void setPoint(BigDecimal point) {
+        this.point = point;
+    }
+
+    /**
+     * 获取邀请人数
+     *
+     * @return referral_count - 邀请人数
+     */
+    public Integer getReferralCount() {
+        return referralCount;
+    }
+
+    /**
+     * 设置邀请人数
+     *
+     * @param referralCount 邀请人数
+     */
+    public void setReferralCount(Integer referralCount) {
+        this.referralCount = referralCount;
+    }
+
+    /**
+     * 获取注册时间
+     *
+     * @return registered_time - 注册时间
+     */
+    public Long getRegisteredTime() {
+        return registeredTime;
+    }
+
+    /**
+     * 设置注册时间
+     *
+     * @param registeredTime 注册时间
+     */
+    public void setRegisteredTime(Long registeredTime) {
+        this.registeredTime = registeredTime;
     }
 }

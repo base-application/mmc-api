@@ -34,9 +34,11 @@ import tk.mybatis.mapper.entity.Condition;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.security.acl.Group;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -171,6 +173,8 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
             user.setLoginName(info.getConcatNumber());
             user.setEnable(true);
             user.setLocked(false);
+            user.setReferralCode(genReferralCode());
+            user.setPoint(BigDecimal.ZERO);
             userMapper.insert(user);
 
             UserRole userRole = new UserRole();
@@ -204,7 +208,7 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
     }
 
     @Override
-    public void register(String phoneNumber, String verificationCode, String password, String countryCode) {
+    public void register(String phoneNumber, String verificationCode, String password, String countryCode,String referralCode) {
         String key = verificationCodeKey(phoneNumber, Const.VERIFICATION_REGISTER);
         String code = redisTemplate.opsForValue().get(key);
         if(code == null){
@@ -214,12 +218,26 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
             throw new ServiceException("验证码不可用","user.40001");
         }
         password = new BCryptPasswordEncoder().encode(password);
-
         User user = new User();
+
+        if(referralCode!=null){
+            User referralUser = userMapper.findByReferralCode(referralCode);
+            if(referralUser ==null){
+                throw new ServiceException("邀请码不存在","user.40011");
+            }
+            user.setReferralId(referralUser.getId());
+
+            referralUser.setReferralCount(referralUser.getReferralCount() +1);
+            userMapper.updateByPrimaryKeySelective(referralUser);
+        }
+
         user.setPassword(password);
         user.setLoginName(phoneNumber);
         user.setEnable(true);
         user.setLocked(false);
+        user.setReferralCode(genReferralCode());
+        user.setPoint(BigDecimal.ZERO);
+        user.setRegisteredTime(new Date().getTime());
         userMapper.insert(user);
 
         Role role = roleService.findBy("name", ProjectConstant.ROLE_USER);
@@ -243,6 +261,12 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
     }
 
 
+    private String genReferralCode() {
+        String referralCode =  UtilFun.getStringRandom(8);
+        User oldUser =  userMapper.findByReferralCode(referralCode);
+        if(oldUser != null) return genReferralCode();
+        return  referralCode;
+    }
     /**
      * 验证码redis key
      * @param phoneNumber
@@ -302,5 +326,10 @@ public class UserInfoServiceImpl extends AbstractService<UserInfo> implements Us
     @Override
     public List<MapLineVo> mapLine() {
         return userInfoMapper.mapLine();
+    }
+
+    @Override
+    public List<ResultMap<String,Object>> referralList(Long userId) {
+        return userInfoMapper.referralList(userId);
     }
 }

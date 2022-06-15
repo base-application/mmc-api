@@ -26,7 +26,7 @@ public interface UserInfoService extends Service<UserInfo> {
 
     void excelToUser(List<List<String>> excelData);
 
-    void register(String phoneNumber, String verificationCode, String password, String countryCode);
+    void register(String phoneNumber, String verificationCode, String password, String countryCode,String referralCode);
 
     String verificationCodeKey(String phoneNumber,Integer type);
 
@@ -49,4 +49,6 @@ public interface UserInfoService extends Service<UserInfo> {
     List<ResultMap<String, Object>> mapData();
 
     List<MapLineVo> mapLine();
+
+    List<ResultMap<String,Object>> referralList(Long userId);
 }

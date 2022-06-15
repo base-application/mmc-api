@@ -1,5 +1,6 @@
 package com.wanghuiwen.user.service;
 import com.wanghuiwen.core.config.AuthUser;
+import com.wanghuiwen.core.response.Result;
 import com.wanghuiwen.user.model.CheckLog;
 import com.wanghuiwen.user.model.MmcEvent;
 import com.wanghuiwen.core.service.Service;
@@ -55,4 +56,6 @@ public interface MmcEventService extends Service<MmcEvent> {
     int count();
 
     void delete(Long id);
+
+    void signedUp(Long id, Long userId);
 }

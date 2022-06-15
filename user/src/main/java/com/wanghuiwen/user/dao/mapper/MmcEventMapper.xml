@@ -1,73 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wanghuiwen.user.dao.MmcEventMapper">
-    <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.MmcEvent">
-        <!--
-          WARNING - @mbg.generated
-        -->
-        <id column="event_id" jdbcType="BIGINT" property="eventId"/>
-        <result column="event_title" jdbcType="VARCHAR" property="eventTitle"/>
-        <result column="event_description" jdbcType="VARCHAR" property="eventDescription"/>
-        <result column="event_start_time" jdbcType="BIGINT" property="eventStartTime"/>
-        <result column="event_end_time" jdbcType="BIGINT" property="eventEndTime"/>
-        <result column="event_location" jdbcType="VARCHAR" property="eventLocation"/>
-        <result column="event_map_link" jdbcType="VARCHAR" property="eventMapLink"/>
-        <result column="event_type" jdbcType="VARCHAR" property="eventType"/>
-        <result column="create_id" jdbcType="BIGINT" property="createId"/>
-        <result column="approve_status" jdbcType="INTEGER" property="approveStatus"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.wanghuiwen.user.model.MmcEvent">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="event_id" jdbcType="BIGINT" property="eventId" />
+    <result column="event_title" jdbcType="VARCHAR" property="eventTitle" />
+    <result column="event_description" jdbcType="VARCHAR" property="eventDescription" />
+    <result column="event_start_time" jdbcType="BIGINT" property="eventStartTime" />
+    <result column="event_end_time" jdbcType="BIGINT" property="eventEndTime" />
+    <result column="event_location" jdbcType="VARCHAR" property="eventLocation" />
+    <result column="event_map_link" jdbcType="VARCHAR" property="eventMapLink" />
+    <result column="event_type" jdbcType="VARCHAR" property="eventType" />
+    <result column="create_id" jdbcType="BIGINT" property="createId" />
+    <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+    <result column="del" jdbcType="BIT" property="del" />
+    <result column="point" jdbcType="DECIMAL" property="point" />
+  </resultMap>
 
     <resultMap id="vo" type="com.wanghuiwen.user.vo.EventVo">
-        <id column="event_id" jdbcType="BIGINT" property="eventId"/>
-        <result column="event_title" jdbcType="VARCHAR" property="eventTitle"/>
-        <result column="event_description" jdbcType="VARCHAR" property="eventDescription"/>
-        <result column="event_start_time" jdbcType="BIGINT" property="eventStartTime"/>
-        <result column="event_end_time" jdbcType="BIGINT" property="eventEndTime"/>
-        <result column="event_location" jdbcType="VARCHAR" property="eventLocation"/>
-        <result column="event_map_link" jdbcType="VARCHAR" property="eventMapLink"/>
-        <result column="event_type" jdbcType="VARCHAR" property="eventType"/>
-        <result column="is_attendance" jdbcType="BIT" property="checkIn"/>
-        <collection property="groups" column="event_id" select="getGroup"/>
-        <collection property="eventPoster" column="event_id" select="getPoster"/>
-        <collection property="attendance" column="event_id" select="getAttendance"/>
+        <id column="event_id" jdbcType="BIGINT" property="eventId" />
+        <result column="event_title" jdbcType="VARCHAR" property="eventTitle" />
+        <result column="event_description" jdbcType="VARCHAR" property="eventDescription" />
+        <result column="event_start_time" jdbcType="BIGINT" property="eventStartTime" />
+        <result column="event_end_time" jdbcType="BIGINT" property="eventEndTime" />
+        <result column="event_location" jdbcType="VARCHAR" property="eventLocation" />
+        <result column="event_map_link" jdbcType="VARCHAR" property="eventMapLink" />
+        <result column="event_type" jdbcType="VARCHAR" property="eventType" />
+        <result column="is_attendance" jdbcType="BIT" property="checkIn" />
+        <collection column="event_id" property="groups" select="getGroup" />
+        <collection column="event_id" property="eventPoster" select="getPoster" />
+        <collection column="event_id" property="attendance" select="getAttendance" />
     </resultMap>
 
     <resultMap id="addVo" type="com.wanghuiwen.user.vo.EventVo">
-        <id column="event_id" jdbcType="BIGINT" property="eventId"/>
-        <result column="event_title" jdbcType="VARCHAR" property="eventTitle"/>
-        <result column="event_description" jdbcType="VARCHAR" property="eventDescription"/>
-        <result column="event_start_time" jdbcType="BIGINT" property="eventStartTime"/>
-        <result column="event_end_time" jdbcType="BIGINT" property="eventEndTime"/>
-        <result column="event_location" jdbcType="VARCHAR" property="eventLocation"/>
-        <result column="event_map_link" jdbcType="VARCHAR" property="eventMapLink"/>
-        <result column="event_type" jdbcType="VARCHAR" property="eventType"/>
-        <result column="approve_status" jdbcType="INTEGER" property="approveStatus"/>
-        <result column="attendance_proportion" jdbcType="DOUBLE" property="attendanceProportion"/>
-        <result column="checkIn" jdbcType="BIT" property="checkIn"/>
-        <result column="is_attendance" jdbcType="BIT" property="attend"/>
-        <result column="check_in_time" jdbcType="BIGINT" property="checkInTime"/>
-        <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime"/>
-        <result column="joind" jdbcType="BIT" property="join"/>
-        <result column="create_id" jdbcType="BIT" property="createId"/>
-        <collection property="groups" column="event_id" select="getGroup"/>
-        <collection property="eventPoster" column="event_id" select="getPoster"/>
-        <collection property="attendance" column="{id=event_id}" select="getAttendance"/>
-        <collection property="grades" column="event_id" select="getGrade"/>
+        <id column="event_id" jdbcType="BIGINT" property="eventId" />
+        <result column="event_title" jdbcType="VARCHAR" property="eventTitle" />
+        <result column="event_description" jdbcType="VARCHAR" property="eventDescription" />
+        <result column="event_start_time" jdbcType="BIGINT" property="eventStartTime" />
+        <result column="event_end_time" jdbcType="BIGINT" property="eventEndTime" />
+        <result column="event_location" jdbcType="VARCHAR" property="eventLocation" />
+        <result column="event_map_link" jdbcType="VARCHAR" property="eventMapLink" />
+        <result column="event_type" jdbcType="VARCHAR" property="eventType" />
+        <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+        <result column="attendance_proportion" jdbcType="DOUBLE" property="attendanceProportion" />
+        <result column="checkIn" jdbcType="BIT" property="checkIn" />
+        <result column="is_attendance" jdbcType="BIT" property="attend" />
+        <result column="check_in_time" jdbcType="BIGINT" property="checkInTime" />
+        <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime" />
+        <result column="joind" jdbcType="BIT" property="join" />
+        <result column="create_id" jdbcType="BIT" property="createId" />
+        <collection column="event_id" property="groups" select="getGroup" />
+        <collection column="event_id" property="eventPoster" select="getPoster" />
+        <collection column="{id=event_id}" property="attendance" select="getAttendance" />
+        <collection column="event_id" property="grades" select="getGrade" />
     </resultMap>
 
     <resultMap id="attendance" type="com.wanghuiwen.user.vo.AttendanceVo">
-        <id column="user_id" jdbcType="BIGINT" property="userId"/>
-        <id column="event_id" jdbcType="BIGINT" property="eventId"/>
-        <result column="check_in_time" jdbcType="BIGINT" property="checkInTime"/>
-        <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime"/>
-        <result column="is_attendance" jdbcType="BIT" property="attendance"/>
-        <result column="remark" jdbcType="VARCHAR" property="remark"/>
-        <result column="agent" jdbcType="VARCHAR" property="agent"/>
-        <result column="agent_role" jdbcType="VARCHAR" property="agentRole"/>
-        <result column="absent_reason" jdbcType="VARCHAR" property="absentReason"/>
-        <result column="facebook_comment" jdbcType="BIT" property="facebookComment"/>
-        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber"/>
-        <result column="grade_name" jdbcType="VARCHAR" property="gradeName"/>
+        <id column="user_id" jdbcType="BIGINT" property="userId" />
+        <id column="event_id" jdbcType="BIGINT" property="eventId" />
+        <result column="check_in_time" jdbcType="BIGINT" property="checkInTime" />
+        <result column="check_out_time" jdbcType="BIGINT" property="checkOutTime" />
+        <result column="is_attendance" jdbcType="BIT" property="attendance" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="agent" jdbcType="VARCHAR" property="agent" />
+        <result column="agent_role" jdbcType="VARCHAR" property="agentRole" />
+        <result column="absent_reason" jdbcType="VARCHAR" property="absentReason" />
+        <result column="facebook_comment" jdbcType="BIT" property="facebookComment" />
+        <result column="concat_number" jdbcType="VARCHAR" property="concatNumber" />
+        <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
         <result column="occupation" jdbcType="VARCHAR" property="occupation" />
         <result column="industry" jdbcType="VARCHAR" property="industry" />
     </resultMap>
@@ -146,7 +148,7 @@
         FROM (select * from mmc_event where approve_status = 2 and del !=1) me
          LEFT JOIN event_attendance_proportion eap on (me.event_id = eap.event_id)
          left join attendance a on (me.event_id = a.event_id and a.user_id = #{id})
-        WHERE event_start_time / 1000 > UNIX_TIMESTAMP(NOW())
+        WHERE event_start_time / 1000 &gt; UNIX_TIMESTAMP(NOW())
           AND (EXISTS(
                        SELECT *
                        FROM user_info ui
@@ -203,7 +205,7 @@
     <select id="findByStartDate" resultMap="BaseResultMap">
         select *
         from mmc_event
-        where del != 1 and  event_start_time / 1000 > UNIX_TIMESTAMP(NOW())
+        where del != 1 and  event_start_time / 1000 &gt; UNIX_TIMESTAMP(NOW())
     </select>
 
     <select id="listUser" resultMap="addVo">
